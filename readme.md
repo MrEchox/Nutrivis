@@ -1,5 +1,5 @@
-# Fitrition
-A playful or educational solution for food culture and physical activity
+# Nutrivis
+A playful or educational solution for food culture and physical activity.
 
 ## What is it?
 This is a semester project by <b>Kaunas University of Technology (KTU)</b> students for PR00B251 'Product development project' module.
