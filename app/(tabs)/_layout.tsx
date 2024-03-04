@@ -31,12 +31,13 @@ export default function TabLayout() {
         options={{
           title: 'Index',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          href: null,
           headerRight: () => (
-            <Link href="/modal" asChild>
+            <Link href="/settings" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
-                    name="info-circle"
+                    name="gear"
                     size={25}
                     color={Colors[colorScheme ?? 'light'].text}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
@@ -48,9 +49,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="recipes"
+        name="food"
         options={{
-          title: 'Recipes',
+          title: 'Food',
           tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
         }}
       />
