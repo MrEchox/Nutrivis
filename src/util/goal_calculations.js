@@ -1,13 +1,11 @@
 // Function to calculate step goal
 export const calculateStepGoal = (age, gender, height, weight, activityLevel) => {
-  // Perform your calculations here
-  // For simplicity, let's assume a basic calculation
   const basalMetabolicRate = 10 * weight + 6.25 * height - 5 * age + (gender === 'male' ? 5 : -161);
   const totalDailyEnergyExpenditure = basalMetabolicRate * getActivityFactor(activityLevel);
-  const caloriesPerStep = 0.05; // Assume an average of 20 steps per calorie
+  const caloriesPerStep = 0.04; // Assume an average of 20 steps per calorie
   const stepGoal = Math.round(totalDailyEnergyExpenditure / caloriesPerStep);
 
-  return stepGoal;
+  return Math.floor(stepGoal / 6);
 };
 
 // Function to get activity factor based on activity level
