@@ -33,16 +33,13 @@ const TabOneScreen = () => {
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Lytis</Text>
         <Picker
-          selectedValue={activityLevel}
+          selectedValue={gender}
           placeholder="Pasirinkite lytį"
           onValueChange={(itemValue) => setGender(itemValue)}
           style={styles.input}
         >
-          <Picker.Item label="Neaktyvus" value="sedentary" />
-          <Picker.Item label="Mažas" value="lightly active" />
-          <Picker.Item label="Vidutinis" value="moderately active" />
-          <Picker.Item label="Didelis" value="very active" />
-          <Picker.Item label="Labai didelis" value="extra active" />
+          <Picker.Item label="Vyras" value="male" />
+          <Picker.Item label="Moteris" value="female" />
         </Picker>
       </View>
       <View style={styles.inputContainer}>
