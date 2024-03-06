@@ -6,7 +6,7 @@ import {Picker} from '@react-native-picker/picker'
 
 const TabOneScreen = () => {
   const [age, setAge] = useState('');
-  const [gender, setGender] = useState('');
+  const [gender, setGender] = useState('male');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
   const [activityLevel, setActivityLevel] = useState('sedentary');
