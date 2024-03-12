@@ -171,9 +171,9 @@ const TabOneScreen = () => {
       </View>
       <Button title="Apskaičiuoti" onPress={handleCalculateRecommendedCalories} />
       <Text>Rekomenduojamas kalorijų kiekis per dieną svoriui palaikyti: {calorieGoal}</Text>
-      <Text>Rekomenduojamas angliavandenių kiekis gramais: {Math.round(calorieGoal * 0.5 / 4)}</Text>
-      <Text>Rekomenduojamas riebalų kiekis gramais: {Math.round(calorieGoal * 0.2 / 9)}</Text>
-      <Text>Rekomenduojamas baltymų kiekis gramais: {Math.round(calorieGoal * 0.3 / 4)}</Text>
+      <Text>Rekomenduojamas angliavandenių kiekis gramais: {Math.round(calorieGoal * 0.5 / 4)}</Text> {/*1g of Carbs = 4cal 50% of all calories*/}
+      <Text>Rekomenduojamas riebalų kiekis gramais: {Math.round(calorieGoal * 0.2 / 9)}</Text> {/*1g of Fat = 9cal 20% of all calories*/}
+      <Text>Rekomenduojamas baltymų kiekis gramais: {Math.round(calorieGoal * 0.3 / 4)}</Text> {/*1g of Protein = 4cal 30% of all calories*/}
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
     </View>
   );
