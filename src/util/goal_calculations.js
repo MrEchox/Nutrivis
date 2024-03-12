@@ -8,6 +8,14 @@ export const calculateStepGoal = (age, gender, height, weight, activityLevel) =>
   return Math.floor(stepGoal / 6);
 };
 
+export const calculateRecommendedCalories = (age, gender, height, weight, activityLevel, weightObjective) => {
+  const basalMetabolicRate = 10 * weight + 6.25 * height - 5 * age + (gender === 'male' ? 5 : -161);
+  const totalDailyEnergyExpenditure = basalMetabolicRate * getActivityFactor(activityLevel);
+  const calorieGoal = Math.round(totalDailyEnergyExpenditure * getObjectiveFactor(weightObjective));
+
+  return calorieGoal;
+}
+
 // Function to get activity factor based on activity level
 const getActivityFactor = (activityLevel) => {
   switch (activityLevel) {
@@ -23,5 +31,22 @@ const getActivityFactor = (activityLevel) => {
       return 1.9;
     default:
       return 1.2; // Default to sedentary
+  }
+};
+
+const getObjectiveFactor = (weightObjective) => {
+  switch (weightObjective) {
+    case 'extreme loss':
+      return 0.5;
+    case 'loss':
+      return 0.8;
+    case 'maintain':
+      return 1;
+    case 'gain':
+      return 1.2;
+    case 'extreme gain':
+      return 1.5;
+    default:
+      return 1; // Default to maintain
   }
 };
