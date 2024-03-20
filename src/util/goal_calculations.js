@@ -17,6 +17,12 @@ export const calculateRecommendedCalories = (age, gender, height, weight, activi
   return calorieGoal;
 }
 
+export const inputCaloriesMacro = (carbs, fat, protein) => {
+  const calculatedCalories = (carbs * 4) + (fat * 9) + (protein * 4);
+
+  return Math.round(calculatedCalories);
+}
+
 // Function to get activity factor based on activity level
 const getActivityFactor = (activityLevel) => {
   switch (activityLevel) {

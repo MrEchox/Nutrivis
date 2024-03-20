@@ -1,183 +1,65 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Button } from 'react-native';
 import { Text, View } from '@/components/Themed';
-import { calculateStepGoal } from '@/src/util/goal_calculations';
-import { calculateRecommendedCalories } from '@/src/util/goal_calculations';
-import {Picker} from '@react-native-picker/picker'
+import { inputCaloriesMacro } from '@/src/util/goal_calculations';
 
-//---Step Tab---
-// const TabOneScreen = () => {
-//   const [age, setAge] = useState('');
-//   const [gender, setGender] = useState('male');
-//   const [height, setHeight] = useState('');
-//   const [weight, setWeight] = useState('');
-//   const [activityLevel, setActivityLevel] = useState('sedentary');
-//   const [stepGoal, setStepGoal] = useState(0);
+var sumCarbs = 0;
+var sumFat = 0;
+var sumProtein = 0;
 
-
-//   // Function to calculate step goal
-//   const handleCalculateStepGoal = () => {
-//     const calculatedStepGoal = calculateStepGoal(age, gender, height, weight, activityLevel);
-//     setStepGoal(calculatedStepGoal);
-//   };
-
-//---Calorie Tab---
+//---Macro input Tab---
 const TabOneScreen = () => {
-  const [age, setAge] = useState('');
-  const [gender, setGender] = useState('male');
-  const [height, setHeight] = useState('');
-  const [weight, setWeight] = useState('');
-  const [activityLevel, setActivityLevel] = useState('sedentary');
-  const [calorieGoal, setCalorieGoal] = useState(0);
-  const [weightObjective, setWeightObjective] = useState(0);
+  var [carbs, setCarbs] = useState('');
+  var [fat, setFat] = useState('');
+  var [protein, setProtein] = useState('');
+  var [calculatedCalories, setCalculatedCalories] = useState(0);
 
-  // Function to calculate recomended calories
-  const handleCalculateRecommendedCalories = () => {
-    const calculatedRecommendedCalories = calculateRecommendedCalories(age, gender, height, weight, activityLevel, weightObjective);
-    setCalorieGoal(calculatedRecommendedCalories);
+  // Function to Handle Input of macros
+  const handleInput = () => {
+    const inputDoneCaloriesMacro = inputCaloriesMacro(carbs, fat, protein);
+    setCalculatedCalories(inputDoneCaloriesMacro);
+    sumCarbs = sumCarbs + parseInt(carbs);
+    sumFat = sumFat + parseInt(fat);
+    sumProtein = sumProtein + parseInt(protein);
   };
 
   return (
-    //---Steps---
-    // <View style={styles.container}>
-    //   <Text style={styles.title}>Index/home tab</Text>
-    //   <View style={styles.inputContainer}>
-    //     <Text style={styles.label}>Amžius:</Text>
-    //     <TextInput
-    //       style={styles.input}
-    //       placeholder="Įveskite savo amžių"
-    //       keyboardType="numeric"
-    //       onChangeText={(text) => setAge(text)}
-    //     />
-    //   </View>
-    //   <View style={styles.inputContainer}>
-    //     <Text style={styles.label}>Lytis</Text>
-    //     <Picker
-    //       selectedValue={gender}
-    //       placeholder="Pasirinkite lytį"
-    //       onValueChange={(itemValue) => setGender(itemValue)}
-    //       style={styles.input}
-    //     >
-    //       <Picker.Item label="Vyras" value="male" />
-    //       <Picker.Item label="Moteris" value="female" />
-    //     </Picker>
-    //   </View>
-    //   <View style={styles.inputContainer}>
-    //     <Text style={styles.label}>Ūgis</Text>
-    //     <TextInput
-    //       style={styles.input}
-    //       placeholder="Įveskite savo ūgį (cm)"
-    //       keyboardType="numeric"
-    //       onChangeText={(text) => setHeight(text)}
-    //     />
-    //   </View>
-    //   <View style={styles.inputContainer}>
-    //     <Text style={styles.label}>Svoris</Text>
-    //     <TextInput
-    //       style={styles.input}
-    //       placeholder="Įveskite savo svorį (kg)"
-    //       keyboardType="numeric"
-    //       onChangeText={(text) => setWeight(text)}
-    //     />
-    //   </View>
-    //   <View style={styles.inputContainer}>
-    //     <Text style={styles.label}>Fizinio aktyvumo lygis</Text>
-    //     <Picker
-    //       selectedValue={activityLevel}
-    //       onValueChange={(itemValue) => setActivityLevel(itemValue)}
-    //       style={styles.input}
-    //     >
-    //       <Picker.Item label="Neaktyvus" value="sedentary" />
-    //       <Picker.Item label="Mažas" value="lightly active" />
-    //       <Picker.Item label="Vidutinis" value="moderately active" />
-    //       <Picker.Item label="Didelis" value="very active" />
-    //       <Picker.Item label="Labai didelis" value="extra active" />
-    //     </Picker>
-    //   </View>
-    //   <Button title="Apskaičiuoti" onPress={handleCalculateStepGoal} />
-    //   <Text>Rekomenduojamas žingsnių skaičius per dieną: {stepGoal}</Text>
-    //   <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-    // </View>
-
     //---Calories---
     <View style={styles.container}>
       <Text style={styles.title}>Welcome!!!</Text>
       <Text style={styles.title}>Index/home tab</Text>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Amžius:</Text>
+        <Text style={styles.label}>Angliavandeniai:</Text>
         <TextInput
           style={styles.input}
-          placeholder="Įveskite savo amžių"
+          placeholder="Įveskite suvartotų angliavandenių kiekį gramais"
           keyboardType="numeric"
-          onChangeText={(text) => setAge(text)}
+          onChangeText={(text) => setCarbs(text)}
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Lytis</Text>
-        <Picker
-          selectedValue={gender}
-          placeholder="Pasirinkite lytį"
-          onValueChange={(itemValue) => setGender(itemValue)}
-          style={styles.input}
-        >
-          <Picker.Item label="Vyras" value="male" />
-          <Picker.Item label="Moteris" value="female" />
-        </Picker>
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Ūgis</Text>
+        <Text style={styles.label}>Riebalai</Text>
         <TextInput
           style={styles.input}
-          placeholder="Įveskite savo ūgį (cm)"
+          placeholder="Įveskite suvartotų riebalų kiekį gramais"
           keyboardType="numeric"
-          onChangeText={(text) => setHeight(text)}
+          onChangeText={(text) => setFat(text)}
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Svoris</Text>
+        <Text style={styles.label}>Baltymai</Text>
         <TextInput
           style={styles.input}
-          placeholder="Įveskite savo svorį (kg)"
+          placeholder="Įveskite suvartotų baltymų kiekį gramais"
           keyboardType="numeric"
-          onChangeText={(text) => setWeight(text)}
+          onChangeText={(text) => setProtein(text)}
         />
       </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Fizinio aktyvumo lygis</Text>
-        <Picker
-          selectedValue={activityLevel}
-          onValueChange={(itemValue) => setActivityLevel(itemValue)}
-          style={styles.input}
-        >
-          <Picker.Item label="Neaktyvus" value="sedentary" />
-          <Picker.Item label="Mažas" value="lightly active" />
-          <Picker.Item label="Vidutinis" value="moderately active" />
-          <Picker.Item label="Didelis" value="very active" />
-          <Picker.Item label="Labai didelis" value="extra active" />
-        </Picker>
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Jūsų tikslas</Text>
-        <Picker
-          selectedValue={weightObjective}
-          onValueChange={(itemValue) => setWeightObjective(itemValue)}
-          style={styles.input}
-        >
-          <Picker.Item label="Ekstremalus svorio metimas" value="extreme loss" />
-          <Picker.Item label="Svorio metimas" value="loss" />
-          <Picker.Item label="Svorio palaikymas" value="maintain" />
-          <Picker.Item label="Svorio priaugimas" value="gain" />
-          <Picker.Item label="Ekstremalus svorio priaugimas" value="extreme gain" />
-        </Picker>
-      </View>
-      <Button title="Apskaičiuoti" onPress={handleCalculateRecommendedCalories} />
-      <Text>Rekomenduojamas kalorijų kiekis per dieną svoriui palaikyti: {calorieGoal}</Text>
-      {/*1g of Carbs = 4cal 50% of all calories*/}
-      <Text>Rekomenduojamas angliavandenių kiekis gramais: {Math.round(calorieGoal * 0.5 / 4)}</Text>
-      {/*1g of Fat = 9cal 20% of all calories*/}
-      <Text>Rekomenduojamas riebalų kiekis gramais: {Math.round(calorieGoal * 0.2 / 9)}</Text>
-      {/*1g of Protein = 4cal 30% of all calories*/}
-      <Text>Rekomenduojamas baltymų kiekis gramais: {Math.round(calorieGoal * 0.3 / 4)}</Text>
+      <Button title="Apskaičiuoti suvartotų kalorijų kiekį" onPress={handleInput} />
+      <Text>Iš viso angliavandenių: {sumCarbs}</Text>
+      <Text>Iš viso riebalų: {sumFat}</Text>
+      <Text>Iš viso baltymų: {sumProtein}</Text>
+      <Text>Suvartotų kalorijų kiekis: {calculatedCalories}</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
     </View>
   );
