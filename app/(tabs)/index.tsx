@@ -6,6 +6,7 @@ import { inputCaloriesMacro } from '@/src/util/goal_calculations';
 var sumCarbs = 0;
 var sumFat = 0;
 var sumProtein = 0;
+var sumCalories = 0;
 
 //---Macro input Tab---
 const TabOneScreen = () => {
@@ -21,6 +22,7 @@ const TabOneScreen = () => {
     sumCarbs = sumCarbs + parseInt(carbs);
     sumFat = sumFat + parseInt(fat);
     sumProtein = sumProtein + parseInt(protein);
+    sumCalories = sumCalories + calculatedCalories;
   };
 
   return (
@@ -56,10 +58,10 @@ const TabOneScreen = () => {
         />
       </View>
       <Button title="Apskaičiuoti suvartotų kalorijų kiekį" onPress={handleInput} />
-      <Text>Iš viso angliavandenių: {sumCarbs}</Text>
-      <Text>Iš viso riebalų: {sumFat}</Text>
-      <Text>Iš viso baltymų: {sumProtein}</Text>
-      <Text>Suvartotų kalorijų kiekis: {calculatedCalories}</Text>
+        <Text>Iš viso angliavandenių: {sumCarbs} g</Text>
+        <Text>Iš viso riebalų: {sumFat} g</Text>
+        <Text>Iš viso baltymų: {sumProtein} g</Text>
+        <Text>Suvartotų kalorijų kiekis: {calculatedCalories + sumCalories} kcal</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
     </View>
   );
