@@ -4,6 +4,10 @@ import { Text, View } from '@/components/Themed';
 import { calculateStepGoal } from '@/src/util/goal_calculations';
 import { calculateRecommendedCalories } from '@/src/util/goal_calculations';
 import {Picker} from '@react-native-picker/picker'
+import { StatusBar } from 'expo-status-bar';
+import { Modal, Platform, StyleSheet } from 'react-native';
+import { TextInput, Button, ScrollView } from 'react-native';
+import { Barcode_Food } from '@/src/object_classes/barcode_food';
 
 //---Step Tab---
 // const TabOneScreen = () => {
@@ -36,6 +40,13 @@ const TabOneScreen = () => {
     const calculatedRecommendedCalories = calculateRecommendedCalories(age, gender, height, weight, activityLevel, weightObjective);
     setCalorieGoal(calculatedRecommendedCalories);
   };
+  
+  // Testing function to add data to the database
+  // To check what each part of data is, check src/object_classes/barcode_food.ts
+  const handleAddData = async () => {
+    const food = new Barcode_Food("Testuojama", 1234512, 100, 100.101, 100, 100, 100, 100, "g");
+    food.save();
+  }
 
   return (
     //---Steps---
@@ -100,9 +111,7 @@ const TabOneScreen = () => {
     // </View>
 
     //---Calories---
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome!!!</Text>
-      <Text style={styles.title}>Index/settings tab</Text>
+    <ScrollView>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Amžius:</Text>
         <TextInput
@@ -170,7 +179,13 @@ const TabOneScreen = () => {
           <Picker.Item label="Ekstremalus svorio priaugimas" value="extreme gain" />
         </Picker>
       </View>
+      
+      
       <Button title="Apskaičiuoti" onPress={handleCalculateRecommendedCalories} />
+      
+      {/* This is button is temporary to check if database input works */}
+      <Button title="Testuojama Duombaze" onPress={handleAddData} />
+      
       <Text>Rekomenduojamas kalorijų kiekis per dieną svoriui palaikyti: {calorieGoal}</Text>
       {/*1g of Carbs = 4cal 50% of all calories*/}
       <Text>Rekomenduojamas angliavandenių kiekis gramais: {Math.round(calorieGoal * 0.5 / 4)}</Text>
@@ -179,7 +194,7 @@ const TabOneScreen = () => {
       {/*1g of Protein = 4cal 30% of all calories*/}
       <Text>Rekomenduojamas baltymų kiekis gramais: {Math.round(calorieGoal * 0.3 / 4)}</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-    </View>
+    </ScrollView>
   );
 };
 

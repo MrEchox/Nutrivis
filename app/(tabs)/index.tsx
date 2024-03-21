@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Button } from 'react-native';
 import { Text, View } from '@/components/Themed';
+import {Barcode_Food} from '@/src/object_classes/barcode_food'
 import { inputCaloriesMacro } from '@/src/util/goal_calculations';
 
 var sumCarbs = 0;
@@ -66,6 +67,7 @@ const TabOneScreen = () => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
