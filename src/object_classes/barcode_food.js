@@ -1,7 +1,6 @@
 import {collection, addDoc} from "firebase/firestore";
 import {db} from "../../firebaseConfig.js";
 
-
 // This is the class for the Barcode_Food object. This object is used to store the nutritional information of a food item.
 // Since this is not TypeScript, we have to manually check the types of the parameters. 
 // If the types are not correct, we throw an error.
@@ -59,4 +58,6 @@ export class Barcode_Food {
         });
         console.log("Document written with ID: ", docRef.id);
     }
+
+
 }
