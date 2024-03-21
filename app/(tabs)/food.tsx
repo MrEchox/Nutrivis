@@ -1,61 +1,71 @@
-import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { Text, View } from '@/components/Themed';
-import { food_object_manual } from '@/src/object_classes/food_object';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const TabTwoScreen = () => {
-  const [date, setDate] = useState('');
-  const [name, setName] = useState('');
-  const [amount, setAmount] = useState('');
-  const [calories, setCalories] = useState('');
-  const [carbs, setCarbs] = useState('');
-  const [sugar, setSugar] = useState('');
-  const [fat, setFat] = useState('');
-  const [protein, setProtein] = useState('');
-  const [salt, setSalt] = useState('');
+// Define your app's unique identifier
+const FOOD_PREFIX = '@Food:';
 
-  const handleCalculate = async () => {
-    
-    setCalories();
-  }
+export default function Foods() {
+  const [localValues, setLocalValues] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch all keys from AsyncStorage
+        const allKeys = await AsyncStorage.getAllKeys();
+        // Filter keys to only include those belonging to your app
+        const appKeys = allKeys.filter(key => key.startsWith(FOOD_PREFIX));
+        // Fetch values corresponding to the filtered keys
+        const values = await AsyncStorage.multiGet(appKeys);
+
+        // Update state with the retrieved values
+        setLocalValues(values);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => handleItemClick(item)}>
+      <Text>{item[0].replace(FOOD_PREFIX, '')}: {item[1]}</Text>
+    </TouchableOpacity>
+  );
+
+  const handleItemClick = (item) => {
+    // Handle the click event for each item in the list
+    // For example, you can navigate to a detail screen or perform any other action
+    console.log('Clicked item:', item);
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>'Food' tab</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      <Text style={styles.title}>Food Tab</Text>
+      <FlatList
+        data={localValues}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        style={styles.list}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    title: {
-      fontSize: 20,
-      fontWeight: 'bold',
-    },
-    label: {
-      marginRight: 10,
-      paddingLeft: 10,
-    },
-    inputContainer: {
-      width: '80%',
-      marginBottom: 20,
-      borderWidth: 1,
-      borderRadius: 5,
-      borderColor: '#ccc',
-    },
-    input: {
-      padding: 10,
-    },
-    separator: {
-      marginVertical: 30,
-      height: 1,
-      width: '80%',
-    },
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  list: {
+    width: '100%',
+  },
 });
-
-export default TabTwoScreen;
