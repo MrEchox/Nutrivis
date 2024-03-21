@@ -1,10 +1,12 @@
+import React, { useState } from 'react';
+import { StyleSheet, TextInput, Button } from 'react-native';
+import { Text, View } from '@/components/Themed';
+import { calculateStepGoal } from '@/src/util/goal_calculations';
+import { calculateRecommendedCalories } from '@/src/util/goal_calculations';
+import {Picker} from '@react-native-picker/picker'
 import { StatusBar } from 'expo-status-bar';
 import { Modal, Platform, StyleSheet } from 'react-native';
-import { Text, View } from '@/components/Themed';
-import React, { useState } from 'react';
 import { TextInput, Button, ScrollView } from 'react-native';
-import {Picker} from '@react-native-picker/picker'
-import { calculateRecommendedCalories } from '@/src/util/goal_calculations';
 import { Barcode_Food } from '@/src/object_classes/barcode_food';
 
 //---Step Tab---
@@ -24,7 +26,7 @@ import { Barcode_Food } from '@/src/object_classes/barcode_food';
 //   };
 
 //---Calorie Tab---
-const ModalScreen = () => {
+const TabOneScreen = () => {
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('male');
   const [height, setHeight] = useState('');
@@ -38,7 +40,7 @@ const ModalScreen = () => {
     const calculatedRecommendedCalories = calculateRecommendedCalories(age, gender, height, weight, activityLevel, weightObjective);
     setCalorieGoal(calculatedRecommendedCalories);
   };
-
+  
   // Testing function to add data to the database
   // To check what each part of data is, check src/object_classes/barcode_food.ts
   const handleAddData = async () => {
@@ -110,7 +112,6 @@ const ModalScreen = () => {
 
     //---Calories---
     <ScrollView>
-      <Text style={styles.title}>Settings tab</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Amžius:</Text>
         <TextInput
@@ -178,9 +179,13 @@ const ModalScreen = () => {
           <Picker.Item label="Ekstremalus svorio priaugimas" value="extreme gain" />
         </Picker>
       </View>
+      
+      
+      <Button title="Apskaičiuoti" onPress={handleCalculateRecommendedCalories} />
+      
       {/* This is button is temporary to check if database input works */}
       <Button title="Testuojama Duombaze" onPress={handleAddData} />
-      <Button title="Apskaičiuoti" onPress={handleCalculateRecommendedCalories} />
+      
       <Text>Rekomenduojamas kalorijų kiekis per dieną svoriui palaikyti: {calorieGoal}</Text>
       {/*1g of Carbs = 4cal 50% of all calories*/}
       <Text>Rekomenduojamas angliavandenių kiekis gramais: {Math.round(calorieGoal * 0.5 / 4)}</Text>
@@ -224,4 +229,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ModalScreen;
+export default TabOneScreen;
