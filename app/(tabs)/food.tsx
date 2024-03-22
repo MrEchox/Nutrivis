@@ -15,7 +15,7 @@ export default function Foods() {
         // Fetch all keys from AsyncStorage
         const allKeys = await AsyncStorage.getAllKeys();
         // Filter keys to only include those belonging to your app
-        const appKeys = allKeys.filter(key => key.startsWith(FOOD_PREFIX));
+        const appKeys = allKeys.filter(key => key.startsWith("@BARCODE_FOOD:"));
         // Fetch values corresponding to the filtered keys
         const values = await AsyncStorage.multiGet(appKeys);
 
