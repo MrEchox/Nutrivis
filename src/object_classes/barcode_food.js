@@ -1,5 +1,6 @@
 import {collection, addDoc} from "firebase/firestore";
 import {db} from "../../firebaseConfig.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 // This is the class for the Barcode_Food object. This object is used to store the nutritional information of a food item.
@@ -48,15 +49,42 @@ export class Barcode_Food {
 
     // This function saves the object to the database.
     async save() {
-        const docRef = await addDoc(collection(db, "barcode_food_not_verified"), {
-            barcode: this.barcode,
-            name: this.name,
-            carbs: this.carbs,
-            sugars: this.sugars,
-            protein: this.protein,
-            fat: this.fat,
-            calories: this.calories
-        });
-        console.log("Document written with ID: ", docRef.id);
+        try 
+        {
+            const docRef = await addDoc(collection(db, "barcode_food_not_verified"), 
+            {
+                barcode: this.barcode,
+                name: this.name,
+                carbs: this.carbs,
+                sugars: this.sugars,
+                protein: this.protein,
+                fat: this.fat,
+                calories: this.calories
+            });
+            console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+    }
+
+    async saveLocal() {
+        try {
+            const jsonValue = JSON.stringify(this);
+            var id = "@BARCODE_FOOD:" + this.name;
+            await AsyncStorage.setItem(id, jsonValue);
+            AsyncStorage.getItem(this.name).then((res) => console.log(res))
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+
+    async PullFromDatabase(barcode) {
+        // const docRef = await getDoc(doc(db, "barcode_food_not_verified", barcode));
+        // if (docRef.exists()) {
+        //     console.log("Document data:", docRef.data());
+        // } else {
+        //     console.log("No such document!");
+        // }
     }
 }

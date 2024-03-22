@@ -54,7 +54,7 @@ return (
       <View style = {styles.sometimesContainer}>
         <Text style = {styles.text}>Tokio barkodo neradome. Ar norėtumėte jį įvesti?</Text>
         <View style = {styles.buttonView}>
-          <Link href="./add_meal" style={[styles.button, {backgroundColor: 'rgba(0,260,0,1)',}]}>
+          <Link href={{pathname: "./add_food", params: {barcode: barcode}}} style={[styles.button, {backgroundColor: 'rgba(0,260,0,1)',}]}>
             <Pressable>
               <Text>Taip</Text>
             </Pressable>

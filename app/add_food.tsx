@@ -1,9 +1,20 @@
-import { StyleSheet, TextInput, Button } from 'react-native';
-import React, { useState } from 'react';
+import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { Text, View } from '@/components/Themed';
-import { food_object } from '@/src/object_classes/food_object'; 
+import { Barcode_Food } from '@/src/object_classes/barcode_food'; 
+import { useLocalSearchParams } from 'expo-router';
+
+/*
+This page is used for adding food with barcode
+To both local storage and database
+It can theoretically be used for inputting other types of food
+to database, such as bananas, apples, etc. with some adjustments
+but that is a problem for the future,
+right now, only barcode foods
+*/
 
 const AddFoodScreen = () => {
+    var { barcode } = useLocalSearchParams<{barcode: string}>(); // Get barcode from the url args
     var [name, setName] = useState('');
     var [calories, setCalories] = useState('');
     var [carbs, setCarbs] = useState('');
@@ -14,16 +25,24 @@ const AddFoodScreen = () => {
 
     // Function to Handle Input of macros
     const handleInput = () => {
-        console.log(name, typeof(parseFloat(calories)), carbs, sugars, fat, protein, salt);
-        const food_item = new food_object(name, parseFloat(calories), parseFloat(carbs),
-            parseFloat(sugars), parseFloat(fat), parseFloat(protein), parseFloat(salt));
-        food_item.saveLocal();
+        // Make a barcode food object
+        const barcode_food = new Barcode_Food( name, parseFloat(barcode), parseFloat(calories), parseFloat(carbs),
+            parseFloat(sugars), parseFloat(fat), parseFloat(protein), parseFloat(salt), barcode);
+        // Save the object to local storage
+        barcode_food.saveLocal();
+        // Save the object to the database
+        barcode_food.save();
     };
     
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Pridėkite naują maisto produktą</Text>
+        <ScrollView>
+            <Text style={styles.title}>Pridėkite naują produktą</Text>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+
+            <View style={styles.inputContainer}> 
+                <Text style={styles.label}>Barkodas</Text>
+                <Text style={styles.label}>{barcode}</Text>
+            </View>
 
             <View style={styles.inputContainer}> 
                 <Text style={styles.label}>Pavadinimas:</Text>
@@ -34,6 +53,7 @@ const AddFoodScreen = () => {
                 />
             </View>
 
+            <Text></Text>
             <Text style={styles.label}>Įveskite reikšmes 100g produkto</Text>
 
             <View style={styles.inputContainer}> 
@@ -97,7 +117,7 @@ const AddFoodScreen = () => {
             title="Pridėti naują maisto produktą"
             onPress={handleInput}
             />
-        </View>
+        </ScrollView>
     );
 }
 
@@ -110,6 +130,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
+        alignSelf: 'center',
     },
     separator: {
         marginVertical: 30,
@@ -119,6 +140,7 @@ const styles = StyleSheet.create({
     label: {
         marginRight: 10,
         paddingLeft: 10,
+        alignSelf: 'center',
     },
     inputContainer: {
         width: '80%',
@@ -126,6 +148,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         borderColor: '#ccc',
+        alignSelf: 'center',
     },
     input: {
         padding: 10,
