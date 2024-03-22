@@ -1,8 +1,10 @@
-import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView, BackHandler } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from '@/components/Themed';
 import { Barcode_Food } from '@/src/object_classes/barcode_food'; 
 import { useLocalSearchParams } from 'expo-router';
+import { Picker } from '@react-native-picker/picker';
+import { router } from 'expo-router';
 
 /*
 This page is used for adding food with barcode
@@ -21,17 +23,37 @@ const AddFoodScreen = () => {
     var [sugars, setSugars] = useState('');
     var [fat, setFat] = useState('');
     var [protein, setProtein] = useState('');
-    var [salt, setSalt] = useState('');
+    var [sodium, setSodium] = useState('');
+    var [unit, setUnit] = useState('g');
 
-    // Function to Handle Input of macros
+    React.useEffect(() => {
+        const backAction = () => {
+            router.replace('./scanner');
+          return true; // Return true to prevent default back button behavior
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        );
+        
+        return () => backHandler.remove();
+    }, []);
+
+    // Function to Handle Input into the database
     const handleInput = () => {
-        // Make a barcode food object
-        const barcode_food = new Barcode_Food( name, parseFloat(barcode), parseFloat(calories), parseFloat(carbs),
-            parseFloat(sugars), parseFloat(fat), parseFloat(protein), parseFloat(salt), barcode);
-        // Save the object to local storage
-        barcode_food.saveLocal();
-        // Save the object to the database
-        barcode_food.save();
+        if (carbs >= sugars) {
+            // Make a barcode food object
+            const barcode_food = new Barcode_Food( name, parseFloat(barcode), parseFloat(calories), parseFloat(carbs),
+                parseFloat(sugars), parseFloat(fat), parseFloat(protein), parseFloat(sodium), unit);
+            // Save the object to local storage
+            barcode_food.saveLocal();
+            // Save the object to the database
+            barcode_food.save();
+            router.replace(`./food?calories=${calories}&name=${name}&carbs=${carbs}
+            &sugars=${sugars}&fat=${fat}&protein=${protein}
+            &sodium=${sodium}&measuring_unit=${unit}`);
+        }
     };
     
     return (
@@ -109,8 +131,20 @@ const AddFoodScreen = () => {
                     style={styles.input}
                     placeholder="Įveskite druskos kiekį gramais"
                     keyboardType="numeric"
-                    onChangeText={(text) => setSalt(text)}
+                    onChangeText={(text) => setSodium(text)}
                 />
+            </View>
+
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Matavimo vienetai</Text>
+                <Picker
+                    selectedValue={unit}
+                    onValueChange={(itemValue) => setUnit(itemValue)}
+                    style={styles.input}
+                >
+                    <Picker.Item label="g" value="g" />
+                    <Picker.Item label="ml" value="ml" />
+                </Picker>
             </View>
 
             <Button 
