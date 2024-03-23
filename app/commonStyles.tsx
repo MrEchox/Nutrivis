@@ -1,14 +1,13 @@
 import { StyleSheet } from 'react-native';
 
 export const commonStyles = StyleSheet.create({
-    lightContainer:{
-
+    lightBackground:{
+      backgroundColor: '#ffffff',
     },
-    darkContainer:{
+    darkBackground:{
       backgroundColor: '#003049',
     },
     mainStatsContainer: {
-        backgroundColor: '#12BA69',
         width: '90%',
         borderRadius: 20,
         padding: 20,
@@ -16,10 +15,27 @@ export const commonStyles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10, 
     },
+    lightContainer:{
+      backgroundColor: "#70b577"
+    },
+    darkContainer:{
+      backgroundColor: '#127A64',
+    },
     lightThemeText:{
-      color: "#ffffff",
+      color: "#000000",
     },
     darkThemeText:{
       color: "#ffffff",
     },
+    lightProgress:{
+      backgroundColor: "#fdf0d5",
+      height: 10,
+      width: 100,
+    },
+    darkProgress:{
+      backgroundColor: "#000000",
+      height: 10,
+      width: 100,
+    },
+
 });

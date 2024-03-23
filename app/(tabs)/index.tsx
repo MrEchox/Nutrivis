@@ -2,50 +2,62 @@ import React from 'react';
 import { StyleSheet, View, Pressable, Image, Text, useColorScheme} from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 import { commonStyles } from '../commonStyles';
+import CircularProgress from '../../components/CircularProgress';
 
 export default function TabOneScreen() {
   //const colorScheme = useColorScheme();
   const colorScheme = 'light';
   const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
-  const themeContainerStyle = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
+  const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
+  const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
+  const themeProg = colorScheme === 'light' ? '#669bbc' : '#ffffff';
+  const themeProgF = colorScheme === 'light' ? '#fdf0d5' : '#ffffff';
+  const themeProgBack = colorScheme === 'light' ? commonStyles.lightProgress : commonStyles.darkProgress;
   
   return (
-    <View style={[styles.container, themeContainerStyle]}>
-      <View style={commonStyles.mainStatsContainer}>
+    <View style={[styles.container, themeBackground]}>
+      <View style={[commonStyles.mainStatsContainer, themeContainer]}>
       <View style={styles.statsItem}>
             <Text style={[styles.text, themeTextStyle]}>Kalorijos</Text>
             <View style={styles.progressBarContainer}>
-              <ProgressBar progress={0.75} color='#003049' style={styles.progressBar} />
+            <CircularProgress
+              size={110} 
+              strokeWidth={10} 
+              progressPercent={80} 
+              text="70%"
+              fill={themeProg}
+              back={themeProgF}
+            />
             </View>
-            <Text style={styles.statsCounter}>1500/2000</Text>
+            <Text style={[styles.text, themeTextStyle]}>1500/2000</Text>
             <Text>{'\n'}</Text>
           </View>
         <View style={styles.column}>
           <View style={styles.statsItem}>
           <Text style={[styles.text, themeTextStyle]}>Baltymai</Text>
             <View style={styles.progressBarContainer}>
-              <ProgressBar progress={0.4} color='#003049' style={styles.progressBar} />
+              <ProgressBar progress={0.4} color={themeProg} style={themeProgBack} />
             </View>
-            <Text style={styles.statsCounter}>8/20 g</Text>
+            <Text style={[styles.text, themeTextStyle]}>8/20 g</Text>
           </View>
           <View style={styles.statsItem}>
           <Text style={[styles.text, themeTextStyle]}>Angliavandeniai</Text>
             <View style={styles.progressBarContainer}>
-              <ProgressBar progress={0.2} color='#003049' style={styles.progressBar} />
+              <ProgressBar progress={0.2} color={themeProg} style={themeProgBack} />
             </View>
-            <Text style={styles.statsCounter}>2/10 g</Text>
+            <Text style={[styles.text, themeTextStyle]}>2/10 g</Text>
           </View>
           <View style={styles.statsItem}>
           <Text style={[styles.text, themeTextStyle]}>Riebalai</Text>
             <View style={styles.progressBarContainer}>
-              <ProgressBar progress={0.7} color='#003049' style={styles.progressBar} />
+              <ProgressBar progress={0.7} color={themeProg} style={themeProgBack} />
             </View>
-            <Text style={styles.statsCounter}>15/20 g</Text>
+            <Text style={[styles.text, themeTextStyle]}>15/20 g</Text>
           </View>
         </View>
       </View>
 
-      <View style={commonStyles.mainStatsContainer}>
+      <View style={[commonStyles.mainStatsContainer, themeContainer]}>
         <View style={styles.column}>
           <Text style={[styles.text, themeTextStyle]}>Pr</Text>
           <Text style={[styles.text, themeTextStyle]}>An</Text>
@@ -57,8 +69,8 @@ export default function TabOneScreen() {
         </View>
       </View>
 
-        <View style={[commonStyles.mainStatsContainer, { alignItems: 'center'}]}>
-          <View style={styles.waterIntakeContainer}>
+        <View style={[commonStyles.mainStatsContainer, themeContainer, { alignItems: 'center'}]}>
+          <View style={[styles.waterIntakeContainer]}>
             <Pressable style={styles.waterIntakeButton}>
               <Image source={require('../../assets/images/minus_symbol.png')} style={{width: 35, height: 5,}} />
             </Pressable>
@@ -71,11 +83,11 @@ export default function TabOneScreen() {
         </View>
 
       <View style={styles.columnContainer}>
-        <View style={commonStyles.mainStatsContainer}>
+        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
         <Text style={[styles.text, themeTextStyle]}>Quick Meal 1</Text>
           <Image source={require('../../assets/images/water-glass.png')} style={styles.waterImage}></Image>
         </View>
-        <View style={commonStyles.mainStatsContainer}>
+        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
         <Text style={[styles.text, themeTextStyle]}>Quick Meal 2</Text>
           <Image source={require('../../assets/images/water-glass.png')} style={styles.waterImage}></Image>
         </View>
@@ -110,7 +122,6 @@ const styles = StyleSheet.create({
   },
   statsCounter: {
     fontSize: 16,
-    color: "#ffffff",
   },
   waterIntakeContainer: {
     flexDirection: 'row',
@@ -142,9 +153,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     overflow: 'hidden',
     marginBottom: 5,
-  },
-  progressBar: {
-    height: 10,
-    width: 100,
   },
 });
