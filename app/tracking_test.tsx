@@ -6,22 +6,34 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Define your app's unique identifier
 const FOOD_PREFIX = '@Food:';
+const NORM_PREFIX = '@Norm:';
 
-export default function Foods() {
-  const [localValues, setLocalValues] = useState([]);
+export default function Tracking() {
+  const [localValuesT, setLocalValuesT] = useState([]);
+  const [localValuesF, setLocalValuesF] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch all keys from AsyncStorage
-        const allKeys = await AsyncStorage.getAllKeys();
+        const allKeysT = await AsyncStorage.getAllKeys();
         // Filter keys to only include those belonging to your app
-        const appKeys = allKeys.filter(key => key.startsWith("@Food:"));
+        const appKeysT = allKeysT.filter(key => key.startsWith("@Norm:"));
         // Fetch values corresponding to the filtered keys
-        const values = await AsyncStorage.multiGet(appKeys);
+        const valuesT = await AsyncStorage.multiGet(appKeysT);
 
         // Update state with the retrieved values
-        setLocalValues(values);
+        setLocalValuesT(valuesT);
+
+        // Fetch all keys from AsyncStorage
+        const allKeysF = await AsyncStorage.getAllKeys();
+        // Filter keys to only include those belonging to your app
+        const appKeysF = allKeysF.filter(key => key.startsWith("@Food:"));
+        // Fetch values corresponding to the filtered keys
+        const valuesF = await AsyncStorage.multiGet(appKeysF);
+
+        // Update state with the retrieved values
+        setLocalValuesF(valuesF);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -30,7 +42,13 @@ export default function Foods() {
     fetchData();
   }, []);
 
-  const renderItem = ({ item }) => (
+  const renderItemT = ({ item }) => (
+    <TouchableOpacity onPress={() => handleItemClick(item)}>
+      <Text>{item[0].replace(NORM_PREFIX, '')}: {item[1]}</Text>
+    </TouchableOpacity>
+  );
+
+  const renderItemF = ({ item }) => (
     <TouchableOpacity onPress={() => handleItemClick(item)}>
       <Text>{item[0].replace(FOOD_PREFIX, '')}: {item[1]}</Text>
     </TouchableOpacity>
@@ -44,10 +62,23 @@ export default function Foods() {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>User recomended daily norm Tab</Text>
+      <FlatList
+        data={localValuesT}
+        renderItem={renderItemT}
+        keyExtractor={(item, index) => index.toString()}
+        style={styles.list}
+      />
       <Text style={styles.title}>Food Tab</Text>
       <FlatList
-        data={localValues}
-        renderItem={renderItem}
+        data={localValuesF}
+        renderItem={renderItemF}
+        keyExtractor={(item, index) => index.toString()}
+        style={styles.list}
+      />
+      <FlatList
+        data={localValuesF}
+        renderItem={renderItemF}
         keyExtractor={(item, index) => index.toString()}
         style={styles.list}
       />

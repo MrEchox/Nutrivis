@@ -6,6 +6,7 @@ import { calculateRecommendedCalories } from '@/src/util/goal_calculations';
 import { Picker } from '@react-native-picker/picker'
 import { StatusBar } from 'expo-status-bar';
 import { Barcode_Food } from '@/src/object_classes/barcode_food';
+import { daily_norm_object } from '@/src/object_classes/daily_norm';
 
 //---Calorie Tab---
 const TabOneScreen = () => {
@@ -25,6 +26,13 @@ const TabOneScreen = () => {
 
     const calculatedStepGoal = calculateStepGoal(age, gender, height, weight, activityLevel);
     setStepGoal(calculatedStepGoal);
+
+    //Object structure - calories, carbs, fat, protein
+    console.log(calorieGoal, Math.round(calorieGoal * 0.5 / 4), Math.round(calorieGoal * 0.2 / 9), Math.round(calorieGoal * 0.3 / 4));
+
+    const dailyNorm_item = new daily_norm_object(calorieGoal, Math.round(calorieGoal * 0.5 / 4), 
+    Math.round(calorieGoal * 0.2 / 9), Math.round(calorieGoal * 0.3 / 4));
+    dailyNorm_item.saveLocal()
   };
   
   // Testing function to add data to the database
@@ -115,7 +123,7 @@ const TabOneScreen = () => {
           <Text>Rekomenduojamas žingsnių skaičius per dieną: {stepGoal}</Text>
 
           {/*Calories acording to Daily energy expenditure and user's objective*/}
-          <Text>Rekomenduojamas kalorijų kiekis per dieną svoriui palaikyti: {calorieGoal}</Text>
+          <Text>Rekomenduojamas kalorijų kiekis per dieną: {calorieGoal}</Text>
 
           {/*1g of Carbs = 4cal 50% of all calories*/}
           <Text>Rekomenduojamas angliavandenių kiekis gramais: {Math.round(calorieGoal * 0.5 / 4)}</Text>
