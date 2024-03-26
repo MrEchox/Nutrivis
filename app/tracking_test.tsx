@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { parse } from '@babel/core';
 
 
 // Define your app's unique identifier
 const FOOD_PREFIX = '@Food:';
 const NORM_PREFIX = '@Norm:';
+
 
 export default function Tracking() {
   const [localValuesT, setLocalValuesT] = useState([]);
@@ -58,6 +60,17 @@ export default function Tracking() {
     // Handle the click event for each item in the list
     // For example, you can navigate to a detail screen or perform any other action
     console.log('Clicked item:', item);
+
+  // Extract the calories value
+    let calories;
+    for (const part of localValuesT.toString().split(',')) {
+      if (part.includes('"calories":')) {
+      calories = parseFloat(part.split(':')[1]);
+      break;
+    }
+  }
+
+  console.log('Calories:', calories);
   };
 
   return (
@@ -70,12 +83,6 @@ export default function Tracking() {
         style={styles.list}
       />
       <Text style={styles.title}>Food Tab</Text>
-      <FlatList
-        data={localValuesF}
-        renderItem={renderItemF}
-        keyExtractor={(item, index) => index.toString()}
-        style={styles.list}
-      />
       <FlatList
         data={localValuesF}
         renderItem={renderItemF}
