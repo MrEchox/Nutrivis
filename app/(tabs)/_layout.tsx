@@ -17,13 +17,15 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const themeBar = colorScheme === 'light' ? '#669BBC' : '#2b2d31';
+  const themeIcon = colorScheme === 'light' ? 'white' : '#003049';
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        tabBarInactiveTintColor: 'white',
-        tabBarStyle: { backgroundColor: '#669BBC' },
+        tabBarInactiveTintColor: themeIcon,
+        tabBarStyle: { backgroundColor: themeBar },
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),

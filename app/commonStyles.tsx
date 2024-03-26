@@ -5,7 +5,7 @@ export const commonStyles = StyleSheet.create({
       backgroundColor: '#ffffff',
     },
     darkBackground:{
-      backgroundColor: '#003049',
+      backgroundColor: '#2b2d31',
     },
     mainStatsContainer: {
         width: '90%',
@@ -19,7 +19,7 @@ export const commonStyles = StyleSheet.create({
       backgroundColor: "#70b577"
     },
     darkContainer:{
-      backgroundColor: '#127A64',
+      backgroundColor: '#12ba69',
     },
     lightThemeText:{
       color: "#000000",
@@ -28,12 +28,12 @@ export const commonStyles = StyleSheet.create({
       color: "#ffffff",
     },
     lightProgress:{
-      backgroundColor: "#fdf0d5",
+      backgroundColor: "#ffffff",
       height: 10,
       width: 100,
     },
     darkProgress:{
-      backgroundColor: "#000000",
+      backgroundColor: "#ffffff",
       height: 10,
       width: 100,
     },
