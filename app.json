@@ -31,7 +31,7 @@
     },
     "plugins": [
       "expo-router",
-      "expo-image-picker",
+      "expo-image-picker"
     ],
     "experiments": {
       "typedRoutes": true
