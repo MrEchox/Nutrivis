@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, FlatList, SectionList } from 'react-native';
+import { StyleSheet, TouchableOpacity, FlatList, Modal, Button, TextInput } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { parse } from '@babel/core';
@@ -26,6 +26,10 @@ export default function Tracking() {
   const [userCarbs, setUserCarbs] = useState(0);
   const [userFat, setUserFat] = useState(0);
   const [userProtein, setUserProtein] = useState(0);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedItemIndex, setSelectedItemIndex] = useState('');
+  const [eatenGrams, setEatenGrams] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,22 +61,25 @@ export default function Tracking() {
     fetchData();
   }, []);
 
-  const renderItemT = ({ item }) => (
-    <TouchableOpacity onPress={() => handleItemClick(item)}>
+  const renderItemT = ({ item, index }) => (
+    <TouchableOpacity onPress={() => handleItemClick(item, index)}>
       <Text>{item[0].replace(NORM_PREFIX, '')}: {item[1]}</Text>
     </TouchableOpacity>
   );
 
-  const renderItemF = ({ item }) => (
-    <TouchableOpacity onPress={() => handleItemClick(item)}>
-      <Text>{item[0].replace(FOOD_PREFIX, '')}: {item[1]}</Text>
+  const renderItemF = ({ item, index }) => (
+    <TouchableOpacity onPress={() => handleItemClick(item, index)}>
+      <Text>{item[0].replace(FOOD_PREFIX, '')}</Text>
     </TouchableOpacity>
   );
 
-  const handleItemClick = (item) => {
+  const handleItemClick = (item, index) => {
     // Handle the click event for each item in the list
     // For example, you can navigate to a detail screen or perform any other action
     console.log('Clicked item:', item);
+
+    setSelectedItemIndex(index);
+    setModalVisible(true);
 
     if(item[0].startsWith(NORM_PREFIX))
     {
@@ -94,10 +101,9 @@ export default function Tracking() {
       console.log('Carbs:', carbs);
       console.log('Fat:', fat);
       console.log('Protein:', protein);
-      setSumCalories(sumCalories + calories);
-      setSumCarbs(sumCarbs + carbs);
-      setSumFat(sumFat + fat);
-      setSumProtein(sumProtein + protein);
+
+      item[0].replace(FOOD_PREFIX, '');
+      setSelectedItemIndex(item[1].toString());
     }
   };
 
@@ -114,9 +120,48 @@ export default function Tracking() {
       <FlatList
         data={localValuesF}
         renderItem={renderItemF}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item, index) => item}
         style={styles.list}
       />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+          <Text>Food information: {selectedItemIndex !== null ? selectedItemIndex.toString() : ''}</Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Suvalgytas produkto kiekis</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Įveskite kiekį gramais"
+                keyboardType="numeric"
+                onChangeText={(text) => setEatenGrams(text)}
+              />
+              <Button
+              title="Įvesti"
+              onPress={() => {
+                setSumCalories(sumCalories + (calories * (parseFloat(eatenGrams)/100)));
+                setSumCarbs(sumCarbs + (carbs * (parseFloat(eatenGrams)/100)));
+                setSumFat(sumFat + (fat * (parseFloat(eatenGrams)/100)));
+                setSumProtein(sumProtein + (protein * (parseFloat(eatenGrams)/100)));
+                setModalVisible(!modalVisible);
+            }}
+            />
+          </View>
+          <Button
+            title="Uždaryti"
+            onPress={() => {
+              setModalVisible(!modalVisible);
+            }}
+          />
+          </View>
+        </View>
+      </Modal>
       <View style={styles.inputContainer}>
         <Text style={styles.title}>Tracking Tab</Text>
         <Text>Viso kalorijų per dieną: {sumCalories} Rekomenduojama: {userCalories}</Text>
@@ -149,5 +194,24 @@ const styles = StyleSheet.create({
   },
   list: {
     width: '100%',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  input: {
+    padding: 10,
+  },
+  label: {
+    marginRight: 10,
+    paddingLeft: 10,
   },
 });
