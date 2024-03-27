@@ -65,13 +65,6 @@ const TabOneScreen = () => {
         <Text>Iš viso baltymų: {sumProtein} g</Text>
         <Text>Suvartotų kalorijų kiekis: {calculatedCalories + sumCalories} kcal</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-
-      <Link href="/add_food" asChild>
-        <Pressable>
-          <Text>Go to add meal</Text>
-        </Pressable>
-      </Link>
-
     </View>
   );
 };
