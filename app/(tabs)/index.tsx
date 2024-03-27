@@ -31,7 +31,7 @@ export default function TabOneScreen() {
             <CircularProgress
               size={110} 
               strokeWidth={10} 
-              progressPercent={50}
+              progressPercent={75}
               text="70%"
               fill={themeProg}
               back={themeProgF}
