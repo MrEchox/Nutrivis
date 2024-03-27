@@ -72,6 +72,12 @@ const TabOneScreen = () => {
         </Pressable>
       </Link>
 
+      <Link href="/tracking_test" asChild>
+        <Pressable>
+          <Text>Go to tracking test</Text>
+        </Pressable>
+      </Link>
+
     </View>
   );
 };

@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 // Define your app's unique identifier
 const FOOD_PREFIX = '@Food:';
 
@@ -15,7 +16,7 @@ export default function Foods() {
         // Fetch all keys from AsyncStorage
         const allKeys = await AsyncStorage.getAllKeys();
         // Filter keys to only include those belonging to your app
-        const appKeys = allKeys.filter(key => key.startsWith("@BARCODE_FOOD:"));
+        const appKeys = allKeys.filter(key => key.startsWith("@Food:"));
         // Fetch values corresponding to the filtered keys
         const values = await AsyncStorage.multiGet(appKeys);
 
