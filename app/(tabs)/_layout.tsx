@@ -51,36 +51,43 @@ export default function TabLayout() {
       <Tabs.Screen
         name="food"
         options={{
-          title: 'Food',
+          title: 'Maistas',
           tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
         }}
       />
       <Tabs.Screen
         name="fitness"
         options={{
-          title: 'Fitness',
+          title: 'Aktyvumas',
           tabBarIcon: ({ color }) => <TabBarIcon name="bicycle" color={color} />,
         }}
       />
       <Tabs.Screen
         name="add_meal"
         options={{
-          title: 'Add meal',
+          title: 'Pridėti maistą',
           tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
         }}
       />
       <Tabs.Screen
         name="scanner"
         options={{
-          title: 'Scanner',
+          title: 'Skenuoti',
           tabBarIcon: ({ color }) => <TabBarIcon name="camera" color={color} />,
         }}
       />
       <Tabs.Screen
         name="report"
         options={{
-          title: 'Weekly report',
+          title: 'Santrauka',
           tabBarIcon: ({ color }) => <TabBarIcon name="bar-chart" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="dieting"
+        options={{
+          title: 'Informacija',
+          tabBarIcon: ({ color }) => <TabBarIcon name="info" color={color} />,
         }}
       />
     </Tabs>

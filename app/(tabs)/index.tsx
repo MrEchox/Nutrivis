@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, TextInput, Button, Pressable } from 'react-native';
 import { Text, View } from '@/components/Themed';
-import {Barcode_Food} from '@/src/object_classes/food_object_barcode'
-import { inputCaloriesMacro } from '@/src/util/goal_calculations';
-import { Link } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Food_Eaten_Prefix = '@Food_Eaten:';
 const Goal_Prefix = '@Goal:';
 
 export default function Tracking() {
-  const [localValuesGoal, setLocalValuesGoal] = useState([]);
-  const [localValuesEaten, setLocalValuesEaten] = useState([]);
-
   const [sumCalories, setSumCalories] = useState(0);
   const [sumCarbs, setSumCarbs] = useState(0);
   const [sumFat, setSumFat] = useState(0);
@@ -46,7 +40,6 @@ export default function Tracking() {
         setGoalFat(goalValues.fat);
         setGoalProtein(goalValues.protein);
 
-
         var Calories = 0
         var Carbs = 0
         var Fat = 0
@@ -63,10 +56,6 @@ export default function Tracking() {
         setSumCarbs(Carbs);
         setSumFat(Fat);
         setSumProtein(Protein);
-
-        console.log(valuesEaten);
-        
-        //setLocalValuesEaten(valuesEaten);
 
       } catch (error) {
         console.error('Error fetching data:', error);

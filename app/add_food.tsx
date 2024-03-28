@@ -1,7 +1,10 @@
-import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView } from 'react-native';
-import React, { useState } from 'react';
+import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView, BackHandler } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { Text, View } from '@/components/Themed';
 import { Barcode_Food } from '@/src/object_classes/food_object_barcode'; 
+import { useLocalSearchParams } from 'expo-router';
+import { Picker } from '@react-native-picker/picker';
+import { router } from 'expo-router';
 
 /*
 This page is used for adding food with barcode
@@ -13,22 +16,44 @@ right now, only barcode foods
 */
 
 const AddFoodScreen = () => {
-    var [barcode, setBarcode] = useState('-1');
+    var { barcode } = useLocalSearchParams<{barcode: string}>(); // Get barcode from the url args
     var [name, setName] = useState('');
     var [calories, setCalories] = useState('');
     var [carbs, setCarbs] = useState('');
     var [sugars, setSugars] = useState('');
     var [fat, setFat] = useState('');
     var [protein, setProtein] = useState('');
-    var [salt, setSalt] = useState('');
+    var [sodium, setSodium] = useState('');
+    var [unit, setUnit] = useState('g');
 
-    // Function to Handle Input of macros
+    React.useEffect(() => {
+        const backAction = () => {
+            router.replace('./scanner');
+          return true; // Return true to prevent default back button behavior
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        );
+        
+        return () => backHandler.remove();
+    }, []);
+
+    // Function to Handle Input into the database
     const handleInput = () => {
-        console.log(name, typeof(parseFloat(calories)), carbs, sugars, fat, protein, salt);
-        const food_object_barcode = new Barcode_Food( name, parseFloat(barcode), parseFloat(calories), parseFloat(carbs),
-            parseFloat(sugars), parseFloat(fat), parseFloat(protein), parseFloat(salt), barcode);
-        food_object_barcode.saveLocal();
-        food_object_barcode.save();
+        if (carbs >= sugars) {
+            // Make a barcode food object
+            const food_object_barcode = new Barcode_Food( name, parseFloat(barcode), parseFloat(calories), parseFloat(carbs),
+                parseFloat(sugars), parseFloat(fat), parseFloat(protein), parseFloat(sodium), unit);
+            // Save the object to local storage
+            food_object_barcode.saveLocal();
+            // Save the object to the database
+            food_object_barcode.save();
+            router.replace(`./food?calories=${calories}&name=${name}&carbs=${carbs}
+            &sugars=${sugars}&fat=${fat}&protein=${protein}
+            &sodium=${sodium}&measuring_unit=${unit}`);
+        }
     };
     
     return (
@@ -37,12 +62,8 @@ const AddFoodScreen = () => {
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
             <View style={styles.inputContainer}> 
-                <Text style={styles.label}>Čia tik laikinai barkodą įvesti, kadangi barkodo radimas yra kitas branch</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Įveskite barkodą"
-                    onChangeText={(text) => setBarcode(text)}
-                />
+                <Text style={styles.label}>Barkodas</Text>
+                <Text style={styles.label}>{barcode}</Text>
             </View>
 
             <View style={styles.inputContainer}> 
@@ -110,8 +131,20 @@ const AddFoodScreen = () => {
                     style={styles.input}
                     placeholder="Įveskite druskos kiekį gramais"
                     keyboardType="numeric"
-                    onChangeText={(text) => setSalt(text)}
+                    onChangeText={(text) => setSodium(text)}
                 />
+            </View>
+
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Matavimo vienetai</Text>
+                <Picker
+                    selectedValue={unit}
+                    onValueChange={(itemValue) => setUnit(itemValue)}
+                    style={styles.input}
+                >
+                    <Picker.Item label="g" value="g" />
+                    <Picker.Item label="ml" value="ml" />
+                </Picker>
             </View>
 
             <Button 
@@ -131,6 +164,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
+        alignSelf: 'center',
     },
     separator: {
         marginVertical: 30,
@@ -140,6 +174,7 @@ const styles = StyleSheet.create({
     label: {
         marginRight: 10,
         paddingLeft: 10,
+        alignSelf: 'center',
     },
     inputContainer: {
         width: '80%',
@@ -147,6 +182,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         borderColor: '#ccc',
+        alignSelf: 'center',
     },
     input: {
         padding: 10,

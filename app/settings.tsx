@@ -37,13 +37,6 @@ const TabOneScreen = () => {
     Math.round(calorieGoal * 0.2 / 9), Math.round(calorieGoal * 0.3 / 4), calculatedStepGoal);
     goal_object.saveLocal()
   };
-  
-  // Testing function to add data to the database
-  // To check what each part of data is, check src/object_classes/barcode_food.ts
-  const handleAddData = async () => {
-    const food = new Barcode_Food("Testuojama", 1234512, 100, 100.101, 100, 100, 100, 100, "g");
-    food.save();
-  }
 
   return (
     //---Basic user information---
@@ -119,9 +112,6 @@ const TabOneScreen = () => {
         {/*Calculating recomended calories, steps and macronutrients for the user*/}
         <View style={styles.inputContainer}>
           <Button title="Apskaičiuoti" onPress={handleCaloriesAndSteps} />
-        
-          {/* This is button is temporary to check if database input works */}
-          <Button title="Testuojama Duombaze" onPress={handleAddData} />
         
           <Text>Rekomenduojamas žingsnių skaičius per dieną: {stepGoal}</Text>
 
