@@ -1,87 +1,59 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, TextInput, Button, Pressable } from 'react-native';
 import { Text, View } from '@/components/Themed';
-import {Barcode_Food} from '@/src/object_classes/barcode_food'
+import {Barcode_Food} from '@/src/object_classes/food_object_barcode'
 import { inputCaloriesMacro } from '@/src/util/goal_calculations';
 import { Link } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-var sumCarbs = 0;
-var sumFat = 0;
-var sumProtein = 0;
-var sumCalories = 0;
+export default function Tracking() {
+  const [localValuesT, setLocalValuesT] = useState([]);
+  const [sumCalories, setSumCalories] = useState(0);
+  const [sumCarbs, setSumCarbs] = useState(0);
+  const [sumFat, setSumFat] = useState(0);
+  const [sumProtein, setSumProtein] = useState(0);
 
-//---Macro input Tab---
-const TabOneScreen = () => {
-  var [carbs, setCarbs] = useState('');
-  var [fat, setFat] = useState('');
-  var [protein, setProtein] = useState('');
-  var [calculatedCalories, setCalculatedCalories] = useState(0);
+  const [userCalories, setUserCalories] = useState(0);
+  const [userCarbs, setUserCarbs] = useState(0);
+  const [userFat, setUserFat] = useState(0);
+  const [userProtein, setUserProtein] = useState(0);
 
-  // Function to Handle Input of macros
-  const handleInput = () => {
-    const inputDoneCaloriesMacro = inputCaloriesMacro(carbs, fat, protein);
-    setCalculatedCalories(inputDoneCaloriesMacro);
-    sumCarbs = sumCarbs + parseInt(carbs);
-    sumFat = sumFat + parseInt(fat);
-    sumProtein = sumProtein + parseInt(protein);
-    sumCalories = sumCalories + calculatedCalories;
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch all keys from AsyncStorage
+        const allKeysT = await AsyncStorage.getAllKeys();
+        // Filter keys to only include those belonging to your app
+        const appKeysT = allKeysT.filter(key => key.startsWith("@Norm:"));
+        // Fetch values corresponding to the filtered keys
+        const valuesT = await AsyncStorage.multiGet(appKeysT);
 
-  return (
-    //---Calories---
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome!!!</Text>
-      <Text style={styles.title}>Index/home tab</Text>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Angliavandeniai:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Įveskite suvartotų angliavandenių kiekį gramais"
-          keyboardType="numeric"
-          onChangeText={(text) => setCarbs(text)}
-        />
+        // Update state with the retrieved values
+        setLocalValuesT(valuesT);
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+
+    return (
+      //---Calories---
+      <View style={styles.container}>
+        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+  
+        <View style={styles.inputContainer}>
+          <Text style={styles.title}>Tracking Tab</Text>
+          <Text>Viso kalorijų per dieną: {sumCalories} Rekomenduojama: {userCalories}</Text>
+          <Text>Viso angliavandenių per dieną: {sumCarbs} Rekomenduojama: {userCarbs}</Text>
+          <Text>Viso riebalų per dieną: {sumFat} Rekomenduojama: {userFat}</Text>
+          <Text>Viso baltymų per dieną: {sumProtein} Rekomenduojama: {userProtein}</Text>
+        </View>
       </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Riebalai</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Įveskite suvartotų riebalų kiekį gramais"
-          keyboardType="numeric"
-          onChangeText={(text) => setFat(text)}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Baltymai</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Įveskite suvartotų baltymų kiekį gramais"
-          keyboardType="numeric"
-          onChangeText={(text) => setProtein(text)}
-        />
-      </View>
-      <Button title="Apskaičiuoti suvartotų kalorijų kiekį" onPress={handleInput} />
-        <Text>Iš viso angliavandenių: {sumCarbs} g</Text>
-        <Text>Iš viso riebalų: {sumFat} g</Text>
-        <Text>Iš viso baltymų: {sumProtein} g</Text>
-        <Text>Suvartotų kalorijų kiekis: {calculatedCalories + sumCalories} kcal</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-
-      <Link href="/add_food" asChild>
-        <Pressable>
-          <Text>Go to add meal</Text>
-        </Pressable>
-      </Link>
-
-      <Link href="/tracking_test" asChild>
-        <Pressable>
-          <Text>Go to tracking test</Text>
-        </Pressable>
-      </Link>
-
-    </View>
-  );
+    );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -113,5 +85,3 @@ const styles = StyleSheet.create({
     width: '80%',
   },
 });
-
-export default TabOneScreen;

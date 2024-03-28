@@ -1,7 +1,7 @@
 import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import { Text, View } from '@/components/Themed';
-import { Barcode_Food } from '@/src/object_classes/barcode_food'; 
+import { Barcode_Food } from '@/src/object_classes/food_object_barcode'; 
 
 /*
 This page is used for adding food with barcode
@@ -25,10 +25,10 @@ const AddFoodScreen = () => {
     // Function to Handle Input of macros
     const handleInput = () => {
         console.log(name, typeof(parseFloat(calories)), carbs, sugars, fat, protein, salt);
-        const barcode_food = new Barcode_Food( name, parseFloat(barcode), parseFloat(calories), parseFloat(carbs),
+        const food_object_barcode = new Barcode_Food( name, parseFloat(barcode), parseFloat(calories), parseFloat(carbs),
             parseFloat(sugars), parseFloat(fat), parseFloat(protein), parseFloat(salt), barcode);
-        barcode_food.saveLocal();
-        barcode_food.save();
+        food_object_barcode.saveLocal();
+        food_object_barcode.save();
     };
     
     return (

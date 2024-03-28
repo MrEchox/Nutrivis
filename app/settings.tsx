@@ -5,7 +5,7 @@ import { calculateStepGoal } from '@/src/util/goal_calculations';
 import { calculateRecommendedCalories } from '@/src/util/goal_calculations';
 import { Picker } from '@react-native-picker/picker'
 import { StatusBar } from 'expo-status-bar';
-import { Barcode_Food } from '@/src/object_classes/barcode_food';
+import { Barcode_Food } from '@/src/object_classes/food_object_barcode';
 import { daily_norm_object } from '@/src/object_classes/daily_norm';
 
 //---Calorie Tab---

@@ -8,6 +8,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // If the types are not correct, we throw an error.
 // This class also contains functions to save the object to the database.
 // Additional functions can be added as needed.
+
+const prefix = '@Barcode_Food:';
+
 export class Barcode_Food {
         constructor(name, barcode, calories, carbs, sugars, fat, protein, sodium, measuring_unit) {
         if (typeof name !== 'string') {
@@ -51,7 +54,7 @@ export class Barcode_Food {
     async save() {
         try 
         {
-            const docRef = await addDoc(collection(db, "barcode_food_not_verified"), 
+            const docRef = await addDoc(collection(db, "food_object_barcode_not_verified"), 
             {
                 barcode: this.barcode,
                 name: this.name,
@@ -70,7 +73,7 @@ export class Barcode_Food {
     async saveLocal() {
         try {
             const jsonValue = JSON.stringify(this);
-            var id = "@BARCODE_FOOD:" + this.name;
+            var id = prefix + this.name;
             await AsyncStorage.setItem(id, jsonValue);
             AsyncStorage.getItem(this.name).then((res) => console.log(res))
         }
@@ -80,7 +83,7 @@ export class Barcode_Food {
     }
 
     async PullFromDatabase(barcode) {
-        // const docRef = await getDoc(doc(db, "barcode_food_not_verified", barcode));
+        // const docRef = await getDoc(doc(db, "food_object_barcode_not_verified", barcode));
         // if (docRef.exists()) {
         //     console.log("Document data:", docRef.data());
         // } else {
