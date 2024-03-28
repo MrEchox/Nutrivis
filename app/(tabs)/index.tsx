@@ -94,36 +94,36 @@ export default function Tracking() {
             <CircularProgress
               size={110} 
               strokeWidth={10} 
-              progressPercent={72}
+              progressPercent={(sumCarbs/goalCarbs)*100}
               text="50%"
               fill={themeProg}
               back={themeProgF}
             />
             </View>
-            <Text style={[styles.text, themeTextStyle]}>1500/2000</Text>
+            <Text style={[styles.text, themeTextStyle]}>{sumCarbs}/{goalCarbs}</Text>
             <Text>{'\n'}</Text>
           </View>
         <View style={[styles.column, themeContainer]}>
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Baltymai</Text>
             <View style={styles.progressBarContainer}>
-              <ProgressBar progress={0.4} color={themeProg} style={themeProgBack}/>
+              <ProgressBar progress={(sumProtein/goalProtein)} color={themeProg} style={themeProgBack}/>
             </View>
-            <Text style={[styles.text, themeTextStyle]}>8/20 g</Text>
+            <Text style={[styles.text, themeTextStyle]}>{sumProtein}/{goalProtein} g</Text>
           </View>
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Angliavandeniai</Text>
             <View style={styles.progressBarContainer}>
-              <ProgressBar progress={0.2} color={themeProg} style={themeProgBack} />
+              <ProgressBar progress={(sumCarbs/goalCarbs)} color={themeProg} style={themeProgBack} />
             </View>
-            <Text style={[styles.text, themeTextStyle]}>2/10 g</Text>
+            <Text style={[styles.text, themeTextStyle]}>{sumCarbs}/{goalCarbs} g</Text>
           </View>
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Riebalai</Text>
             <View style={styles.progressBarContainer}>
-              <ProgressBar progress={0.7} color={themeProg} style={themeProgBack} />
+              <ProgressBar progress={(sumFat/goalFat)} color={themeProg} style={themeProgBack} />
             </View>
-            <Text style={[styles.text, themeTextStyle]}>15/20 g</Text>
+            <Text style={[styles.text, themeTextStyle]}>{sumFat}/{goalFat} g</Text>
           </View>
         </View>
       </View>
@@ -163,13 +163,13 @@ export default function Tracking() {
 
       <View style={[styles.columnContainer, themeBackground]}>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-        <Text style={[styles.text, themeTextStyle]}>Quick Meal 1</Text>
+        <Text style={[styles.text, themeTextStyle]}>Maistas 1</Text>
           <Svg width="100" height="100" style={{ transform: [{ scale: 0.8 }] }} >
                 {waterSvg}
               </Svg>
         </View>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-        <Text style={[styles.text, themeTextStyle]}>Quick Meal 2</Text>
+        <Text style={[styles.text, themeTextStyle]}>Maistas 2</Text>
         <Svg width="100" height="100" style={{ transform: [{ scale: 0.8 }] }} >
                 {waterSvg}
               </Svg>

@@ -142,16 +142,16 @@ export default function Foods() {
         >
           <View style={styles.modalContainer}>
             <View style={[styles.modalContent, commonStyles.mainStatsContainer, themeContainer]}>
-            <Text style={[themeTextStyle]}>Food information: {selectedItemIndex !== null ? selectedItemIndex.toString() : ''}</Text>
-            <View style={themeContainer}>
-              <Text style={[styles.label, themeTextStyle, {fontWeight:"500"}]}>Suvalgytas produkto kiekis</Text>
+            <Text style={[themeTextStyle]}>Maistas: {selectedItemIndex !== null ? selectedItemIndex.toString() : ''}</Text>
+            <View style={[themeContainer, {paddingBottom: 10}]}>
+              <Text style={[styles.label, themeTextStyle, {fontWeight:"500", paddingBottom: 10}]}>Suvalgytas produkto kiekis</Text>
                 <TextInput
                   style={[styles.input, themeTextStyle]}
                   placeholder="Įveskite kiekį gramais"
                   keyboardType="numeric"
                   onChangeText={(text) => setEatenGrams(text)}
                 />
-                <View style={styles.buttonContainer}>
+                <View style={[styles.buttonContainer]}>
                 <Button
                 color={themeSvg}
                 title="Įvesti"
