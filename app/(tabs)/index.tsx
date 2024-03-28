@@ -46,14 +46,23 @@ export default function Tracking() {
         setGoalFat(goalValues.fat);
         setGoalProtein(goalValues.protein);
 
+
+        var Calories = 0
+        var Carbs = 0
+        var Fat = 0
+        var Protein = 0
+
         valuesEaten.forEach(element => {
           const eatenVals = JSON.parse(element[1]);
-          setSumCalories(sumCalories + eatenVals.calories / 100 * eatenVals.amount);
-          setSumCarbs(sumCarbs + eatenVals.carbs / 100 * eatenVals.amount);
-          setSumFat(sumFat + eatenVals.fat / 100 * eatenVals.amount);
-          setSumProtein(sumProtein + eatenVals.protein / 100 * eatenVals.amount);
-
+          Calories += eatenVals.calories / 100 * eatenVals.amount;
+          Carbs += eatenVals.carbs / 100 * eatenVals.amount;
+          Fat += eatenVals.fat / 100 * eatenVals.amount;
+          Protein += eatenVals.protein / 100 * eatenVals.amount;
         });
+        setSumCalories(Calories);
+        setSumCarbs(Carbs);
+        setSumFat(Fat);
+        setSumProtein(Protein);
 
         console.log(valuesEaten);
         
