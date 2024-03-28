@@ -143,15 +143,17 @@ export default function Foods() {
           <View style={styles.modalContainer}>
             <View style={[styles.modalContent, commonStyles.mainStatsContainer, themeContainer]}>
             <Text style={[themeTextStyle]}>Food information: {selectedItemIndex !== null ? selectedItemIndex.toString() : ''}</Text>
-            <View style={styles.inputContainer}>
-              <Text style={[styles.label, themeTextStyle]}>Suvalgytas produkto kiekis</Text>
+            <View style={themeContainer}>
+              <Text style={[styles.label, themeTextStyle, {fontWeight:"500"}]}>Suvalgytas produkto kiekis</Text>
                 <TextInput
                   style={[styles.input, themeTextStyle]}
                   placeholder="Įveskite kiekį gramais"
                   keyboardType="numeric"
                   onChangeText={(text) => setEatenGrams(text)}
                 />
+                <View style={styles.buttonContainer}>
                 <Button
+                color={themeSvg}
                 title="Įvesti"
                 onPress={() => { // On press saves the eaten food to local storage
                   const name = selectedItemIndex.split(',')[0].split(':')[1]; // Don't worry abt it, it works
@@ -161,8 +163,9 @@ export default function Foods() {
                   const eatenFood = new food_object_eaten(currentDate, parseFloat(eatenGrams), name, calories, carbs, fat, protein);
                   eatenFood.saveLocal();
               }}
-              />
+              /></View>
             </View>
+            <View style={styles.buttonContainer}>
             <Button
               title="Panaikinti"
               onPress={() => {
@@ -172,11 +175,13 @@ export default function Foods() {
               }}
             />
             <Button
+              color={themeSvg}
               title="Uždaryti"
               onPress={() => {
                 setModalVisible(!modalVisible);
               }}
             />
+            </View>
             </View>
           </View>
         </Modal>
@@ -230,6 +235,8 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 10,
+    borderWidth: 1,
+    borderRadius: 10,
   },
   label: {
     marginRight: 10,
@@ -239,5 +246,9 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: '80%',
+},
+buttonContainer: {
+  borderRadius: 10,
+  overflow: 'hidden',
 },
 });
