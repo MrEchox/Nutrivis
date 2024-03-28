@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { View, FlatList, ScrollView } from 'react-native';
+import { View, FlatList, ScrollView, useColorScheme} from 'react-native';
 import { Link } from 'expo-router';
+
+import { commonStyles } from '../commonStyles';
 
 
 const pages = [
@@ -16,13 +18,16 @@ const pages = [
 
 const PageList = () => {
     const renderItem = ({ item }) => (
-        <Link href={item.link} style={{ padding: 10, fontSize: 20, borderBottomWidth: 1 }}>
+        <Link href={item.link} style={[{ padding: 10, fontSize: 20, borderBottomWidth: 1, }, themeTextStyle]}>
             ● {item.title}
         </Link>
     );
+    const colorScheme = useColorScheme();
+    const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
+    const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
 
     return (
-        <View>
+        <View style={[themeBackground, {flex: 1}]}>
             <FlatList
                 data={pages}
                 renderItem={renderItem}
