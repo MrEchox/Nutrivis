@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, FlatList, Modal, Button, TextInput } from 'react-native';
+import { StyleSheet, TouchableOpacity, FlatList, Modal, Button, TextInput, useColorScheme } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { food_object_eaten } from '@/src/object_classes/food_object_eaten'; 
 import { useFocusEffect } from '@react-navigation/native';
+import { commonStyles } from '../commonStyles';
 
 
 // Unique identifiers
@@ -64,6 +65,12 @@ export default function Foods() {
     fetchData();
   }, [refreshPage]);
 
+  const colorScheme = useColorScheme();
+  const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
+  const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
+  const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
+  const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
+
   const renderFoodItem = ({ item, index }) => (
     <TouchableOpacity onPress={() => handleFoodItemClick(item, index)}>
       <Text>{item[0].replace(FOOD_PREFIX, '')}</Text>
@@ -114,12 +121,12 @@ export default function Foods() {
 
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Maisto puslapis</Text>
-      <View style={styles.container} /* Container for local food objects */> 
-        <Text style={styles.title}>Įvesti maisto produktai</Text>
+    <View style={[styles.container, themeBackground]}>
+      <Text style={[styles.title, themeTextStyle, {paddingTop:20}]}>Maisto puslapis</Text>
+      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      <View style={[styles.container, commonStyles.mainStatsContainer, themeContainer]} /* Container for local food objects */> 
+        <Text style={[styles.title, themeTextStyle]}>Įvesti maisto produktai</Text>
         <FlatList
-          
           data={localFoodValues}
           renderItem={renderFoodItem}
           keyExtractor={(item, index) => item}
@@ -134,12 +141,12 @@ export default function Foods() {
           }}
         >
           <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-            <Text>Food information: {selectedItemIndex !== null ? selectedItemIndex.toString() : ''}</Text>
+            <View style={[styles.modalContent, commonStyles.mainStatsContainer, themeContainer]}>
+            <Text style={[themeTextStyle]}>Food information: {selectedItemIndex !== null ? selectedItemIndex.toString() : ''}</Text>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Suvalgytas produkto kiekis</Text>
+              <Text style={[styles.label, themeTextStyle]}>Suvalgytas produkto kiekis</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, themeTextStyle]}
                   placeholder="Įveskite kiekį gramais"
                   keyboardType="numeric"
                   onChangeText={(text) => setEatenGrams(text)}
@@ -174,8 +181,8 @@ export default function Foods() {
           </View>
         </Modal>
       </View>
-      <View style={styles.container} /* Container for scanned food objects */>
-        <Text style={styles.title}>Skenuoti maisto produktai</Text>
+      <View style={[styles.container, commonStyles.mainStatsContainer, themeContainer]} /* Container for scanned food objects */>
+        <Text style={[styles.title, themeTextStyle]}>Skenuoti maisto produktai</Text>
         <FlatList
           data={localFoodBarcodeValues}
           renderItem={renderScannedFoodItem}
@@ -228,4 +235,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
     paddingLeft: 10,
   },
+  separator: {
+    marginVertical: 30,
+    height: 1,
+    width: '80%',
+},
 });
