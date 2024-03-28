@@ -6,30 +6,53 @@ import { inputCaloriesMacro } from '@/src/util/goal_calculations';
 import { Link } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const Food_Eaten_Prefix = '@Food_Eaten:';
+const Goal_Prefix = '@Goal:';
+
 export default function Tracking() {
-  const [localValuesT, setLocalValuesT] = useState([]);
+  const [localValuesGoal, setLocalValuesGoal] = useState([]);
+  const [localValuesEaten, setLocalValuesEaten] = useState([]);
+
   const [sumCalories, setSumCalories] = useState(0);
   const [sumCarbs, setSumCarbs] = useState(0);
   const [sumFat, setSumFat] = useState(0);
   const [sumProtein, setSumProtein] = useState(0);
 
-  const [userCalories, setUserCalories] = useState(0);
-  const [userCarbs, setUserCarbs] = useState(0);
-  const [userFat, setUserFat] = useState(0);
-  const [userProtein, setUserProtein] = useState(0);
+  const [goalCalories, setGoalCalories] = useState(0);
+  const [goalCarbs, setGoalCarbs] = useState(0);
+  const [goalFat, setGoalFat] = useState(0);
+  const [goalProtein, setGoalProtein] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch all keys from AsyncStorage
-        const allKeysT = await AsyncStorage.getAllKeys();
-        // Filter keys to only include those belonging to your app
-        const appKeysT = allKeysT.filter(key => key.startsWith("@Norm:"));
-        // Fetch values corresponding to the filtered keys
-        const valuesT = await AsyncStorage.multiGet(appKeysT);
+        var date = new Date();
+        const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear(); // dd/mm/yyyy
 
-        // Update state with the retrieved values
-        setLocalValuesT(valuesT);
+        // Fetch all keys from AsyncStorage
+        const allKeys = await AsyncStorage.getAllKeys();
+        // Filter keys to only include those belonging to your app
+        const appKeysGoal = allKeys.filter(key => key.startsWith(Goal_Prefix + "local"));
+        const appKeysEaten = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix + currentDate)); // Gets todays eaten food values
+        console.log(Food_Eaten_Prefix + currentDate);
+        // Fetch values corresponding to the filtered keys
+        const valuesGoalLocal = await AsyncStorage.multiGet(appKeysGoal);
+        const valuesEaten = await AsyncStorage.multiGet(appKeysEaten);
+
+        // Goal values
+        const goalValues = valuesGoalLocal[0][1]?.split(',');
+        setGoalCalories(goalValues[0].split(':')[1]);
+        setGoalCarbs(goalValues[1].split(':')[1]);
+        setGoalFat(goalValues[2].split(':')[1]);
+        setGoalProtein(goalValues[3].split(':')[1].replace('}', ''));
+
+        valuesEaten.forEach(element => {
+          
+        });
+
+        console.log(valuesEaten);
+        
+        //setLocalValuesEaten(valuesEaten);
 
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -40,16 +63,15 @@ export default function Tracking() {
 
 
     return (
-      //---Calories---
       <View style={styles.container}>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
   
         <View style={styles.inputContainer}>
           <Text style={styles.title}>Tracking Tab</Text>
-          <Text>Viso kalorijų per dieną: {sumCalories} Rekomenduojama: {userCalories}</Text>
-          <Text>Viso angliavandenių per dieną: {sumCarbs} Rekomenduojama: {userCarbs}</Text>
-          <Text>Viso riebalų per dieną: {sumFat} Rekomenduojama: {userFat}</Text>
-          <Text>Viso baltymų per dieną: {sumProtein} Rekomenduojama: {userProtein}</Text>
+          <Text>Viso kalorijų per dieną: {sumCalories} Rekomenduojama: {goalCalories}</Text>
+          <Text>Viso angliavandenių per dieną: {sumCarbs} Rekomenduojama: {goalCarbs}</Text>
+          <Text>Viso riebalų per dieną: {sumFat} Rekomenduojama: {goalFat}</Text>
+          <Text>Viso baltymų per dieną: {sumProtein} Rekomenduojama: {goalProtein}</Text>
         </View>
       </View>
     );

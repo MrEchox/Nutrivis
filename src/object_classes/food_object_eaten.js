@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // This class also contains functions to save the object locally.
 // Additional functions can be added as needed.
 
-const prefix = '@Eaten_Food:';
+const prefix = '@Food_Eaten:';
 
 export class food_object_eaten {
         constructor(date, amount, name, calories, carbs, fat, protein) {
@@ -44,9 +44,9 @@ export class food_object_eaten {
     async saveLocal() {
         try {
             const jsonValue = JSON.stringify(this);
-            var id = prefix + this.name + ":" + this.date; // @EatenFood:date:name
+            var id = prefix + this.date + ":" + this.name; // @EatenFood:date:name
             await AsyncStorage.setItem(id, jsonValue);
-            AsyncStorage.getItem(this.name).then((res) => console.log(res))
+            AsyncStorage.getItem(id).then((res) => console.log("Added eaten food:\n" + res))
         }
         catch (e) {
             console.log(e);

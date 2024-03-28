@@ -6,11 +6,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // This class also contains functions to save the object locally.
 // Additional functions can be added as needed.
 
-const NORM_PREFIX = '@Norm:';
+const prefix = '@Goal:';
 var x = 0;
 
-export class daily_norm_object {
-        constructor(calories, carbs, fat, protein) {
+export class daily_goal_object {
+        constructor(calories, carbs, fat, protein, stepGoal) {
         if (typeof calories !== 'number') {
             throw new Error('Calories must be a number');
         }
@@ -23,19 +23,23 @@ export class daily_norm_object {
         if (typeof protein !== 'number') {
             throw new Error('Protein must be a number');
         }
+        if (typeof stepGoal !== 'number') {
+            throw new Error('Step goal must be a number');
+        }
 
         this.calories = calories;
         this.carbs = carbs;
         this.fat = fat;
         this.protein = protein;
+        this.stepGoal = stepGoal;
     }
 
     async saveLocal() {
         try {
             const jsonValue = JSON.stringify(this);
-            var id = NORM_PREFIX + "user" + x++;
+            var id = prefix + "local";
             await AsyncStorage.setItem(id, jsonValue);
-            AsyncStorage.getItem(this.name).then((res) => console.log(res))
+            AsyncStorage.getItem(id).then((res) => console.log("Added goal:\n" + res))
         }
         catch (e) {
             console.log(e);

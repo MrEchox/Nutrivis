@@ -50,9 +50,14 @@ export default function Foods() {
     fetchData();
   }, []);
 
-  const renderItem = ({ item, index }) => (
+  const renderFoodItem = ({ item, index }) => (
     <TouchableOpacity onPress={() => handleFoodItemClick(item, index)}>
       <Text>{item[0].replace(FOOD_PREFIX, '')}</Text>
+    </TouchableOpacity>
+  );
+  const renderScannedFoodItem = ({ item, index }) => (
+    <TouchableOpacity onPress={() => handleFoodItemClick(item, index)}>
+      <Text>{item[0].replace(FOOD_BARCODE_PREFIX, '')}</Text>
     </TouchableOpacity>
   );
 
@@ -83,8 +88,59 @@ export default function Foods() {
       <View style={styles.container}>
         <Text style={styles.title}>Įvesti maisto produktai</Text>
         <FlatList
+          
           data={localFoodValues}
-          renderItem={renderItem}
+          renderItem={renderFoodItem}
+          keyExtractor={(item, index) => item}
+          style={styles.list}
+        />
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+            <Text>Food information: {selectedItemIndex !== null ? selectedItemIndex.toString() : ''}</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Suvalgytas produkto kiekis</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Įveskite kiekį gramais"
+                  keyboardType="numeric"
+                  onChangeText={(text) => setEatenGrams(text)}
+                />
+                <Button
+                title="Įvesti"
+                onPress={() => { // On press saves the eaten food to local storage
+                  const name = selectedItemIndex.split(',')[0].split(':')[1]; // Don't worry abt it, it works
+                  var date = new Date();
+                  const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+
+                  const eatenFood = new food_object_eaten(currentDate, parseFloat(eatenGrams), name, calories, carbs, fat, protein);
+                  eatenFood.saveLocal();
+              }}
+              />
+            </View>
+            <Button
+              title="Uždaryti"
+              onPress={() => {
+                setModalVisible(!modalVisible);
+              }}
+            />
+            </View>
+          </View>
+        </Modal>
+      </View>
+      <View style={styles.container}>
+        <Text style={styles.title}>Skenuoti maisto produktai</Text>
+        <FlatList
+          
+          data={localFoodBarcodeValues}
+          renderItem={renderScannedFoodItem}
           keyExtractor={(item, index) => item}
           style={styles.list}
         />

@@ -75,7 +75,7 @@ export class Barcode_Food {
             const jsonValue = JSON.stringify(this);
             var id = prefix + this.name;
             await AsyncStorage.setItem(id, jsonValue);
-            AsyncStorage.getItem(this.name).then((res) => console.log(res))
+            AsyncStorage.getItem(id).then((res) => console.log("Added barcode food:\n" + res))
         }
         catch (e) {
             console.log(e);
