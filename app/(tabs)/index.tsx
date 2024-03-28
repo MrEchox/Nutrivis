@@ -40,14 +40,19 @@ export default function Tracking() {
         const valuesEaten = await AsyncStorage.multiGet(appKeysEaten);
 
         // Goal values
-        const goalValues = valuesGoalLocal[0][1]?.split(',');
-        setGoalCalories(goalValues[0].split(':')[1]);
-        setGoalCarbs(goalValues[1].split(':')[1]);
-        setGoalFat(goalValues[2].split(':')[1]);
-        setGoalProtein(goalValues[3].split(':')[1].replace('}', ''));
+        const goalValues = JSON.parse(valuesGoalLocal[0][1]);
+        setGoalCalories(goalValues.calories);
+        setGoalCarbs(goalValues.carbs);
+        setGoalFat(goalValues.fat);
+        setGoalProtein(goalValues.protein);
 
         valuesEaten.forEach(element => {
-          
+          const eatenVals = JSON.parse(element[1]);
+          setSumCalories(sumCalories + eatenVals.calories / 100 * eatenVals.amount);
+          setSumCarbs(sumCarbs + eatenVals.carbs / 100 * eatenVals.amount);
+          setSumFat(sumFat + eatenVals.fat / 100 * eatenVals.amount);
+          setSumProtein(sumProtein + eatenVals.protein / 100 * eatenVals.amount);
+
         });
 
         console.log(valuesEaten);
@@ -62,19 +67,19 @@ export default function Tracking() {
   }, []);
 
 
-    return (
+  return (
       <View style={styles.container}>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-  
+    
         <View style={styles.inputContainer}>
           <Text style={styles.title}>Tracking Tab</Text>
           <Text>Viso kalorijų per dieną: {sumCalories} Rekomenduojama: {goalCalories}</Text>
-          <Text>Viso angliavandenių per dieną: {sumCarbs} Rekomenduojama: {goalCarbs}</Text>
-          <Text>Viso riebalų per dieną: {sumFat} Rekomenduojama: {goalFat}</Text>
-          <Text>Viso baltymų per dieną: {sumProtein} Rekomenduojama: {goalProtein}</Text>
+            <Text>Viso angliavandenių per dieną: {sumCarbs} Rekomenduojama: {goalCarbs}</Text>
+            <Text>Viso riebalų per dieną: {sumFat} Rekomenduojama: {goalFat}</Text>
+            <Text>Viso baltymų per dieną: {sumProtein} Rekomenduojama: {goalProtein}</Text>
         </View>
       </View>
-    );
+  );
 };
 
 const styles = StyleSheet.create({
