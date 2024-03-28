@@ -1,7 +1,7 @@
 import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView, BackHandler } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from '@/components/Themed';
-import { Barcode_Food } from '@/src/object_classes/barcode_food'; 
+import { Barcode_Food } from '@/src/object_classes/food_object_barcode'; 
 import { useLocalSearchParams } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
 import { router } from 'expo-router';
@@ -44,12 +44,12 @@ const AddFoodScreen = () => {
     const handleInput = () => {
         if (carbs >= sugars) {
             // Make a barcode food object
-            const barcode_food = new Barcode_Food( name, parseFloat(barcode), parseFloat(calories), parseFloat(carbs),
+            const food_object_barcode = new Barcode_Food( name, parseFloat(barcode), parseFloat(calories), parseFloat(carbs),
                 parseFloat(sugars), parseFloat(fat), parseFloat(protein), parseFloat(sodium), unit);
             // Save the object to local storage
-            barcode_food.saveLocal();
+            food_object_barcode.saveLocal();
             // Save the object to the database
-            barcode_food.save();
+            food_object_barcode.save();
             router.replace(`./food?calories=${calories}&name=${name}&carbs=${carbs}
             &sugars=${sugars}&fat=${fat}&protein=${protein}
             &sodium=${sodium}&measuring_unit=${unit}`);

@@ -2,13 +2,15 @@ import {collection, addDoc} from "firebase/firestore";
 import {db} from "../../firebaseConfig.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BAR_FOOD_PREFIX = '@BARCODE_FOOD:';
 
 // This is the class for the Barcode_Food object. This object is used to store the nutritional information of a food item.
 // Since this is not TypeScript, we have to manually check the types of the parameters. 
 // If the types are not correct, we throw an error.
 // This class also contains functions to save the object to the database.
 // Additional functions can be added as needed.
+
+const prefix = '@Barcode_Food:';
+
 export class Barcode_Food {
         constructor(name, barcode, calories, carbs, sugars, fat, protein, sodium, measuring_unit) {
         if (typeof name !== 'string') {
@@ -46,15 +48,13 @@ export class Barcode_Food {
         this.protein = protein;
         this.fat = fat;
         this.calories = calories;
-        this.sodium = sodium;
-        this.measuring_unit = measuring_unit;
     }
 
     // This function saves the object to the database.
     async save() {
         try 
         {
-            const docRef = await addDoc(collection(db, "barcode_food_not_verified"), 
+            const docRef = await addDoc(collection(db, "food_object_barcode_not_verified"), 
             {
                 barcode: this.barcode,
                 name: this.name,
@@ -62,9 +62,7 @@ export class Barcode_Food {
                 sugars: this.sugars,
                 protein: this.protein,
                 fat: this.fat,
-                calories: this.calories,
-                sodium: this.sodium,
-                measuring_unit: this.measuring_unit
+                calories: this.calories
             });
             console.log("Document written with ID: ", docRef.id);
         } catch (e) {
@@ -75,9 +73,9 @@ export class Barcode_Food {
     async saveLocal() {
         try {
             const jsonValue = JSON.stringify(this);
-            var id = BAR_FOOD_PREFIX + this.name;
+            var id = prefix + this.name;
             await AsyncStorage.setItem(id, jsonValue);
-            AsyncStorage.getItem(this.name).then((res) => console.log(res))
+            AsyncStorage.getItem(id).then((res) => console.log("Added barcode food:\n" + res))
         }
         catch (e) {
             console.log(e);
@@ -85,7 +83,7 @@ export class Barcode_Food {
     }
 
     async PullFromDatabase(barcode) {
-        // const docRef = await getDoc(doc(db, "barcode_food_not_verified", barcode));
+        // const docRef = await getDoc(doc(db, "food_object_barcode_not_verified", barcode));
         // if (docRef.exists()) {
         //     console.log("Document data:", docRef.data());
         // } else {

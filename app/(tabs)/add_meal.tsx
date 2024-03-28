@@ -14,7 +14,6 @@ const AddFoodScreen = () => {
 
     // Function to Handle Input of macros
     const handleInput = () => {
-        console.log(name, typeof(parseFloat(calories)), carbs, sugars, fat, protein, salt);
         const food_item = new food_object(name, parseFloat(calories), parseFloat(carbs),
             parseFloat(sugars), parseFloat(fat), parseFloat(protein), parseFloat(salt));
         food_item.saveLocal();
