@@ -17,11 +17,13 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        //tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: "white",
+        tabBarInactiveTintColor: "#003049",
+        tabBarStyle: { backgroundColor: "#669BBC" },
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
@@ -39,7 +41,8 @@ export default function TabLayout() {
                   <FontAwesome
                     name="gear"
                     size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
+                    // color={Colors[colorScheme ?? 'light'].text}
+                    color = {"#003049"}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
