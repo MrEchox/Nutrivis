@@ -6,15 +6,15 @@ const CircularProgress = (props) => {
   const { size, strokeWidth, text, back, fill} = props;
   const radius = (size - strokeWidth) / 2;
   const circum = 2 * Math.PI * radius;
-  const offset = (1 - props.progressPercent / 100) * circum;
+  const offset = 1 - (1 - props.progressPercent / 100) * circum;
 
   return (
     <View style={{ margin: 10 }}>
       <Svg width={size} height={size} viewBox="0 0 95 110">
         {/* Egg shape */}
         <Path
-          d="M47,103c22.03-0.36,29.99-14.66,32.71-25.54C85.69,53.58,64.73,8,46.1,8l0.03,0C27.5,8,6.54,53.58,12.52,77.46
-          c2.72,10.88,11.56,25.18,33.6,25.54H47z"
+          d="M46.1,103c22-0.4,30.9-14.7,33.6-25.5c2.9-11.6-0.5-28.2-7-42.4C65.9,20.1,55.7,8,46.1,8h0
+          c-9.8,0-20.2,12.5-27,27.9c-6.2,13.9-9.4,30.2-6.6,41.5c2.7,10.9,10.7,25.2,32.7,25.5H46.1z"
           fill="none"
           stroke={back}
           strokeWidth={strokeWidth}
@@ -22,13 +22,13 @@ const CircularProgress = (props) => {
 
         {/* Progress */}
         <Path 
-          d="M47,103c22.03-0.36,29.99-14.66,32.71-25.54C85.69,53.58,64.73,8,46.1,8l0.03,0C27.5,8,6.54,53.58,12.52,77.46
-          c2.72,10.88,11.56,25.18,33.6,25.54H47z"
+          d="M46.1,103c22-0.4,30.9-14.7,33.6-25.5c2.9-11.6-0.5-28.2-7-42.4C65.9,20.1,55.7,8,46.1,8h0
+          c-9.8,0-20.2,12.5-27,27.9c-6.2,13.9-9.4,30.2-6.6,41.5c2.7,10.9,10.7,25.2,32.7,25.5H46.1z"
           fill="none"
           stroke={fill}
           strokeWidth={strokeWidth}
-          strokeDasharray={`${circum*0.9} ${circum}`}
-          strokeDashoffset={offset}
+          strokeDasharray={`${circum} ${circum}`}
+          strokeDashoffset={offset*0.85}
           strokeLinecap="round"
         />
         
