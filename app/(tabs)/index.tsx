@@ -94,8 +94,9 @@ export default function Tracking() {
             <CircularProgress
               size={110} 
               strokeWidth={10} 
-              progressPercent={(sumCarbs/goalCarbs)*100}
-              text="50%"
+              progressPercent={75}
+              //progressPercent={(sumCarbs/goalCarbs)*100}
+              text="50%" //does nothing currently
               fill={themeProg}
               back={themeProgF}
             />
