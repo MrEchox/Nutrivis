@@ -24,6 +24,9 @@ export default function Foods() {
   const [selectedItemIndex, setSelectedItemIndex] = useState('');
   const [eatenGrams, setEatenGrams] = useState('');
 
+  const [refreshPage, setRefreshPage] = useState(false);
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -48,7 +51,7 @@ export default function Foods() {
     };
 
     fetchData();
-  }, []);
+  }, [refreshPage]);
 
   const renderFoodItem = ({ item, index }) => (
     <TouchableOpacity onPress={() => handleFoodItemClick(item, index)}>
@@ -80,6 +83,15 @@ export default function Foods() {
     }
   };
 
+  const removeItem = async (name) => {
+    try {
+      await AsyncStorage.removeItem(name);
+      console.log('Data removed: ', name);
+      setRefreshPage(prevState => !prevState); // Toggle refreshPage state to trigger page refresh
+    } catch (error) {
+      console.error('Error removing data:', error);
+    }
+  };
 
 
   return (
@@ -126,6 +138,14 @@ export default function Foods() {
               />
             </View>
             <Button
+              title="Panaikinti"
+              onPress={() => {
+                setModalVisible(!modalVisible);
+                const name = FOOD_PREFIX + selectedItemIndex.split(',')[0].split(':')[1].replace(/['"]+/g, ''); // Gets the key of the food
+                removeItem(name);
+              }}
+            />
+            <Button
               title="Uždaryti"
               onPress={() => {
                 setModalVisible(!modalVisible);
@@ -144,46 +164,7 @@ export default function Foods() {
           keyExtractor={(item, index) => item}
           style={styles.list}
         />
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-            <Text>Food information: {selectedItemIndex !== null ? selectedItemIndex.toString() : ''}</Text>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Suvalgytas produkto kiekis</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Įveskite kiekį gramais"
-                  keyboardType="numeric"
-                  onChangeText={(text) => setEatenGrams(text)}
-                />
-                <Button
-                title="Įvesti"
-                onPress={() => { // On press saves the eaten food to local storage
-                  const name = selectedItemIndex.split(',')[0].split(':')[1]; // Don't worry abt it, it works
-                  var date = new Date();
-                  const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-
-                  const eatenFood = new food_object_eaten(currentDate, parseFloat(eatenGrams), name, calories, carbs, fat, protein);
-                  eatenFood.saveLocal();
-              }}
-              />
-            </View>
-            <Button
-              title="Uždaryti"
-              onPress={() => {
-                setModalVisible(!modalVisible);
-              }}
-            />
-            </View>
-          </View>
-        </Modal>
+        
       </View>
     </View>
   );
