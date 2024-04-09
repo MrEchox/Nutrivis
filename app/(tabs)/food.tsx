@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity, FlatList, Modal, Button, TextInput } from
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { food_object_eaten } from '@/src/object_classes/food_object_eaten'; 
+import { useFocusEffect } from '@react-navigation/native';
 
 
 // Define your app's unique identifier
@@ -26,30 +27,39 @@ export default function Foods() {
 
   const [refreshPage, setRefreshPage] = useState(false);
 
+  const fetchData = async () => {
+    try {
+      // Fetch all keys from AsyncStorage
+      const allKeys = await AsyncStorage.getAllKeys();
+      // Filter keys to only include those belonging to your app
+      const appKeysFood = allKeys.filter(key => key.startsWith("@Food:"));
+      const appKeysFoodEaten = allKeys.filter(key => key.startsWith("@FoodEaten:"));
+      const appKeysFoodBarcode = allKeys.filter(key => key.startsWith("@FoodBarcode:"));
+      // Fetch values corresponding to the filtered keys
+      const valuesFood = await AsyncStorage.multiGet(appKeysFood);
+      const valuesFoodEaten = await AsyncStorage.multiGet(appKeysFoodEaten);
+      const valuesFoodBarcode = await AsyncStorage.multiGet(appKeysFoodBarcode);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch all keys from AsyncStorage
-        const allKeys = await AsyncStorage.getAllKeys();
-        // Filter keys to only include those belonging to your app
-        const appKeysFood = allKeys.filter(key => key.startsWith("@Food:"));
-        const appKeysFoodEaten = allKeys.filter(key => key.startsWith("@FoodEaten:"));
-        const appKeysFoodBarcode = allKeys.filter(key => key.startsWith("@FoodBarcode:"));
-        // Fetch values corresponding to the filtered keys
-        const valuesFood = await AsyncStorage.multiGet(appKeysFood);
-        const valuesFoodEaten = await AsyncStorage.multiGet(appKeysFoodEaten);
-        const valuesFoodBarcode = await AsyncStorage.multiGet(appKeysFoodBarcode);
+      // Update state with the retrieved values
+      setLocalFoodValues(valuesFood);
+      setLocalFoodEatenValues(valuesFoodEaten);
+      setLocalFoodBarcodeValues(valuesFoodBarcode);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
-        // Update state with the retrieved values
-        setLocalFoodValues(valuesFood);
-        setLocalFoodEatenValues(valuesFoodEaten);
-        setLocalFoodBarcodeValues(valuesFoodBarcode);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  useFocusEffect( // When focusing on page fetch data
+    React.useCallback(() => {
+      fetchData();
+      // Return cleanup function
+      return () => {
+        // Any cleanup you want to do when the component is unmounted or loses focus
+      };
+    }, [])
+  );
 
+  useEffect(() => { // When refreshPage state changes fetch data
     fetchData();
   }, [refreshPage]);
 
@@ -87,7 +97,6 @@ export default function Foods() {
     try {
       await AsyncStorage.removeItem(name);
       console.log('Data removed: ', name);
-      setRefreshPage(prevState => !prevState); // Toggle refreshPage state to trigger page refresh
     } catch (error) {
       console.error('Error removing data:', error);
     }
@@ -143,6 +152,7 @@ export default function Foods() {
                 setModalVisible(!modalVisible);
                 const name = FOOD_PREFIX + selectedItemIndex.split(',')[0].split(':')[1].replace(/['"]+/g, ''); // Gets the key of the food
                 removeItem(name);
+                setRefreshPage(prevState => !prevState); // Toggle refreshPage state to trigger page refresh
               }}
             />
             <Button
