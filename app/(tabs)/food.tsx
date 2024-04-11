@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity, FlatList, Modal, Button, TextInput } from
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { food_object_eaten } from '@/src/object_classes/food_object_eaten'; 
+import { useFocusEffect } from '@react-navigation/native';
 
 
 // Define your app's unique identifier
@@ -24,31 +25,43 @@ export default function Foods() {
   const [selectedItemIndex, setSelectedItemIndex] = useState('');
   const [eatenGrams, setEatenGrams] = useState('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch all keys from AsyncStorage
-        const allKeys = await AsyncStorage.getAllKeys();
-        // Filter keys to only include those belonging to your app
-        const appKeysFood = allKeys.filter(key => key.startsWith("@Food:"));
-        const appKeysFoodEaten = allKeys.filter(key => key.startsWith("@FoodEaten:"));
-        const appKeysFoodBarcode = allKeys.filter(key => key.startsWith("@FoodBarcode:"));
-        // Fetch values corresponding to the filtered keys
-        const valuesFood = await AsyncStorage.multiGet(appKeysFood);
-        const valuesFoodEaten = await AsyncStorage.multiGet(appKeysFoodEaten);
-        const valuesFoodBarcode = await AsyncStorage.multiGet(appKeysFoodBarcode);
+  const [refreshPage, setRefreshPage] = useState(false);
 
-        // Update state with the retrieved values
-        setLocalFoodValues(valuesFood);
-        setLocalFoodEatenValues(valuesFoodEaten);
-        setLocalFoodBarcodeValues(valuesFoodBarcode);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      // Fetch all keys from AsyncStorage
+      const allKeys = await AsyncStorage.getAllKeys();
+      // Filter keys to only include those belonging to your app
+      const appKeysFood = allKeys.filter(key => key.startsWith("@Food:"));
+      const appKeysFoodEaten = allKeys.filter(key => key.startsWith("@FoodEaten:"));
+      const appKeysFoodBarcode = allKeys.filter(key => key.startsWith("@FoodBarcode:"));
+      // Fetch values corresponding to the filtered keys
+      const valuesFood = await AsyncStorage.multiGet(appKeysFood);
+      const valuesFoodEaten = await AsyncStorage.multiGet(appKeysFoodEaten);
+      const valuesFoodBarcode = await AsyncStorage.multiGet(appKeysFoodBarcode);
 
+      // Update state with the retrieved values
+      setLocalFoodValues(valuesFood);
+      setLocalFoodEatenValues(valuesFoodEaten);
+      setLocalFoodBarcodeValues(valuesFoodBarcode);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useFocusEffect( // When focusing on page fetch data
+    React.useCallback(() => {
+      fetchData();
+      // Return cleanup function
+      return () => {
+        // Any cleanup you want to do when the component is unmounted or loses focus
+      };
+    }, [])
+  );
+
+  useEffect(() => { // When refreshPage state changes fetch data
     fetchData();
-  }, []);
+  }, [refreshPage]);
 
   const renderFoodItem = ({ item, index }) => (
     <TouchableOpacity onPress={() => handleFoodItemClick(item, index)}>
@@ -80,6 +93,14 @@ export default function Foods() {
     }
   };
 
+  const removeItem = async (name) => {
+    try {
+      await AsyncStorage.removeItem(name);
+      console.log('Data removed: ', name);
+    } catch (error) {
+      console.error('Error removing data:', error);
+    }
+  };
 
 
   return (
@@ -126,6 +147,15 @@ export default function Foods() {
               />
             </View>
             <Button
+              title="Panaikinti"
+              onPress={() => {
+                setModalVisible(!modalVisible);
+                const name = FOOD_PREFIX + selectedItemIndex.split(',')[0].split(':')[1].replace(/['"]+/g, ''); // Gets the key of the food
+                removeItem(name);
+                setRefreshPage(prevState => !prevState); // Toggle refreshPage state to trigger page refresh
+              }}
+            />
+            <Button
               title="Uždaryti"
               onPress={() => {
                 setModalVisible(!modalVisible);
@@ -144,46 +174,7 @@ export default function Foods() {
           keyExtractor={(item, index) => item}
           style={styles.list}
         />
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-            <Text>Food information: {selectedItemIndex !== null ? selectedItemIndex.toString() : ''}</Text>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Suvalgytas produkto kiekis</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Įveskite kiekį gramais"
-                  keyboardType="numeric"
-                  onChangeText={(text) => setEatenGrams(text)}
-                />
-                <Button
-                title="Įvesti"
-                onPress={() => { // On press saves the eaten food to local storage
-                  const name = selectedItemIndex.split(',')[0].split(':')[1]; // Don't worry abt it, it works
-                  var date = new Date();
-                  const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-
-                  const eatenFood = new food_object_eaten(currentDate, parseFloat(eatenGrams), name, calories, carbs, fat, protein);
-                  eatenFood.saveLocal();
-              }}
-              />
-            </View>
-            <Button
-              title="Uždaryti"
-              onPress={() => {
-                setModalVisible(!modalVisible);
-              }}
-            />
-            </View>
-          </View>
-        </Modal>
+        
       </View>
     </View>
   );
