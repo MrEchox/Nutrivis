@@ -93,8 +93,8 @@ export default function Tracking() {
             <View style={[styles.progressBarContainer, themeContainer]}>
             <CircularProgress
               size={110} 
-              strokeWidth={10} 
-              progressPercent={75}
+              strokeWidth={10}
+              progressPercent={60}
               //progressPercent={(sumCarbs/goalCarbs)*100}
               text="50%" //does nothing currently
               fill={themeProg}
