@@ -7,7 +7,7 @@ const pages = [
     { title: 'Kalorijos', link: '../dieting/topics/calories' },
     { title: 'Angliavandeniai', link: '../dieting/topics/carbs' },
     { title: 'Baltymai', link: '../dieting/topics/protein' },
-    { title: 'Riebalai', link: '../dieting/topics/fats' },
+    { title: 'Riebalai - lipidai', link: '../dieting/topics/fats' },
     { title: 'Skaidulos', link: '../dieting/topics/fiber' },
     { title: 'Hidratacija', link: '../dieting/topics/hydration'},
     { title: 'Papildai', link: '../dieting/topics/supplements'},

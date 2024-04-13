@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Alert} from 'react-native';
 import { StyleSheet, TextInput, Button, ScrollView, Modal, Platform, SafeAreaView } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { calculateStepGoal } from '@/src/util/goal_calculations';
@@ -17,6 +18,11 @@ const TabOneScreen = () => {
   const [calorieGoal, setCalorieGoal] = useState(0);
   const [weightObjective, setWeightObjective] = useState(0);
   const [stepGoal, setStepGoal] = useState(0);
+  const [error, setError] = useState<string>('');
+
+
+
+
 
   // Function to calculate recomended calories
   const handleCaloriesAndSteps = () => {
@@ -25,7 +31,47 @@ const TabOneScreen = () => {
 
     const calculatedStepGoal = calculateStepGoal(age, gender, height, weight, activityLevel);
     setStepGoal(calculatedStepGoal);
+
+// Checking input data for age error
+      const inputAge = parseInt(age);
+  if (!isNaN(inputAge)) {
+    if (inputAge >= 12 && inputAge <= 120) {
+      setAge(age);
+      alert('');
+    } else {
+      alert('Amžius turi būti tarp 12(netinkama vaikam) ir 120.');
+    }
+  } else {
+    alert('Prašome įvesti tinkamą amžių.');
+  }
+
+// Checking input data for height error
+  const inputheight = parseInt(height);
+  if (!isNaN(inputheight)) {
+    if (inputheight <= 0) {
+      setHeight(height);
+      alert('');
+    } else {
+      alert('Ūgis turibūti teigiamas.');
+    }
+  } else {
+    alert('Prašome įvesti tinkamą ūgį.');
+  }
+
+  // Checking input data for weight error
+  const inputweight = parseInt(weight);
+  if (!isNaN(inputweight)) {
+    if (inputweight <= 0) {
+      setHeight(weight);
+      alert('');
+    } else {
+      alert('Svoris turibūti teigiamas.');
+    }
+  } else {
+    alert('Prašome įvesti tinkamą svorį.');
+  }
   };
+  
 
   return (
     //---Basic user information---
@@ -40,6 +86,7 @@ const TabOneScreen = () => {
             onChangeText={(text) => setAge(text)}
           />
         </View>
+        
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Lytis</Text>
           <Picker
@@ -98,9 +145,10 @@ const TabOneScreen = () => {
             <Picker.Item label="Ekstremalus svorio priaugimas" value="extreme gain" />
           </Picker>
         </View>
+        
         {/*Calculating recomended calories, steps and macronutrients for the user*/}
         <View style={styles.inputContainer}>
-          <Button title="Apskaičiuoti" onPress={handleCaloriesAndSteps} />
+          <Button title="Apskaičiuoti" onPress={handleCaloriesAndSteps}/>
         
           <Text>Rekomenduojamas žingsnių skaičius per dieną: {stepGoal}</Text>
 

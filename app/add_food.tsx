@@ -54,6 +54,62 @@ const AddFoodScreen = () => {
             &sugars=${sugars}&fat=${fat}&protein=${protein}
             &sodium=${sodium}&measuring_unit=${unit}`);
         }
+        
+        // Checking input data for calorie error
+        const inputCal = parseInt(calories);
+        const inputSug = parseInt(sugars);
+        const inputCar = parseInt(carbs);
+        const inputFat = parseInt(fat);
+        const inputPro = parseInt(protein);
+
+        if (!isNaN(inputCal)) {
+            if (inputCal >= 0) {
+                setCalories(calories);
+                alert('');
+            } else {
+                alert('Kalorijos turibūti teigiamas skaičius.');
+            }
+        } else {
+            alert('Prašome įvesti tinkamą kalorijų skaičių.');
+        }
+
+        // Checking input data for carbs error
+        
+        if (!isNaN(inputCar)) {
+            if ((inputCar + inputFat) <= inputCal) {
+                setCarbs(carbs);
+                alert('');
+            } else {
+                alert('angliavandenių turibūti teigiamas skaičius ir mažiau nei kalorijų.');
+            }
+        } else {
+            alert('Prašome įvesti tinkamą angliavandenių skaičių.');
+        }
+
+        // Checking input data for sugar error
+        if (!isNaN(inputSug)) {
+            if (inputSug <= inputCar) {
+                setSugars(sugars);
+                alert('');
+            } else {
+                alert('cukrų turibūti teigiamas skaičius ir mažiau nei angliavandenių.');
+            }
+        } else {
+            alert('Prašome įvesti tinkamą cukrų skaičių.');
+        }
+
+        // Checking input data for sugar error
+        if (!isNaN(inputFat)) {
+            if ((inputFat + inputCar) <= inputCal) {
+                setFat(fat);
+                alert('');
+            } else {
+                alert('riebalų turibūti teigiamas skaičius ir mažiau nei kalorijų.');
+            }
+        } else {
+            alert('Prašome įvesti tinkamą riebalų skaičių.');
+        }
+
     };
     
     return (
