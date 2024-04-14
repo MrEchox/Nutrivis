@@ -6,6 +6,8 @@ import { food_object_eaten } from '@/src/object_classes/food_object_eaten';
 import { useFocusEffect } from '@react-navigation/native';
 import { commonStyles } from '../commonStyles';
 
+import { commonStyles } from '../commonStyles';
+
 
 // Unique identifiers
 const FOOD_PREFIX = '@Food:';
@@ -64,6 +66,12 @@ export default function Foods() {
   useEffect(() => { // When refreshPage state changes fetch data
     fetchData();
   }, [refreshPage]);
+
+  const colorScheme = useColorScheme();
+  const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
+  const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
+  const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
+  const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
 
   const colorScheme = useColorScheme();
   const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;

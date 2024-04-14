@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, Button, ScrollView, Alert, useColorScheme } from 'react-native';
+import { StyleSheet, TextInput, Button, ScrollView, useColorScheme } from 'react-native';
 import React, { useState } from 'react';
 import { Text, View } from '@/components/Themed';
 import { food_object } from '@/src/object_classes/food_object';
