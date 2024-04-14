@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, Button, ScrollView, useColorScheme } from 'react-native';
+import { StyleSheet, TextInput, Button, ScrollView, useColorScheme, Alert} from 'react-native';
 import React, { useState } from 'react';
 import { Text, View } from '@/components/Themed';
 import { food_object } from '@/src/object_classes/food_object';
@@ -101,7 +101,7 @@ const AddFoodScreen = () => {
                         onChangeText={(text) => setSalt(text)}
                     />
                 </View>
-                <View style={styles.buttonContainer}>
+                <View style={[styles.buttonContainer, {backgroundColor: "transparent"}]}>
                     <Button 
                     color = {themeSvg}
                     title="Pridėti naują maisto produktą"
@@ -150,6 +150,9 @@ const styles = StyleSheet.create({
       buttonContainer: {
         borderRadius: 10,
         overflow: 'hidden',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.25,
       },
 });
 

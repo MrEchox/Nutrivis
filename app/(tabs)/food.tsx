@@ -6,8 +6,6 @@ import { food_object_eaten } from '@/src/object_classes/food_object_eaten';
 import { useFocusEffect } from '@react-navigation/native';
 import { commonStyles } from '../commonStyles';
 
-import { commonStyles } from '../commonStyles';
-
 
 // Unique identifiers
 const FOOD_PREFIX = '@Food:';
@@ -73,20 +71,18 @@ export default function Foods() {
   const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
   const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
 
-  const colorScheme = useColorScheme();
-  const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
-  const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
-  const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
-  const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
-
   const renderFoodItem = ({ item, index }) => (
     <TouchableOpacity onPress={() => handleFoodItemClick(item, index)}>
-      <Text>{item[0].replace(FOOD_PREFIX, '')}</Text>
+      <View style={[styles.FoodItemStyle, {backgroundColor:themeSvg}]}>
+        <Text style={themeTextStyle}>{item[0].replace(FOOD_PREFIX, '')}</Text>
+      </View>
     </TouchableOpacity>
   );
   const renderScannedFoodItem = ({ item, index }) => (
     <TouchableOpacity onPress={() => handleFoodItemClick(item, index)}>
-      <Text>{item[0].replace(FOOD_BARCODE_PREFIX, '')}</Text>
+      <View style={[styles.FoodItemStyle, {backgroundColor:themeSvg}]}>
+        <Text style={themeTextStyle}>{item[0].replace(FOOD_BARCODE_PREFIX, '')}</Text>
+      </View>
     </TouchableOpacity>
   );
 
@@ -150,7 +146,10 @@ export default function Foods() {
         >
           <View style={styles.modalContainer}>
             <View style={[styles.modalContent, commonStyles.mainStatsContainer, themeContainer]}>
-            <Text style={[themeTextStyle]}>Maistas: {selectedItemIndex !== null ? selectedItemIndex.toString() : ''}</Text>
+            <Text style={[themeTextStyle, {fontWeight:"500"}]}>
+              Pasirinkta: {selectedItemIndex ? JSON.parse(selectedItemIndex).name + ' ' : ''} 
+              ({selectedItemIndex ? JSON.parse(selectedItemIndex).calories : ''} kcal)
+            </Text>
             <View style={[themeContainer, {paddingBottom: 10}]}>
               <Text style={[styles.label, themeTextStyle, {fontWeight:"500", paddingBottom: 10}]}>Suvalgytas produkto kiekis</Text>
                 <TextInput
@@ -159,36 +158,42 @@ export default function Foods() {
                   keyboardType="numeric"
                   onChangeText={(text) => setEatenGrams(text)}
                 />
-                <View style={[styles.buttonContainer]}>
-                <Button
-                color={themeSvg}
-                title="Įvesti"
-                onPress={() => { // On press saves the eaten food to local storage
-                  const name = selectedItemIndex.split(',')[0].split(':')[1]; // Don't worry abt it, it works
-                  var date = new Date();
-                  const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-
-                  const eatenFood = new food_object_eaten(currentDate, parseFloat(eatenGrams), name, calories, carbs, fat, protein);
-                  eatenFood.saveLocal();
-              }}
-              /></View>
+                <View style={[styles.buttonContainer, { marginTop: 10 }]}> 
+                  <Button
+                  color={themeSvg}
+                  title="Įvesti"
+                  onPress={() => { // On press saves the eaten food to local storage
+                    const name = selectedItemIndex.split(',')[0].split(':')[1]; // Don't worry abt it, it works
+                    var date = new Date();
+                    const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+                  
+                    const eatenFood = new food_object_eaten(currentDate, parseFloat(eatenGrams), name, calories, carbs, fat, protein);
+                    eatenFood.saveLocal();
+                  }}
+                  />
+              </View>
             </View>
-            <View style={styles.buttonContainer}>
-            <Button
-              title="Panaikinti"
-              onPress={() => {
-                setModalVisible(!modalVisible);
-                removeItem(selectedItemKey);
-                setRefreshPage(prevState => !prevState); // Toggle refreshPage state to trigger page refresh
-              }}
-            />
-            <Button
-              color={themeSvg}
-              title="Uždaryti"
-              onPress={() => {
-                setModalVisible(!modalVisible);
-              }}
-            />
+            <View style={{ flexDirection: 'row', backgroundColor: 'transparent'}}>
+              <View style={[styles.buttonContainer, { marginRight: 15 }]}> 
+                <Button
+                  title="Panaikinti"
+                  color = {themeSvg}
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                    removeItem(selectedItemKey);
+                    setRefreshPage(prevState => !prevState); // Toggle refreshPage state to trigger page refresh
+                  }}
+                />
+              </View>
+              <View style={styles.buttonContainer}>
+                <Button
+                  color={themeSvg}
+                  title="Uždaryti"
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                  }}
+                />
+              </View>
             </View>
             </View>
           </View>
@@ -258,5 +263,14 @@ const styles = StyleSheet.create({
 buttonContainer: {
   borderRadius: 10,
   overflow: 'hidden',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 1 },
+  shadowOpacity: 0.25,
 },
+FoodItemStyle: {
+  paddingHorizontal: 16,
+  paddingVertical: 8,
+  borderRadius: 10,
+  marginBottom: 8,
+}
 });
