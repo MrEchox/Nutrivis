@@ -8,7 +8,7 @@ import { db } from "../../firebase.config.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from 'expo-router';
 
-const TabTwoScreen = () => {
+const loginScreen = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -67,6 +67,7 @@ const TabTwoScreen = () => {
                         const user = JSON.parse(userVal);
                         console.log(user);
                         changeLoginStatus(user.username);
+                        router.replace('../(tabs)/index')
                         console.log(user);
                     }
                 }
@@ -75,6 +76,7 @@ const TabTwoScreen = () => {
                     var LogInUser = new User(querySnapshot.docs[0].data().email, querySnapshot.docs[0].data().username, querySnapshot.docs[0].data().password, querySnapshot.docs[0].data().salt);
                     console.log(LogInUser);
                     changeLoginStatus(LogInUser.username);
+                    router.replace('../(tabs)/index')
                     LogInUser.saveLocal();
                 }
             }
@@ -152,4 +154,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default TabTwoScreen;
+export default loginScreen;
