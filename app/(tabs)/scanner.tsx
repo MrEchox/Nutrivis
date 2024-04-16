@@ -6,7 +6,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import {db} from "../../firebase.config.js";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function TabTwoScreen() {
+export default function scannerScreen() {
     const [facing, setFacing] = useState('back');
     const [permission, requestPermission] = useCameraPermissions();
     const [barcode, setBarcode] = useState(0);

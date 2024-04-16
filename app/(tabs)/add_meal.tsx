@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, Button, ScrollView } from 'react-native';
+import { StyleSheet, TextInput, Button, ScrollView, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { Text, View } from '@/components/Themed';
 import { food_object } from '@/src/object_classes/food_object'; 
@@ -17,6 +17,9 @@ const AddFoodScreen = () => {
         const food_item = new food_object(name, parseFloat(calories), parseFloat(carbs),
             parseFloat(sugars), parseFloat(fat), parseFloat(protein), parseFloat(salt));
         food_item.saveLocal();
+        Alert.alert('Valio!', 'Maisto produktas pridėtas sėkmingai!', [
+            { text: 'OK' }
+        ]);
     };
     
     return (
