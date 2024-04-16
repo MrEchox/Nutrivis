@@ -67,44 +67,55 @@ export default function Tracking() {
     fetchData();
   }, []);
 
-  const handleWaterSum = () => {
-    setWatah(Watah + 200)
-
-    var date = new Date();
-    const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-
-    const drunkWater = new daily_water_object(currentDate, Watah);
-    drunkWater.saveLocal();
-  }
-  const handleWaterMinus = () => {
-    if (Watah != 0 && Watah >= 200)
-      {
-        setWatah(Watah - 200)
+  const handleWaterDrink = (operation : String) => {
+    switch (operation){
+      case 'minus5':
+        if (Watah != 0 && Watah >= 500)
+          {
+            setWatah(Watah - 500)
+            var date = new Date();
+            const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+      
+            const drunkWater = new daily_water_object(currentDate, Watah);
+            drunkWater.saveLocal();
+          };
+        return Watah;
+      case 'minus2':
+        if (Watah != 0 && Watah >= 200)
+          {
+            setWatah(Watah - 200)
+            var date = new Date();
+            const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+      
+            const drunkWater = new daily_water_object(currentDate, Watah);
+            drunkWater.saveLocal();
+          };
+        return Watah;
+      case 'add2':
+        {
+        setWatah(Watah + 200);
         var date = new Date();
         const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
   
         const drunkWater = new daily_water_object(currentDate, Watah);
         drunkWater.saveLocal();
-      }
-  }
-  const handleWaterSum5 = () => {
-    setWatah(Watah + 500)
-    var date = new Date();
-    const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-
-    const drunkWater = new daily_water_object(currentDate, Watah);
-    drunkWater.saveLocal();
-  }
-  const handleWaterMinus5 = () => {
-    if (Watah != 0 && Watah >= 500)
-      {
-        setWatah(Watah - 500)
+        }
+        return Watah;
+      case 'add5':
+        {
+        setWatah(Watah + 500);
         var date = new Date();
         const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
   
         const drunkWater = new daily_water_object(currentDate, Watah);
         drunkWater.saveLocal();
-      }
+        }
+        return Watah;
+      default:
+        return 0;
+
+      
+    }
   }
 
   return (
@@ -126,19 +137,19 @@ export default function Tracking() {
               </View>
               <View style={styles.inputContainer2}>
                 <View style={styles.buttonLeft}>
-                  <Button title="-0.5" onPress={handleWaterMinus5}></Button>
+                  <Button title="-0.5" onPress={() => handleWaterDrink('minus5')}></Button>
                 </View>
                 <View style={styles.buttonLeft}>
-                  <Button title="-0.2" onPress={handleWaterMinus}></Button>
+                  <Button title="-0.2" onPress={() => handleWaterDrink('minus2')}></Button>
                 </View>
                 <View>
                   <Text style={styles.inputContainer}>{Watah}</Text>
                 </View>
                 <View style={styles.buttonRight}> 
-                  <Button title="+0.2" onPress={handleWaterSum}></Button> 
+                  <Button title="+0.2" onPress={() => handleWaterDrink('add2')}></Button> 
                 </View>
                 <View style={styles.buttonRight}> 
-                  <Button title="+0.5" onPress={handleWaterSum5}></Button> 
+                  <Button title="+0.5" onPress={() => handleWaterDrink('add5')}></Button> 
                 </View>
               </View>
             </View>
