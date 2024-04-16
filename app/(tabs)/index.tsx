@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, TextInput, Button, Pressable } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { daily_water_object } from '@/src/object_classes/daily_water';
 
 const Food_Eaten_Prefix = '@Food_Eaten:';
 const Goal_Prefix = '@Goal:';
@@ -68,17 +69,42 @@ export default function Tracking() {
 
   const handleWaterSum = () => {
     setWatah(Watah + 200)
+
+    var date = new Date();
+    const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+
+    const drunkWater = new daily_water_object(currentDate, Watah);
+    drunkWater.saveLocal();
   }
   const handleWaterMinus = () => {
     if (Watah != 0 && Watah >= 200)
-      setWatah(Watah - 200)
+      {
+        setWatah(Watah - 200)
+        var date = new Date();
+        const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+  
+        const drunkWater = new daily_water_object(currentDate, Watah);
+        drunkWater.saveLocal();
+      }
   }
   const handleWaterSum5 = () => {
     setWatah(Watah + 500)
+    var date = new Date();
+    const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+
+    const drunkWater = new daily_water_object(currentDate, Watah);
+    drunkWater.saveLocal();
   }
   const handleWaterMinus5 = () => {
     if (Watah != 0 && Watah >= 500)
-      setWatah(Watah - 500)
+      {
+        setWatah(Watah - 500)
+        var date = new Date();
+        const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+  
+        const drunkWater = new daily_water_object(currentDate, Watah);
+        drunkWater.saveLocal();
+      }
   }
 
   return (
