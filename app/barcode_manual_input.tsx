@@ -5,7 +5,7 @@ import { calculateStepGoal } from '@/src/util/goal_calculations';
 import { calculateRecommendedCalories } from '@/src/util/goal_calculations';
 import {Picker} from '@react-native-picker/picker'
 import {collection, query, where, getDocs} from "firebase/firestore";
-import {db} from "../firebase.config.js/index.js";
+import {db} from "../firebase.config.js";
 import { Link } from 'expo-router';
 
 const BarcodeInputScreen = () => {
