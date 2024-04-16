@@ -17,6 +17,8 @@ export default function Tracking() {
   const [goalFat, setGoalFat] = useState(0);
   const [goalProtein, setGoalProtein] = useState(0);
 
+  const [Watah, setWatah] = useState(0);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -64,17 +66,56 @@ export default function Tracking() {
     fetchData();
   }, []);
 
+  const handleWaterSum = () => {
+    setWatah(Watah + 200)
+  }
+  const handleWaterMinus = () => {
+    if (Watah != 0 && Watah >= 200)
+      setWatah(Watah - 200)
+  }
+  const handleWaterSum5 = () => {
+    setWatah(Watah + 500)
+  }
+  const handleWaterMinus5 = () => {
+    if (Watah != 0 && Watah >= 500)
+      setWatah(Watah - 500)
+  }
 
   return (
       <View style={styles.container}>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
     
         <View style={styles.inputContainer}>
-          <Text style={styles.title}>Tracking Tab</Text>
-          <Text>Viso kalorijų per dieną: {sumCalories} Rekomenduojama: {goalCalories}</Text>
-            <Text>Viso angliavandenių per dieną: {sumCarbs} Rekomenduojama: {goalCarbs}</Text>
-            <Text>Viso riebalų per dieną: {sumFat} Rekomenduojama: {goalFat}</Text>
-            <Text>Viso baltymų per dieną: {sumProtein} Rekomenduojama: {goalProtein}</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.title}>Tracking Tab</Text>
+              <Text>Viso kalorijų per dieną: {sumCalories} Rekomenduojama: {goalCalories}</Text>
+              <Text>Viso angliavandenių per dieną: {sumCarbs} Rekomenduojama: {goalCarbs}</Text>
+              <Text>Viso riebalų per dieną: {sumFat} Rekomenduojama: {goalFat}</Text>
+              <Text>Viso baltymų per dieną: {sumProtein} Rekomenduojama: {goalProtein}</Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.title}>Water xixixaxa</Text>
+              <View style={styles.label}>
+                <Text style={{width:'auto', textAlign: 'center'}}>Šią dieną jūs išgėrėte</Text>
+              </View>
+              <View style={styles.inputContainer2}>
+                <View style={styles.buttonLeft}>
+                  <Button title="-0.5" onPress={handleWaterMinus5}></Button>
+                </View>
+                <View style={styles.buttonLeft}>
+                  <Button title="-0.2" onPress={handleWaterMinus}></Button>
+                </View>
+                <View>
+                  <Text style={styles.inputContainer}>{Watah}</Text>
+                </View>
+                <View style={styles.buttonRight}> 
+                  <Button title="+0.2" onPress={handleWaterSum}></Button> 
+                </View>
+                <View style={styles.buttonRight}> 
+                  <Button title="+0.5" onPress={handleWaterSum5}></Button> 
+                </View>
+              </View>
+            </View>
         </View>
       </View>
   );
@@ -85,21 +126,37 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    padding: 0,
   },
   label: {
     marginRight: 10,
     paddingLeft: 10,
   },
   inputContainer: {
-    width: '80%',
+    width: 'auto',
+    marginTop: 20,
     marginBottom: 20,
     borderWidth: 1,
     borderRadius: 5,
     borderColor: '#ccc',
+    padding: 10,
+  },
+  inputContainer2: {
+    width: '100%',
+    marginBottom: 20,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#ccc',
+    padding: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   input: {
     padding: 10,
@@ -108,5 +165,13 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: '80%',
+  },
+  buttonLeft: {
+    width: 'auto',
+    left: 0,
+  },
+  buttonRight: {
+    width: 'auto',
+    right: 0,
   },
 });
