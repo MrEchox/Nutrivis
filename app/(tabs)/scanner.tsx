@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { Link, router } from 'expo-router';
 import { collection, query, where, getDocs } from "firebase/firestore";
-import {db} from "../../firebaseConfig.js";
+import {db} from "../../firebase.config.js/index.js";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function scannerScreen() {
