@@ -7,12 +7,15 @@ import { Picker } from '@react-native-picker/picker'
 import { StatusBar } from 'expo-status-bar';
 import { Barcode_Food } from '@/src/object_classes/food_object_barcode';
 import { daily_goal_object } from '@/src/object_classes/daily_goal';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from 'expo-router';
 
 import { commonStyles } from './commonStyles';
 
 const Goal_Prefix = '@Goal:';
 
-const TabOneScreen = () => {
+//---Calorie Tab---
+const SettingsScreen = () => {
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('male');
   const [height, setHeight] = useState('');
@@ -39,6 +42,23 @@ const TabOneScreen = () => {
   const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
   const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
   const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
+  async function handleLogout() {
+    const loginVal = await AsyncStorage.getItem("@LoggedIn:");
+    if (loginVal) {
+        const status = JSON.parse(loginVal);
+
+        status.username = "";
+
+        await AsyncStorage.setItem("@LoggedIn:", JSON.stringify(status));
+
+        router.replace('./session/login');
+    }
+    else {
+        await AsyncStorage.setItem("@LoggedIn:", JSON.stringify({ username: ""}));
+
+        router.replace('./session/login');
+    }
+  }
 
   return (
     <SafeAreaView style={[styles.container, themeBackground]}>
@@ -122,6 +142,9 @@ const TabOneScreen = () => {
 
           {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
         </View>
+        <View>
+          <Button title="Atsijungti nuo paskyros" onPress={handleLogout} />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -168,4 +191,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TabOneScreen;
+export default SettingsScreen;
