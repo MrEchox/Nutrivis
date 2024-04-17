@@ -27,7 +27,7 @@ export class daily_water_object {
     async saveLocal() {
         try {
             const jsonValue = JSON.stringify(this);
-            var id = prefix + this.date;
+            var id = prefix + this.date + ":" + this.email;
             await AsyncStorage.setItem(id, jsonValue);
             AsyncStorage.getItem(id).then((res) => console.log("Added water:\n" + res))
         }

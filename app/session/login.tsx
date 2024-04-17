@@ -42,10 +42,7 @@ const loginScreen = () => {
 
         const q = query(collectionRef, where("email", "==", email));
         const querySnapshot = await getDocs(q);
-
-        console.log(querySnapshot.size);
-        console.log(bcrypt.compareSync(password, querySnapshot.docs[0].data().password));
-
+        
         if (querySnapshot.size > 0) {
             // Check if password is correct
             if (bcrypt.compareSync(password, querySnapshot.docs[0].data().password)) {

@@ -41,7 +41,7 @@ export class daily_goal_object {
     async saveLocal() {
         try {
             const jsonValue = JSON.stringify(this);
-            var id = prefix + "local";
+            var id = prefix + "local" + ":" + this.email;
             await AsyncStorage.setItem(id, jsonValue);
             AsyncStorage.getItem(id).then((res) => console.log("Added goal:\n" + res))
         }

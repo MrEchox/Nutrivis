@@ -44,17 +44,17 @@ export default function Tracking() {
         // Fetch all keys from AsyncStorage
         const allKeys = await AsyncStorage.getAllKeys();
         // Filter keys to only include those belonging to your app
-        const appKeysGoal = allKeys.filter(key => key.startsWith(Goal_Prefix + "local"));
-        const appKeysEaten = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix + currentDate)); // Gets todays eaten food values
+        const appKeysGoal = allKeys.filter(key => key.startsWith(Goal_Prefix + "local"  + ":" + email));
+        const appKeysEatenUnfiltered = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix + currentDate)); // Gets todays eaten food values
+        console.log(appKeysEatenUnfiltered);
+        const appKeysEaten = appKeysEatenUnfiltered.filter(key => key.includes(email));
         const appKeysWater = allKeys.filter(key => key.startsWith('@Water:' + currentDate)); // Gets todays drunk water values
         // Fetch values corresponding to the filtered keys
         const unfilteredValuesGoalLocal = await AsyncStorage.multiGet(appKeysGoal);
-        console.log("unf"+unfilteredValuesGoalLocal);
         const valuesGoalLocal = unfilteredValuesGoalLocal.filter(([key, value]) => {
           const data = JSON.parse(value);
           return data.email === email;
         });
-        console.log("val"+valuesGoalLocal);
         const unfilteredValuesEaten = await AsyncStorage.multiGet(appKeysEaten);
         const valuesEaten = unfilteredValuesEaten.filter(([key, value]) => {
           const data = JSON.parse(value);
@@ -88,6 +88,8 @@ export default function Tracking() {
         var Fat = 0
         var Protein = 0
 
+        console.log(valuesEaten);
+        
         valuesEaten.forEach(element => {
           const eatenVals = JSON.parse(element[1]);
           Calories += eatenVals.calories / 100 * eatenVals.amount;
