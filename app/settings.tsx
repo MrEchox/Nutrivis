@@ -24,8 +24,19 @@ const SettingsScreen = () => {
   const [weightObjective, setWeightObjective] = useState(0);
   const [stepGoal, setStepGoal] = useState(0);
 
+  const getLoggedInEmail = async () => {
+    const loginVal = await AsyncStorage.getItem("@LoggedIn:");
+    if (loginVal) {
+      const status = JSON.parse(loginVal);
+      return status.email;
+    }
+    return "";
+  };
+
   // Function to calculate recomended calories
-  const handleCaloriesAndSteps = () => {
+  const handleCaloriesAndSteps = async () => {
+    const email = await getLoggedInEmail();
+
     const calculatedRecommendedCalories = calculateRecommendedCalories(age, gender, height, weight, activityLevel, weightObjective);
     setCalorieGoal(calculatedRecommendedCalories);
 
@@ -36,8 +47,9 @@ const SettingsScreen = () => {
     console.log(calorieGoal, Math.round(calorieGoal * 0.5 / 4), Math.round(calorieGoal * 0.2 / 9), Math.round(calorieGoal * 0.3 / 4));
 
     const goal_object = new daily_goal_object(calorieGoal, Math.round(calorieGoal * 0.5 / 4), 
-    Math.round(calorieGoal * 0.2 / 9), Math.round(calorieGoal * 0.3 / 4), calculatedStepGoal);
+    Math.round(calorieGoal * 0.2 / 9), Math.round(calorieGoal * 0.3 / 4), calculatedStepGoal, email);
     goal_object.saveLocal()
+    goal_object.save(email);
   };
 
   async function handleLogout() {

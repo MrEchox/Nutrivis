@@ -28,19 +28,44 @@ export default function Tracking() {
 
   const [refreshPage, setRefreshPage] = useState(false); // State to trigger page refresh
 
+  const getLoggedInEmail = async () => {
+    const loginVal = await AsyncStorage.getItem("@LoggedIn:");
+    if (loginVal) {
+      const status = JSON.parse(loginVal);
+      return status.email;
+    }
+    return "";
+  };
+
     const fetchData = async () => {
       try {
+        const email = await getLoggedInEmail();
+
         // Fetch all keys from AsyncStorage
         const allKeys = await AsyncStorage.getAllKeys();
         // Filter keys to only include those belonging to your app
         const appKeysGoal = allKeys.filter(key => key.startsWith(Goal_Prefix + "local"));
         const appKeysEaten = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix + currentDate)); // Gets todays eaten food values
         const appKeysWater = allKeys.filter(key => key.startsWith('@Water:' + currentDate)); // Gets todays drunk water values
-        console.log(Food_Eaten_Prefix + currentDate);
         // Fetch values corresponding to the filtered keys
-        const valuesGoalLocal = await AsyncStorage.multiGet(appKeysGoal);
-        const valuesEaten = await AsyncStorage.multiGet(appKeysEaten);
-        const valuesWater = await AsyncStorage.multiGet(appKeysWater);
+        const unfilteredValuesGoalLocal = await AsyncStorage.multiGet(appKeysGoal);
+        console.log("unf"+unfilteredValuesGoalLocal);
+        const valuesGoalLocal = unfilteredValuesGoalLocal.filter(([key, value]) => {
+          const data = JSON.parse(value);
+          return data.email === email;
+        });
+        console.log("val"+valuesGoalLocal);
+        const unfilteredValuesEaten = await AsyncStorage.multiGet(appKeysEaten);
+        const valuesEaten = unfilteredValuesEaten.filter(([key, value]) => {
+          const data = JSON.parse(value);
+          console.log(data);
+          return data.email === email;
+        });
+        const unfilteredValuesWater = await AsyncStorage.multiGet(appKeysWater);
+        const valuesWater = unfilteredValuesWater.filter(([key, value]) => {
+          const data = JSON.parse(value);
+          return data.email === email;
+        });
 
         // Water value
         if (valuesWater.length > 0)
@@ -51,6 +76,7 @@ export default function Tracking() {
         }
 
         // Goal values
+        console.log(valuesGoalLocal);
         const goalValues = JSON.parse(valuesGoalLocal[0][1]);
         setGoalCalories(goalValues.calories);
         setGoalCarbs(goalValues.carbs);
@@ -89,15 +115,18 @@ export default function Tracking() {
     }, [])
   );
 
-  const handleWaterDrink = (operation: string) => {
+  const handleWaterDrink = async (operation: string) => {
+    const email = await getLoggedInEmail();
+
     switch (operation) {
       case 'minus5':
         if (Watah !== 0 && Watah >= 500) {
           setWatah(prevWatah => {
             const newWatah = prevWatah - 500;
             console.log("Updated water after minus5: " + newWatah + "ml");
-            const drunkWater = new daily_water_object(currentDate, newWatah);
+            const drunkWater = new daily_water_object(currentDate, newWatah, email);
             drunkWater.saveLocal();
+            drunkWater.save(email);
             return newWatah;
           });
         }
@@ -107,8 +136,9 @@ export default function Tracking() {
           setWatah(prevWatah => {
             const newWatah = prevWatah - 200;
             console.log("Updated water after minus2: " + newWatah + "ml");
-            const drunkWater = new daily_water_object(currentDate, newWatah);
+            const drunkWater = new daily_water_object(currentDate, newWatah, email);
             drunkWater.saveLocal();
+            drunkWater.save(email);
             return newWatah;
           });
         }
@@ -117,8 +147,9 @@ export default function Tracking() {
         setWatah(prevWatah => {
           const newWatah = prevWatah + 200;
           console.log("Updated water after add2: " + newWatah + "ml");
-          const drunkWater = new daily_water_object(currentDate, newWatah);
+          const drunkWater = new daily_water_object(currentDate, newWatah, email);
           drunkWater.saveLocal();
+          drunkWater.save(email);
           return newWatah;
         });
         break;
@@ -126,8 +157,9 @@ export default function Tracking() {
         setWatah(prevWatah => {
           const newWatah = prevWatah + 500;
           console.log("Updated water after add5: " + newWatah + "ml");
-          const drunkWater = new daily_water_object(currentDate, newWatah);
+          const drunkWater = new daily_water_object(currentDate, newWatah, email);
           drunkWater.saveLocal();
+          drunkWater.save(email);
           return newWatah;
         });
         break;
