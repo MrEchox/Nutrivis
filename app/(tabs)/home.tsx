@@ -215,11 +215,13 @@ export default function Tracking() {
             <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
               {minusSvg}
             </Svg>
+            <Text style={[styles.waterIntakeText, themeTextStyle, {bottom:42, fontSize: 13}]}>500</Text>
           </Pressable>
           <Pressable style={[styles.waterIntakeButton]} onPress={() => handleWaterDrink('minus2')}> 
-            <Svg width="100" height="100" style={{ transform: [{ scale: 0.4 }] }} >
+            <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
               {minusSvg}
             </Svg>
+            <Text style={[styles.waterIntakeText, themeTextStyle, {bottom:42, fontSize: 13}]}>200</Text>
           </Pressable>
           <View style={[styles.waterIntakeButton, themeContainer]}>
             <Svg width="100" height="100" style={{ transform: [{ scale: 1 }] }} >
@@ -228,14 +230,16 @@ export default function Tracking() {
           </View>
           <Text style={[styles.waterIntakeText, themeTextStyle]}>{Watah}ml</Text>
           <Pressable style={styles.waterIntakeButton} onPress={() => handleWaterDrink('add2')} >
-            <Svg width="100" height="100" style={{ transform: [{ scale: 0.4 }] }} >
+            <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
               {plusSvg}
             </Svg>
+            <Text style={[styles.waterIntakeText, themeTextStyle, {bottom:42, fontSize: 13}]}>200</Text>
           </Pressable>
           <Pressable style={styles.waterIntakeButton} onPress={() => handleWaterDrink('add5')} >
             <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
               {plusSvg}
             </Svg>
+            <Text style={[styles.waterIntakeText, themeTextStyle, {bottom:42, fontSize: 13}]}>500</Text>
           </Pressable>
         </View>
       </View>
