@@ -3,6 +3,8 @@ import { StyleSheet, TextInput, Button, Pressable } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { daily_water_object } from '@/src/object_classes/daily_water';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 const Food_Eaten_Prefix = '@Food_Eaten:';
 const Goal_Prefix = '@Goal:';
@@ -18,23 +20,35 @@ export default function Tracking() {
   const [goalFat, setGoalFat] = useState(0);
   const [goalProtein, setGoalProtein] = useState(0);
 
+  var date = new Date();
+  const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear(); // dd/mm/yyyy
+
+
   const [Watah, setWatah] = useState(0);
 
-  useEffect(() => {
+  const [refreshPage, setRefreshPage] = useState(false); // State to trigger page refresh
+
     const fetchData = async () => {
       try {
-        var date = new Date();
-        const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear(); // dd/mm/yyyy
-
         // Fetch all keys from AsyncStorage
         const allKeys = await AsyncStorage.getAllKeys();
         // Filter keys to only include those belonging to your app
         const appKeysGoal = allKeys.filter(key => key.startsWith(Goal_Prefix + "local"));
         const appKeysEaten = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix + currentDate)); // Gets todays eaten food values
+        const appKeysWater = allKeys.filter(key => key.startsWith('@Water:' + currentDate)); // Gets todays drunk water values
         console.log(Food_Eaten_Prefix + currentDate);
         // Fetch values corresponding to the filtered keys
         const valuesGoalLocal = await AsyncStorage.multiGet(appKeysGoal);
         const valuesEaten = await AsyncStorage.multiGet(appKeysEaten);
+        const valuesWater = await AsyncStorage.multiGet(appKeysWater);
+
+        // Water value
+        if (valuesWater.length > 0)
+        {
+          const waterValues = JSON.parse(valuesWater[0][1]);
+          setWatah(waterValues.water);
+          console.log("Loaded water: " + waterValues.water + "ml");
+        }
 
         // Goal values
         const goalValues = JSON.parse(valuesGoalLocal[0][1]);
@@ -64,59 +78,63 @@ export default function Tracking() {
         console.error('Error fetching data:', error);
       }
     };
-    fetchData();
-  }, []);
 
-  const handleWaterDrink = (operation : String) => {
-    switch (operation){
+  useFocusEffect( // When focusing on page, fetch data
+    React.useCallback(() => {
+      fetchData();
+      // Return cleanup function
+      return () => {
+        // Any cleanup you want to do when the component is unmounted or loses focus
+      };
+    }, [])
+  );
+
+  const handleWaterDrink = (operation: string) => {
+    switch (operation) {
       case 'minus5':
-        if (Watah != 0 && Watah >= 500)
-          {
-            setWatah(Watah - 500)
-            var date = new Date();
-            const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-      
-            const drunkWater = new daily_water_object(currentDate, Watah);
+        if (Watah !== 0 && Watah >= 500) {
+          setWatah(prevWatah => {
+            const newWatah = prevWatah - 500;
+            console.log("Updated water after minus5: " + newWatah + "ml");
+            const drunkWater = new daily_water_object(currentDate, newWatah);
             drunkWater.saveLocal();
-          };
-        return Watah;
+            return newWatah;
+          });
+        }
+        break;
       case 'minus2':
-        if (Watah != 0 && Watah >= 200)
-          {
-            setWatah(Watah - 200)
-            var date = new Date();
-            const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-      
-            const drunkWater = new daily_water_object(currentDate, Watah);
+        if (Watah !== 0 && Watah >= 200) {
+          setWatah(prevWatah => {
+            const newWatah = prevWatah - 200;
+            console.log("Updated water after minus2: " + newWatah + "ml");
+            const drunkWater = new daily_water_object(currentDate, newWatah);
             drunkWater.saveLocal();
-          };
-        return Watah;
+            return newWatah;
+          });
+        }
+        break;
       case 'add2':
-        {
-        setWatah(Watah + 200);
-        var date = new Date();
-        const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-  
-        const drunkWater = new daily_water_object(currentDate, Watah);
-        drunkWater.saveLocal();
-        }
-        return Watah;
+        setWatah(prevWatah => {
+          const newWatah = prevWatah + 200;
+          console.log("Updated water after add2: " + newWatah + "ml");
+          const drunkWater = new daily_water_object(currentDate, newWatah);
+          drunkWater.saveLocal();
+          return newWatah;
+        });
+        break;
       case 'add5':
-        {
-        setWatah(Watah + 500);
-        var date = new Date();
-        const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-  
-        const drunkWater = new daily_water_object(currentDate, Watah);
-        drunkWater.saveLocal();
-        }
-        return Watah;
+        setWatah(prevWatah => {
+          const newWatah = prevWatah + 500;
+          console.log("Updated water after add5: " + newWatah + "ml");
+          const drunkWater = new daily_water_object(currentDate, newWatah);
+          drunkWater.saveLocal();
+          return newWatah;
+        });
+        break;
       default:
-        return 0;
-
-      
+        break;
     }
-  }
+  };
 
   return (
       <View style={styles.container}>
@@ -124,32 +142,33 @@ export default function Tracking() {
     
         <View style={styles.inputContainer}>
             <View style={styles.inputContainer}>
-              <Text style={styles.title}>Tracking Tab</Text>
+              <Text style={styles.title}>Kasdienis maisto medžiagų sėkimas</Text>
               <Text>Viso kalorijų per dieną: {sumCalories} Rekomenduojama: {goalCalories}</Text>
               <Text>Viso angliavandenių per dieną: {sumCarbs} Rekomenduojama: {goalCarbs}</Text>
               <Text>Viso riebalų per dieną: {sumFat} Rekomenduojama: {goalFat}</Text>
               <Text>Viso baltymų per dieną: {sumProtein} Rekomenduojama: {goalProtein}</Text>
             </View>
+
             <View style={styles.inputContainer}>
-              <Text style={styles.title}>Water xixixaxa</Text>
+              <Text style={styles.title}>Kasdienis vandens sekimas</Text>
               <View style={styles.label}>
                 <Text style={{width:'auto', textAlign: 'center'}}>Šią dieną jūs išgėrėte</Text>
               </View>
               <View style={styles.inputContainer2}>
                 <View style={styles.buttonLeft}>
-                  <Button title="-0.5" onPress={() => handleWaterDrink('minus5')}></Button>
+                  <Button title="-500" onPress={() => handleWaterDrink('minus5')}></Button>
                 </View>
                 <View style={styles.buttonLeft}>
-                  <Button title="-0.2" onPress={() => handleWaterDrink('minus2')}></Button>
+                  <Button title="-200" onPress={() => handleWaterDrink('minus2')}></Button>
                 </View>
                 <View>
-                  <Text style={styles.inputContainer}>{Watah}</Text>
+                  <Text style={styles.inputContainer}>{Watah}ml</Text>
                 </View>
                 <View style={styles.buttonRight}> 
-                  <Button title="+0.2" onPress={() => handleWaterDrink('add2')}></Button> 
+                  <Button title="+200" onPress={() => handleWaterDrink('add2')}></Button> 
                 </View>
                 <View style={styles.buttonRight}> 
-                  <Button title="+0.5" onPress={() => handleWaterDrink('add5')}></Button> 
+                  <Button title="+500" onPress={() => handleWaterDrink('add5')}></Button> 
                 </View>
               </View>
             </View>
