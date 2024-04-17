@@ -10,7 +10,7 @@ import { daily_goal_object } from '@/src/object_classes/daily_goal';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from 'expo-router';
 
-import { commonStyles } from './commonStyles';
+import { commonStyles } from '../components/commonStyles';
 
 const Goal_Prefix = '@Goal:';
 
@@ -42,6 +42,7 @@ const SettingsScreen = () => {
   const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
   const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
   const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
+  
   async function handleLogout() {
     const loginVal = await AsyncStorage.getItem("@LoggedIn:");
     if (loginVal) {
@@ -142,9 +143,13 @@ const SettingsScreen = () => {
 
           {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
         </View>
-        <View>
-          <Button title="Atsijungti nuo paskyros" onPress={handleLogout} />
+        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+          <Text style={[themeTextStyle, {alignSelf: 'center', marginBottom: 10}]}>Vartotojo vardas ar kažkas tokio</Text>
+          <View style={styles.buttonContainer}>
+            <Button color={themeSvg} title="Atsijungti nuo paskyros" onPress={handleLogout} />
+          </View>
         </View>
+        
       </ScrollView>
     </SafeAreaView>
   );
@@ -188,6 +193,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     borderRadius: 10,
     overflow: 'hidden',
+    backgroundColor: '',
   },
 });
 

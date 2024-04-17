@@ -5,7 +5,7 @@ import { Barcode_Food } from '@/src/object_classes/food_object_barcode';
 import { useLocalSearchParams } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
 import { router } from 'expo-router';
-import { commonStyles } from './commonStyles';
+import { commonStyles } from '../components/commonStyles';
 
 /*
 This page is used for adding food with barcode

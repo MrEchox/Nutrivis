@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, ScrollView, View, useColorScheme} from 'react-native';
 import { Stack } from 'expo-router'
-import { commonStyles } from '../../commonStyles';
+import { commonStyles } from '../../../components/commonStyles';
 
 export default function Page() {
   const colorScheme = useColorScheme();

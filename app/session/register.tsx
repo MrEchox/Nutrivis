@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView, BackHandler, Alert } from 'react-native';
+import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView, BackHandler, Alert, useColorScheme } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { User } from '@/src/object_classes/user';
 import { useState } from 'react';
@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase.config.js";
 import { router } from 'expo-router';
+import { commonStyles } from '../../components/commonStyles';
 
 
 const TabTwoScreen = () => {
@@ -66,53 +67,61 @@ const TabTwoScreen = () => {
             ],
             );
     }
+    
+    const colorScheme = useColorScheme();
+    const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
+    const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
+    const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
+    const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
 
     return (
-        <View style={styles.container}>
-                <Text style={styles.title}>Registruotis</Text>
+        <View style={[styles.container, themeBackground]}>
+            <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+            <Text style={[styles.title, themeTextStyle]}>Registracija</Text>
                 <Text> </Text>
-                <View style={styles.inputContainer}> 
-                    <Text style={styles.label}>El. paštas:</Text>
+                    <Text style={[styles.label, themeTextStyle]}>El. paštas:</Text>
                     <TextInput
-                        style={styles.input}
-                        placeholder="Įveskite prisijungimo el. paštą"
+                        style={[styles.input, themeTextStyle]}
+                        placeholder="Įveskite el. pašto adresą"
                         onChangeText={(text) => setEmail(text)}
                     />
-                </View>
-                <View style={styles.inputContainer}> 
-                    <Text style={styles.label}>Slapyvardis:</Text>
+                    <Text> </Text>
+                    <Text style={[styles.label, themeTextStyle]}>Vardas:</Text>
                     <TextInput
-                        style={styles.input}
+                        style={[styles.input, themeTextStyle]}
                         placeholder="Kaip jus vadinti"
                         onChangeText={(text) => setUsername(text)}
                     />
-                </View>
-                <View style={styles.inputContainer}> 
-                    <Text style={styles.label}>Slaptažodis:</Text>
-                    <TextInput secureTextEntry={true}
-                        style={styles.input}
+                    <Text> </Text>
+                    <Text style={[styles.label, themeTextStyle]}>Slaptažodis:</Text>
+                    <TextInput
+                        style={[styles.input, themeTextStyle]}
                         placeholder="Sugalvokite prisijungimo slaptažodį"
                         onChangeText={(text) => setPassword(text)}
                     />
-                </View>
-                <View style={styles.inputContainer}> 
-                    <Text style={styles.label}>Pakartokite slaptažodį:</Text>
-                    <TextInput secureTextEntry={true}
-                        style={styles.input}
+                    <Text> </Text>
+                    <Text style={[styles.label, themeTextStyle]}>Pakartokite slaptažodį:</Text>
+                    <TextInput
+                        style={[styles.input, themeTextStyle]}
                         placeholder="Pakartokite prisijungimo slaptažodį"
                         onChangeText={(text) => setRepeatPassword(text)}
                     />
-                </View>
-                <Button 
+                    <Text> </Text>
+                <View style={styles.buttonContainer}>
+                <Button color={themeSvg}
                     title="Registruotis"
                     onPress={handleRegister}
                 />
+                </View>
                 <Text> </Text>
-                <Text>Ęsate prisiregistravę?</Text>
-                <Button 
+                <Text style={themeTextStyle}>Esate prisiregistravę?</Text>
+                <View style={styles.buttonContainer}>
+                <Button color={themeSvg}
                     title="Prisijungti"
                     onPress={() => router.replace('../session/login')}
                 />
+                </View>
+            </View>
         </View>
     );
 }
@@ -121,34 +130,42 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
-    },
-    title: {
+        justifyContent: 'flex-start',
+        paddingTop: 30,
+      },
+      title: {
         fontSize: 20,
         fontWeight: 'bold',
-        alignSelf: 'center',
-    },
-    separator: {
-        marginVertical: 30,
-        height: 1,
-        width: '80%',
-    },
-    label: {
+      },
+      label: {
         marginRight: 10,
         paddingLeft: 10,
-        alignSelf: 'center',
-    },
-    inputContainer: {
+        paddingBottom: 10,
+        fontWeight: "500",
+      },
+      inputContainer: {
         width: '80%',
         marginBottom: 20,
         borderWidth: 1,
         borderRadius: 5,
         borderColor: '#ccc',
         alignSelf: 'center',
-    },
-    input: {
+      },
+      input: {
         padding: 10,
-    },
+        borderWidth: 1,
+        borderRadius: 10,
+      },
+      separator: {
+        marginVertical: 30,
+        height: 1,
+        width: '80%',
+      },
+      buttonContainer: {
+        borderRadius: 10,
+        overflow: 'hidden',
+        backgroundColor: '',
+      },
 });
 
 export default TabTwoScreen;

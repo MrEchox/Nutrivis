@@ -3,7 +3,7 @@ import { StyleSheet, TextInput, Button, Pressable, useColorScheme} from 'react-n
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProgressBar } from 'react-native-paper';
-import { commonStyles } from '../commonStyles';
+import { commonStyles } from '../../components/commonStyles';
 import CircularProgress from '../../components/CircularProgress';
 import { getSvgByName } from '../../components/SVGs';
 import {Svg } from 'react-native-svg';
@@ -209,27 +209,36 @@ export default function Tracking() {
         </View>
       </View>
 
-        <View style={[commonStyles.mainStatsContainer, themeContainer, { alignItems: 'center'}]}>
-          <View style={[styles.column, themeContainer]}>
-            <Pressable style={styles.waterIntakeButton}> 
-              <Svg width="100" height="100" style={{ transform: [{ scale: 0.6 }] }} >
-                {minusSvg}
-              </Svg>
-            </Pressable>
-            <View style={[styles.waterIntakeButton, themeContainer]}>
-              <Svg width="100" height="100" style={{ transform: [{ scale: 0.8 }] }} >
-                {waterSvg}
-              </Svg>
-            </View>
-            <Text style={[styles.waterIntakeText, themeTextStyle]}>10</Text>
-            <Pressable style={styles.waterIntakeButton}>
-              <Svg width="100" height="100" style={{ transform: [{ scale: 0.6 }] }} >
-                {plusSvg}
-              </Svg>
-            </Pressable>
+      <View style={[commonStyles.mainStatsContainer, themeContainer, { alignItems: 'center'}]}>
+        <View style={[styles.column, themeContainer]}>
+          <Pressable style={[styles.waterIntakeButton]} onPress={() => handleWaterDrink('minus5')}> 
+            <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
+              {minusSvg}
+            </Svg>
+          </Pressable>
+          <Pressable style={[styles.waterIntakeButton]} onPress={() => handleWaterDrink('minus2')}> 
+            <Svg width="100" height="100" style={{ transform: [{ scale: 0.4 }] }} >
+              {minusSvg}
+            </Svg>
+          </Pressable>
+          <View style={[styles.waterIntakeButton, themeContainer]}>
+            <Svg width="100" height="100" style={{ transform: [{ scale: 1 }] }} >
+              {waterSvg}
+            </Svg>
           </View>
+          <Text style={[styles.waterIntakeText, themeTextStyle]}>{Watah}ml</Text>
+          <Pressable style={styles.waterIntakeButton} onPress={() => handleWaterDrink('add2')} >
+            <Svg width="100" height="100" style={{ transform: [{ scale: 0.4 }] }} >
+              {plusSvg}
+            </Svg>
+          </Pressable>
+          <Pressable style={styles.waterIntakeButton} onPress={() => handleWaterDrink('add5')} >
+            <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
+              {plusSvg}
+            </Svg>
+          </Pressable>
         </View>
-
+      </View>
       <View style={[styles.columnContainer, themeBackground]}>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
         <Text style={[styles.text, themeTextStyle]}>Maistas 1</Text>
@@ -244,29 +253,7 @@ export default function Tracking() {
               </Svg>
         </View>
       </View>
-      <View style={styles.inputContainer}>
-              <Text style={styles.title}>Kasdienis vandens sekimas</Text>
-              <View style={styles.label}>
-                <Text style={{width:'auto', textAlign: 'center'}}>Šią dieną jūs išgėrėte</Text>
-              </View>
-              <View style={styles.inputContainer2}>
-                <View style={styles.buttonLeft}>
-                  <Button title="-500" onPress={() => handleWaterDrink('minus5')}></Button>
-                </View>
-                <View style={styles.buttonLeft}>
-                  <Button title="-200" onPress={() => handleWaterDrink('minus2')}></Button>
-                </View>
-                <View>
-                  <Text style={styles.inputContainer}>{Watah}ml</Text>
-                </View>
-                <View style={styles.buttonRight}> 
-                  <Button title="+200" onPress={() => handleWaterDrink('add2')}></Button> 
-                </View>
-                <View style={styles.buttonRight}> 
-                  <Button title="+500" onPress={() => handleWaterDrink('add5')}></Button> 
-                </View>
-              </View>
-        </View>
+      
 
       {/* <Text>Tracking Tab</Text>
       <Text>Viso kalorijų per dieną: {sumCalories} Rekomenduojama: {goalCalories}</Text>
@@ -313,6 +300,7 @@ const styles = StyleSheet.create({
   waterIntakeButton: {
     width: 100,
     height: 100,
+    margin: -10,
   },
   waterIntakeText: {
     position: 'absolute',
@@ -326,53 +314,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     overflow: 'hidden',
     marginBottom: 5,
-    justifyContent: 'center',
-    width: '100%',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    padding: 0,
-  },
-  label: {
-    marginRight: 10,
-    paddingLeft: 10,
-  },
-  inputContainer: {
-    width: 'auto',
-    marginTop: 20,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: '#ccc',
-    padding: 10,
-  },
-  inputContainer2: {
-    width: '100%',
-    marginBottom: 20,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: '#ccc',
-    padding: 10,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  input: {
-    padding: 10,
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-  buttonLeft: {
-    width: 'auto',
-    left: 0,
-  },
-  buttonRight: {
-    width: 'auto',
-    right: 0,
   },
 });

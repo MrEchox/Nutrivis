@@ -4,7 +4,7 @@ import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { food_object_eaten } from '@/src/object_classes/food_object_eaten'; 
 import { useFocusEffect } from '@react-navigation/native';
-import { commonStyles } from '../commonStyles';
+import { commonStyles } from '../../components/commonStyles';
 
 
 // Unique identifiers
@@ -149,6 +149,13 @@ export default function Foods() {
             <Text style={[themeTextStyle, {fontWeight:"500"}]}>
               Pasirinkta: {selectedItemIndex ? JSON.parse(selectedItemIndex).name + ' ' : ''} 
               ({selectedItemIndex ? JSON.parse(selectedItemIndex).calories : ''} kcal)
+            </Text>
+            <Text style={[themeTextStyle]}>
+              (Angl.: {selectedItemIndex ? JSON.parse(selectedItemIndex).carbs + ' g, ' : ''}
+              Rieb.: {selectedItemIndex ? JSON.parse(selectedItemIndex).fat + ' g, ' : ''}
+              Prot.: {selectedItemIndex ? JSON.parse(selectedItemIndex).protein + ' g' : ''}
+              
+              )
             </Text>
             <View style={[themeContainer, {paddingBottom: 10}]}>
               <Text style={[styles.label, themeTextStyle, {fontWeight:"500", paddingBottom: 10}]}>Suvalgytas produkto kiekis</Text>

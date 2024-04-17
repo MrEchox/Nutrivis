@@ -2,7 +2,7 @@ import { StyleSheet, TextInput, Button, ScrollView, useColorScheme, Alert} from 
 import React, { useState } from 'react';
 import { Text, View } from '@/components/Themed';
 import { food_object } from '@/src/object_classes/food_object';
-import { commonStyles } from '../commonStyles';
+import { commonStyles } from '../../components/commonStyles';
 
 const AddFoodScreen = () => {
     var [name, setName] = useState('');

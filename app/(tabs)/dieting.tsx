@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, FlatList, ScrollView, useColorScheme} from 'react-native';
 import { Link } from 'expo-router';
 
-import { commonStyles } from '../commonStyles';
+import { commonStyles } from '../../components/commonStyles';
 
 
 const pages = [
