@@ -5,6 +5,7 @@ import { useState } from 'react';
 import bcrypt from 'bcryptjs';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase.config.js";
+import { router } from 'expo-router';
 
 
 const TabTwoScreen = () => {
