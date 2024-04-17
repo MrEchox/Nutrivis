@@ -5,6 +5,7 @@ import { useState } from 'react';
 import bcrypt from 'bcryptjs';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase.config.js";
+import { router } from 'expo-router';
 
 
 const TabTwoScreen = () => {
@@ -42,36 +43,30 @@ const TabTwoScreen = () => {
             return;
         }
 
-        const q2 = query(collectionRef, where("username", "==", username));
-        const querySnapshot2 = await getDocs(q2);
-        if (querySnapshot2.size > 0) {
-            Alert.alert(
-                "Klaida",
-                "Toks slapyvardis jau užimtas",
-                [
-                    { text: 'OK', onPress: () => console.log('OK Pressed') }
-                ],
-                );
-            return;
-        }
-
         // Hash the password
         const saltRounds = 7;
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(password, salt);
 
-        // Make a user object
-        const user = new User( email, username, hash, salt);
+        const user = new User( email, username, hash, salt); // Make a user object
 
-        // Save the object to local storage
-        user.saveLocal();
-        // Save the object to the database
-        user.save();
+        user.saveLocal(); // Save the object to local storage
+        user.save(); // Save the object to the database
+
+        Alert.alert(
+            "Valio!",
+            "Sėkmingai užsiregistravote!",
+            [
+                { text: 'OK', onPress: () => {
+                    console.log('OK Pressed')
+                    router.replace('../session/login')}}
+            ],
+            );
     }
 
     return (
         <View style={styles.container}>
-                <Text style={styles.title}>Registruotis</Text>
+                <Text style={styles.title}>Registracija</Text>
                 <Text> </Text>
                 <View style={styles.inputContainer}> 
                     <Text style={styles.label}>El. paštas:</Text>
@@ -91,7 +86,7 @@ const TabTwoScreen = () => {
                 </View>
                 <View style={styles.inputContainer}> 
                     <Text style={styles.label}>Slaptažodis:</Text>
-                    <TextInput
+                    <TextInput secureTextEntry={true}
                         style={styles.input}
                         placeholder="Sugalvokite prisijungimo slaptažodį"
                         onChangeText={(text) => setPassword(text)}
@@ -99,7 +94,7 @@ const TabTwoScreen = () => {
                 </View>
                 <View style={styles.inputContainer}> 
                     <Text style={styles.label}>Pakartokite slaptažodį:</Text>
-                    <TextInput
+                    <TextInput secureTextEntry={true}
                         style={styles.input}
                         placeholder="Pakartokite prisijungimo slaptažodį"
                         onChangeText={(text) => setRepeatPassword(text)}
@@ -110,9 +105,10 @@ const TabTwoScreen = () => {
                     onPress={handleRegister}
                 />
                 <Text> </Text>
-                <Text>Ęsate prisiregistravę?</Text>
+                <Text>Esate prisiregistravę?</Text>
                 <Button 
                     title="Prisijungti"
+                    onPress={() => router.replace('../session/login')}
                 />
         </View>
     );

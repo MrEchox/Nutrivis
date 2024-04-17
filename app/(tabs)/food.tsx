@@ -50,7 +50,7 @@ export default function Foods() {
     }
   };
 
-  useFocusEffect( // When focusing on page fetch data
+  useFocusEffect( // When focusing on page, fetch data
     React.useCallback(() => {
       fetchData();
       // Return cleanup function

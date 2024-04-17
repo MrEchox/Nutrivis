@@ -23,19 +23,14 @@ const loginScreen = () => {
             const loginVal = await AsyncStorage.getItem("@LoggedIn:");
             if (loginVal) {
                 const status = JSON.parse(loginVal);
-
                 status.username = username;
-
                 await AsyncStorage.setItem("@LoggedIn:", JSON.stringify(status));
-
                 console.log(status);
-
                 router.replace('../');
             }
         }
         else {
             await AsyncStorage.setItem("@LoggedIn:", JSON.stringify({ username: username}));
-
             console.log({ username: username });
             router.replace('../');
         }
@@ -67,16 +62,17 @@ const loginScreen = () => {
                         const user = JSON.parse(userVal);
                         console.log(user);
                         changeLoginStatus(user.username);
-                        router.replace('../(tabs)/index')
+                        router.replace('../(tabs)/home')
                         console.log(user);
                     }
                 }
 
                 else {
-                    var LogInUser = new User(querySnapshot.docs[0].data().email, querySnapshot.docs[0].data().username, querySnapshot.docs[0].data().password, querySnapshot.docs[0].data().salt);
+                    var LogInUser = new User(querySnapshot.docs[0].data().email, querySnapshot.docs[0].data().username,
+                        querySnapshot.docs[0].data().password, querySnapshot.docs[0].data().salt);
                     console.log(LogInUser);
                     changeLoginStatus(LogInUser.username);
-                    router.replace('../(tabs)/index')
+                    router.replace('../(tabs)/home')
                     LogInUser.saveLocal();
                 }
             }
@@ -97,7 +93,7 @@ const loginScreen = () => {
                 </View>
                 <View style={styles.inputContainer}> 
                     <Text style={styles.label}>Slaptažodis:</Text>
-                    <TextInput
+                    <TextInput secureTextEntry={true}
                         style={styles.input}
                         placeholder="Įveskite prisijungimo slaptažodį"
                         onChangeText={(text) => setPassword(text)}
@@ -115,6 +111,7 @@ const loginScreen = () => {
                 <Text>Jungiates pirmą kartą?</Text>
                 <Button 
                     title="Registruotis"
+                    onPress={() => router.replace('../session/register')}
                 />
         </View>
     );
