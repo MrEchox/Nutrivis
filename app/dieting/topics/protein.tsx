@@ -6,52 +6,80 @@ export default function Page() {
     
     return (
         <View style={styles.container}>
-          <ScrollView>
-            <Text style={styles.title}>Lorem?</Text>
+        <ScrollView>
+        <Text style={styles.title}>Kas yra baltymai?</Text>
 
-            <Text style={styles.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque rutrum nulla a nibh feugiat facilisis. Suspendisse a metus a mi dapibus tristique. 
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sodales mauris id condimentum molestie. Phasellus quis eleifend arcu, eu eleifend justo. 
-            Sed sapien velit, laoreet vel porta at, finibus ac mi. Integer laoreet ipsum a lacus facilisis fermentum. 
-            Fusce et erat commodo, aliquam risus eget, fermentum enim. Nulla iaculis orci vel dignissim consectetur. 
-            Donec auctor tempor ligula in ultricies. Praesent vestibulum condimentum porta. Proin consequat eros lorem.
-            </Text>
+<Text style={styles.text}>
+Baltymai – statybinė raumenų medžiaga.
+</Text>
 
-            <Text style={styles.text}>
-            Ut nec orci placerat, congue orci quis, interdum dui. In a vestibulum arcu. Aenean erat dui, placerat sed ipsum quis, condimentum congue eros. 
-            Cras porttitor venenatis neque id consequat. Duis a pulvinar diam. Sed nec arcu ipsum. Pellentesque at laoreet ipsum. Nam rhoncus quam ut est maximus, 
-            ut efficitur mauris lobortis. Curabitur eget euismod velit, a viverra lorem. Donec viverra mi id quam pellentesque pretium. 
-            Etiam leo massa, auctor vel ultricies vel, porta id nibh. Ut eu elementum ipsum. Etiam sagittis turpis eu tristique mollis.
-            </Text>
 
-            <Text style={styles.title}>Ipsum?</Text>
 
-            <Text style={styles.text}>
-            Ut varius nisl et tempor convallis. Nunc lobortis quam vel tortor tincidunt molestie. Duis eu eleifend massa. 
-            Cras libero nunc, euismod sit amet diam et, dapibus auctor lectus. Donec congue sapien nisi, tempor auctor purus consectetur vel. 
-            Morbi sit amet gravida velit, quis maximus nisi. Quisque eu porta leo. In ut odio tempus, ultrices nulla et, tempor nunc. 
-            Fusce egestas ultrices fringilla. Vestibulum mattis, nulla sed porta tincidunt, sem purus faucibus diam, nec fermentum neque sapien at eros. 
-            Proin eget purus non leo tempor finibus.
-            </Text>
+<Text style={styles.text}>
+Baltymai – viena iš pagrindinių maistinių medžiagų, kaip angliavandeniai ir riebalai. 
+</Text>
 
-            <Text style={styles.text}>
-            Cras eros dolor, finibus non sodales ut, accumsan non orci. Etiam venenatis molestie tristique. 
-            Suspendisse dapibus nulla id bibendum vestibulum. Donec sed vestibulum sapien. Duis ullamcorper vestibulum massa ut tempor. 
-            Nam libero nisi, tincidunt eget lorem euismod, ornare iaculis eros. Sed blandit massa ac tellus auctor mollis. 
-            In pretium, leo quis accumsan euismod, tortor mi pharetra erat, ac rutrum massa purus non est. Quisque pulvinar lobortis risus, ac molestie elit tempor elementum.
-            </Text>
+<Text style={styles.text}>
+Visos šios maistinės medžiagos susideda iš anglies, deguonies ir vandenilio. 
+</Text>
 
-            <Text style={styles.title}>Dolor sit amet?</Text>
+<Text style={styles.text}>
+Baltymai nuo angliavandenių ir riebalų skiriasi tuo, kad juose be anglies, deguonies ir vandenilio molekulių dar yra azoto, sulfanilamidino ir keletas mineralų. 
+</Text>
 
-            <Text style={styles.text}>
-            Ut eleifend odio felis, eu efficitur turpis vehicula sed. Quisque vulputate, lorem et ultrices hendrerit, magna ante venenatis orci, 
-            vel mattis nisi sapien nec enim. Etiam justo purus, dignissim eu leo sed, congue dictum neque. Nam aliquet turpis vel sapien vulputate fringilla. 
-            Sed ut augue arcu. Morbi in elit at urna porta tristique. Maecenas quis fermentum diam. Aliquam eu tincidunt ipsum, sit amet vehicula lacus. 
-            Nunc pellentesque vehicula porttitor. Donec bibendum mi turpis, facilisis molestie nisl imperdiet eu. Pellentesque non auctor lacus. 
-            Etiam pretium facilisis bibendum. Praesent vel massa a ante ornare iaculis at vel ipsum.
-            </Text>
+<Text style={styles.text}>
+Baltymas yra suformuota iš 100 ar daugiau susijungusių amino rūgščių. 
+</Text>
 
-            <Text style={styles.refference}>Šaltinis:{'\n'}lipsum.com</Text>
+<Text style={styles.text}>
+Baltymai formuojami vadovaujantis specifiniai genetiniais kodais. 
+</Text>
+
+<Text style={styles.text}>
+Taigi, atskiros amino rūšys į specifinius baltymus yra jungiamos naudojantis tam tikrais genais ar kodais. 
+</Text>
+
+<Text style={styles.text}>
+Yra apie 10000 skirtingų baltymų rūšių.
+</Text>
+
+<Text style={styles.text}>
+</Text>
+
+<Text style={styles.text}>
+</Text>
+
+<Text style={styles.title}>Baltymų paskirtis</Text>
+
+<Text style={styles.text}>
+Baltymai yra statybinė raumens medžiaga, atstato pažeistas raumens skaidulas po treniruotės.
+</Text>
+
+<Text style={styles.text}>
+Aprūpina imuninę sistemą antikūnais.
+</Text>
+
+<Text style={styles.text}>
+Gamina hormonus ir enzimus, kurie yra įtraukiami į daugelį organizme vykstančių reakcijų.
+</Text>
+
+<Text style={styles.text}>
+Padeda virškinti ir absorbuoti maistą.
+</Text>
+
+<Text style={styles.text}>
+Energijos šaltinis, kai glikogeno atsargos išnaudotos.
+</Text>
+
+<Text style={styles.text}>
+Maksimizuoja deguonies transportavimą į audinius.
+</Text>
+
+<Text style={styles.text}>
+Medžiaga būtina raumenims, sausgyslėms, vidaus organams, kaulams, plaukams, odai, ir kitiems audiniams.
+</Text>
+
+<Text style={styles.refference}>Šaltinis:{'\n'}https://maistassportui.lt/straipsniai/ivairus/baltymai/</Text>
           </ScrollView>
         </View>
     )

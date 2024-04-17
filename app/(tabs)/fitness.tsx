@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+/*import { useState, useEffect } from 'react';
 import { StyleSheet, PermissionsAndroid, Alert, TextInput } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { Pedometer } from 'expo-sensors';
@@ -77,3 +77,4 @@ const styles = StyleSheet.create({
         padding: 10,
     },
 });
+*/
