@@ -94,14 +94,14 @@ export default function Tracking() {
             <CircularProgress
               size={110} 
               strokeWidth={10}
-              progressPercent={60}
-              //progressPercent={(sumCarbs/goalCarbs)*100}
+              //progressPercent={60}
+              progressPercent={(sumCalories/goalCalories)*100}
               text="50%" //does nothing currently
               fill={themeProg}
               back={themeProgF}
             />
             </View>
-            <Text style={[styles.text, themeTextStyle]}>{sumCarbs}/{goalCarbs}</Text>
+            <Text style={[styles.text, themeTextStyle]}>{sumCalories}/{goalCalories}</Text>
             <Text>{'\n'}</Text>
           </View>
         <View style={[styles.column, themeContainer]}>
