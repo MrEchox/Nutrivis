@@ -89,7 +89,7 @@ const TabTwoScreen = () => {
                 </View>
                 <View style={styles.inputContainer}> 
                     <Text style={styles.label}>Slaptažodis:</Text>
-                    <TextInput
+                    <TextInput secureTextEntry={true}
                         style={styles.input}
                         placeholder="Sugalvokite prisijungimo slaptažodį"
                         onChangeText={(text) => setPassword(text)}
@@ -97,7 +97,7 @@ const TabTwoScreen = () => {
                 </View>
                 <View style={styles.inputContainer}> 
                     <Text style={styles.label}>Pakartokite slaptažodį:</Text>
-                    <TextInput
+                    <TextInput secureTextEntry={true}
                         style={styles.input}
                         placeholder="Pakartokite prisijungimo slaptažodį"
                         onChangeText={(text) => setRepeatPassword(text)}
@@ -111,6 +111,7 @@ const TabTwoScreen = () => {
                 <Text>Ęsate prisiregistravę?</Text>
                 <Button 
                     title="Prisijungti"
+                    onPress={() => router.replace('../session/login')}
                 />
         </View>
     );
