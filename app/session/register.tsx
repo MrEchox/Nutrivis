@@ -5,7 +5,6 @@ import { useState } from 'react';
 import bcrypt from 'bcryptjs';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase.config.js";
-import { router } from 'expo-router';
 
 
 const TabTwoScreen = () => {
@@ -48,10 +47,13 @@ const TabTwoScreen = () => {
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(password, salt);
 
-        const user = new User( email, username, hash, salt); // Make a user object
+        // Make a user object
+        const user = new User( email, username, hash, salt);
 
-        user.saveLocal(); // Save the object to local storage
-        user.save(); // Save the object to the database
+        // Save the object to local storage
+        user.saveLocal();
+        // Save the object to the database
+        user.save();
 
         Alert.alert(
             "Valio!",
@@ -66,7 +68,7 @@ const TabTwoScreen = () => {
 
     return (
         <View style={styles.container}>
-                <Text style={styles.title}>Registracija</Text>
+                <Text style={styles.title}>Registruotis</Text>
                 <Text> </Text>
                 <View style={styles.inputContainer}> 
                     <Text style={styles.label}>El. paštas:</Text>
@@ -86,7 +88,7 @@ const TabTwoScreen = () => {
                 </View>
                 <View style={styles.inputContainer}> 
                     <Text style={styles.label}>Slaptažodis:</Text>
-                    <TextInput secureTextEntry={true}
+                    <TextInput
                         style={styles.input}
                         placeholder="Sugalvokite prisijungimo slaptažodį"
                         onChangeText={(text) => setPassword(text)}
@@ -94,7 +96,7 @@ const TabTwoScreen = () => {
                 </View>
                 <View style={styles.inputContainer}> 
                     <Text style={styles.label}>Pakartokite slaptažodį:</Text>
-                    <TextInput secureTextEntry={true}
+                    <TextInput
                         style={styles.input}
                         placeholder="Pakartokite prisijungimo slaptažodį"
                         onChangeText={(text) => setRepeatPassword(text)}
@@ -105,10 +107,9 @@ const TabTwoScreen = () => {
                     onPress={handleRegister}
                 />
                 <Text> </Text>
-                <Text>Esate prisiregistravę?</Text>
+                <Text>Ęsate prisiregistravę?</Text>
                 <Button 
                     title="Prisijungti"
-                    onPress={() => router.replace('../session/login')}
                 />
         </View>
     );

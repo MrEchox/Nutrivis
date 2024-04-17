@@ -13,11 +13,11 @@ const loginStatus = async () => {
             if (loginVal) {
                 const status = JSON.parse(loginVal);
                 if (status.username === '') {
-                    // If user is not logged in, navigate to login screen\
-                    router.replace('./(tabs)/home');
+                    // If user is not logged in, navigate to login screen
+                    router.replace('./session/login');
                 } else {
                     // If user is logged in, navigate to home screen within the tab stack
-                    router.replace('./session/login');
+                    router.replace('./(tabs)/home');
                 }
             }
         } else {
