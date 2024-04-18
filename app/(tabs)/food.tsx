@@ -123,6 +123,22 @@ export default function Foods() {
     }
   };
 
+  const getLoggedInEmail = async () => {
+    const loginVal = await AsyncStorage.getItem("@LoggedIn:");
+    if (loginVal) {
+      const status = JSON.parse(loginVal);
+      return status.email;
+    }
+    return "";
+  };
+
+  const handleFoodSave = async (currentDate, eatenGrams, name, calories, carbs, fat, protein) => {
+    const email = await getLoggedInEmail();
+    const eatenFood = new food_object_eaten(currentDate, parseFloat(eatenGrams), name, calories, carbs, fat, protein, email);
+    eatenFood.saveLocal();
+    eatenFood.save(email);
+  }
+
 
   return (
     <View style={[styles.container, themeBackground]}>

@@ -9,10 +9,16 @@ const pages = [
     { title: 'Kalorijos', link: '../dieting/topics/calories' },
     { title: 'Angliavandeniai', link: '../dieting/topics/carbs' },
     { title: 'Baltymai', link: '../dieting/topics/protein' },
-    { title: 'Riebalai', link: '../dieting/topics/fats' },
+    { title: 'Riebalai - lipidai', link: '../dieting/topics/fats' },
     { title: 'Skaidulos', link: '../dieting/topics/fiber' },
     { title: 'Hidratacija', link: '../dieting/topics/hydration'},
     { title: 'Papildai', link: '../dieting/topics/supplements'},
+    { title: 'Sportavimo tipai', link: '../dieting/topics/trainingtypes'},
+    { title: 'Maisto valgymo laikas', link: '../dieting/topics/nutrienttiming'},
+    { title: 'Maisto planavimas', link: '../dieting/topics/mealplaning'},
+    { title: 'Nutukimas', link: '../dieting/topics/Obsesity'},
+    { title: 'Anoreksija', link: '../dieting/topics/Anorexia'},
+    { title: 'Emocinis valgymas', link: '../dieting/topics/Emotional_stress_eating'},
   // Add more pages as needed
 ];
 
