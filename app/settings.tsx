@@ -11,6 +11,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from 'expo-router';
 
 import { commonStyles } from '../components/commonStyles';
+import { HelperText } from 'react-native-paper';
+
 
 const Goal_Prefix = '@Goal:';
 
@@ -34,6 +36,7 @@ const SettingsScreen = () => {
     return "";
   };
 
+
   // Function to calculate recomended calories
   const handleCaloriesAndSteps = async () => {
     const email = await getLoggedInEmail();
@@ -49,6 +52,9 @@ const SettingsScreen = () => {
     goal_object.saveLocal()
     goal_object.save(email);
   };
+
+  
+  
 
   const colorScheme = useColorScheme();
   const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
@@ -73,8 +79,60 @@ const SettingsScreen = () => {
         router.replace('./session/login');
     }
   }
+// Checking input data for age error
+  const inputAge = parseInt(age);
+ // if (!isNaN(inputAge)) {
+    if (inputAge >= 12 && inputAge <= 120) {
+      setAge(age);
+      //alert('');
+    } else {
+      //<View>
+      
+       // <HelperText type="error" visible={hasErrors()}>
+      alert('Amžius turi būti daugiau 12(netinkama vaikam)!');
+      //</HelperText>
+     // </View>
+    }
+    
+ // }else {
+   //alert('Prašome įvesti tinkamą amžių.');
+  //}
 
+  // Checking input data for height error
+  const inputheight = parseInt(height);
+  //if (!isNaN(inputheight)) {
+    if (inputheight >= 12 && inputheight <= 260) {
+      setHeight(height);
+     // alert('');
+    } else {
+      //<View>
+      //  <HelperText type="error" visible={hasErrors()}>
+      alert(' Ūgis turi atitikti realius matmenis cm !');
+     // </HelperText>
+     //</View>
+    }
+ // } else {
+   // alert('Prašome įvesti tinkamą ūgį.');
+ // }
+
+  // Checking input data for weight error
+  const inputweight = parseInt(weight);
+  //if (!isNaN(inputweight)) {
+    if (inputweight >= 0) {
+      setHeight(weight);
+     // alert('');
+    } else {
+      //<View>
+        //<HelperText type="error" visible={hasErrors()}>
+      alert ('Svoris turibūti teigiamas!');
+      //</HelperText>
+      //</View>
+    }
+  //} else {
+    //alert('Prašome įvesti tinkamą svorį.');
+  //}
   return (
+    
     <SafeAreaView style={[styles.container, themeBackground]}>
       <ScrollView>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
@@ -84,6 +142,7 @@ const SettingsScreen = () => {
             placeholder="Įveskite savo amžių"
             keyboardType="numeric"
             onChangeText={(text) => setAge(text)}
+            
           />
         </View>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
@@ -166,6 +225,7 @@ const SettingsScreen = () => {
       </ScrollView>
     </SafeAreaView>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -211,3 +271,7 @@ const styles = StyleSheet.create({
 });
 
 export default SettingsScreen;
+function hasErrors(): boolean | undefined {
+  throw new Error('Function not implemented.');
+}
+
