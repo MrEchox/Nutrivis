@@ -42,10 +42,7 @@ export default function Tracking() {
   var date = new Date();
   const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear(); // dd/mm/yyyy
 
-
   const [Watah, setWatah] = useState(0);
-
-  const [refreshPage, setRefreshPage] = useState(false); // State to trigger page refresh
 
   const getLoggedInEmail = async () => {
     const loginVal = await AsyncStorage.getItem("@LoggedIn:");
@@ -62,12 +59,14 @@ export default function Tracking() {
 
         // Fetch all keys from AsyncStorage
         const allKeys = await AsyncStorage.getAllKeys();
+
         // Filter keys to only include those belonging to your app
         const appKeysGoal = allKeys.filter(key => key.startsWith(Goal_Prefix + "local"  + ":" + email));
         const appKeysEatenUnfiltered = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix + currentDate)); // Gets todays eaten food values
         console.log(appKeysEatenUnfiltered);
         const appKeysEaten = appKeysEatenUnfiltered.filter(key => key.includes(email));
-        const appKeysWater = allKeys.filter(key => key.startsWith('@Water:' + currentDate)); // Gets todays drunk water values
+        const appKeysWater = allKeys.filter(key => key.startsWith('@Water:' + currentDate)); // Gets todays drank water values
+
         // Fetch values corresponding to the filtered keys
         const unfilteredValuesGoalLocal = await AsyncStorage.multiGet(appKeysGoal);
         const valuesGoalLocal = unfilteredValuesGoalLocal.filter(([key, value]) => {
@@ -203,7 +202,7 @@ export default function Tracking() {
               back={themeProgF}
             />
             </View>
-            <Text style={[styles.text, themeTextStyle]}>{sumCalories}/{goalCalories}</Text>
+            <Text style={[styles.text, themeTextStyle]}>{sumCalories}/{goalCalories} kcal</Text>
             <Text>{'\n'}</Text>
           </View>
         <View style={[styles.column, themeContainer]}>

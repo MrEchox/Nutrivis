@@ -47,7 +47,7 @@ export class food_object_eaten {
     async saveLocal() {
         try {
             const jsonValue = JSON.stringify(this);
-            var id = prefix + this.date + ":" + this.name + ":" + this.email; // @EatenFood:date:name
+            var id = prefix + this.date + ":" + this.name + ":" + this.email; // @EatenFood:date:name:email
             await AsyncStorage.setItem(id, jsonValue);
             AsyncStorage.getItem(id).then((res) => console.log("Added eaten food:\n" + res))
         }
