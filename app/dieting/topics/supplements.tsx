@@ -1,11 +1,14 @@
 import React from 'react';
-import { Text, StyleSheet, ScrollView, View } from 'react-native';
+import { Text, StyleSheet, ScrollView, View, useColorScheme} from 'react-native';
 import { Stack } from 'expo-router'
+import { commonStyles } from '../../../components/commonStyles';
 
 export default function Page() {
-    
+  const colorScheme = useColorScheme();
+  const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
+  const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, themeBackground]}>
           <ScrollView>
             <Text style={styles.title}>Kam reikalingi maisto papildai?</Text>
 

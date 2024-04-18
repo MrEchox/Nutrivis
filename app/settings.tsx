@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, Button, ScrollView, Modal, Platform, SafeAreaView } from 'react-native';
+import { StyleSheet, TextInput, Button, ScrollView, Modal, Platform, SafeAreaView, useColorScheme } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { calculateStepGoal } from '@/src/util/goal_calculations';
 import { calculateRecommendedCalories } from '@/src/util/goal_calculations';
@@ -10,8 +10,9 @@ import { daily_goal_object } from '@/src/object_classes/daily_goal';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from 'expo-router';
 
+import { commonStyles } from '../components/commonStyles';
 
-const Goal_Prefix = '@Goal:'; 
+const Goal_Prefix = '@Goal:';
 
 //---Calorie Tab---
 const SettingsScreen = () => {
@@ -43,15 +44,18 @@ const SettingsScreen = () => {
     const calculatedStepGoal = calculateStepGoal(age, gender, height, weight, activityLevel);
     setStepGoal(calculatedStepGoal);
 
-    //Object structure - calories, carbs, fat, protein
-    console.log(calorieGoal, Math.round(calorieGoal * 0.5 / 4), Math.round(calorieGoal * 0.2 / 9), Math.round(calorieGoal * 0.3 / 4));
-
     const goal_object = new daily_goal_object(calorieGoal, Math.round(calorieGoal * 0.5 / 4), 
     Math.round(calorieGoal * 0.2 / 9), Math.round(calorieGoal * 0.3 / 4), calculatedStepGoal, email);
     goal_object.saveLocal()
     goal_object.save(email);
   };
 
+  const colorScheme = useColorScheme();
+  const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
+  const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
+  const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
+  const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
+  
   async function handleLogout() {
     const loginVal = await AsyncStorage.getItem("@LoggedIn:");
     if (loginVal) {
@@ -71,54 +75,53 @@ const SettingsScreen = () => {
   }
 
   return (
-    //---Basic user information---
-    <SafeAreaView>
+    <SafeAreaView style={[styles.container, themeBackground]}>
       <ScrollView>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Amžius:</Text>
+        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+          <Text style={[styles.label, themeTextStyle]}>Amžius:</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, themeTextStyle]}
             placeholder="Įveskite savo amžių"
             keyboardType="numeric"
             onChangeText={(text) => setAge(text)}
           />
         </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Lytis</Text>
+        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+          <Text style={[styles.label, themeTextStyle]}>Lytis</Text>
           <Picker
             selectedValue={gender}
             placeholder="Pasirinkite lytį"
             onValueChange={(itemValue) => setGender(itemValue)}
-            style={styles.input}
+            style={[styles.input, themeContainer, themeTextStyle]}
           >
             <Picker.Item label="Vyras" value="male" />
             <Picker.Item label="Moteris" value="female" />
           </Picker>
         </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Ūgis</Text>
+        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+          <Text style={[styles.label, themeTextStyle]}>Ūgis</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, themeTextStyle]}
             placeholder="Įveskite savo ūgį (cm)"
             keyboardType="numeric"
             onChangeText={(text) => setHeight(text)}
           />
         </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Svoris</Text>
+        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+          <Text style={[styles.label, themeTextStyle]}>Svoris</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, themeTextStyle]}
             placeholder="Įveskite savo svorį (kg)"
             keyboardType="numeric"
             onChangeText={(text) => setWeight(text)}
           />
         </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Fizinio aktyvumo lygis</Text>
+        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+          <Text style={[styles.label, themeTextStyle]}>Fizinio aktyvumo lygis</Text>
           <Picker
             selectedValue={activityLevel}
             onValueChange={(itemValue) => setActivityLevel(itemValue)}
-            style={styles.input}
+            style={[styles.input, themeTextStyle, themeContainer]}
           >
             <Picker.Item label="Neaktyvus" value="sedentary" />
             <Picker.Item label="Mažas" value="lightly active" />
@@ -127,12 +130,12 @@ const SettingsScreen = () => {
             <Picker.Item label="Labai didelis" value="extra active" />
           </Picker>
         </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Jūsų tikslas</Text>
+        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+          <Text style={[styles.label, themeTextStyle]}>Jūsų tikslas</Text>
           <Picker
             selectedValue={weightObjective}
             onValueChange={(itemValue) => setWeightObjective(itemValue)}
-            style={styles.input}
+            style={[styles.input, themeTextStyle, themeContainer]}
           >
             <Picker.Item label="Ekstremalus svorio metimas" value="extreme loss" />
             <Picker.Item label="Svorio metimas" value="loss" />
@@ -141,27 +144,25 @@ const SettingsScreen = () => {
             <Picker.Item label="Ekstremalus svorio priaugimas" value="extreme gain" />
           </Picker>
         </View>
-        {/*Calculating recomended calories, steps and macronutrients for the user*/}
-        <View style={styles.inputContainer}>
-          <Button title="Apskaičiuoti" onPress={handleCaloriesAndSteps} />
+        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+          <View style={styles.buttonContainer}>
+            <Button color={themeSvg} title="Apskaičiuoti" onPress={handleCaloriesAndSteps}/>
+          </View>
+          <Text style={themeTextStyle}>Rekomenduojamas žingsnių skaičius per dieną: {stepGoal}</Text>
+          <Text style={themeTextStyle}>Rekomenduojamas kalorijų kiekis per dieną: {calorieGoal}</Text>
+          <Text style={themeTextStyle}>Rekomenduojamas angliavandenių kiekis gramais: {Math.round(calorieGoal * 0.5 / 4)}</Text>
+          <Text style={themeTextStyle}>Rekomenduojamas riebalų kiekis gramais: {Math.round(calorieGoal * 0.2 / 9)}</Text>
+          <Text style={themeTextStyle}>Rekomenduojamas baltymų kiekis gramais: {Math.round(calorieGoal * 0.3 / 4)}</Text>
+
+          {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
+        </View>
+        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+          <Text style={[themeTextStyle, {alignSelf: 'center', marginBottom: 10}]}>Vartotojo vardas ar kažkas tokio</Text>
+          <View style={styles.buttonContainer}>
+            <Button color={themeSvg} title="Atsijungti nuo paskyros" onPress={handleLogout} />
+          </View>
+        </View>
         
-          <Text>Rekomenduojamas žingsnių skaičius per dieną: {stepGoal}</Text>
-
-          {/*Calories acording to Daily energy expenditure and user's objective*/}
-          <Text>Rekomenduojamas kalorijų kiekis per dieną: {calorieGoal}</Text>
-
-          {/*1g of Carbs = 4cal 50% of all calories*/}
-          <Text>Rekomenduojamas angliavandenių kiekis gramais: {Math.round(calorieGoal * 0.5 / 4)}</Text>
-          {/*1g of Fat = 9cal 20% of all calories*/}
-          <Text>Rekomenduojamas riebalų kiekis gramais: {Math.round(calorieGoal * 0.2 / 9)}</Text>
-          {/*1g of Protein = 4cal 30% of all calories*/}
-          <Text>Rekomenduojamas baltymų kiekis gramais: {Math.round(calorieGoal * 0.3 / 4)}</Text>
-
-          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-        </View>
-        <View>
-          <Button title="Atsijungti nuo paskyros" onPress={handleLogout} />
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -171,7 +172,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    paddingTop: 30,
   },
   title: {
     fontSize: 20,
@@ -180,6 +182,8 @@ const styles = StyleSheet.create({
   label: {
     marginRight: 10,
     paddingLeft: 10,
+    paddingBottom: 10,
+    fontWeight: "500",
   },
   inputContainer: {
     width: '80%',
@@ -191,11 +195,18 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 10,
+    borderWidth: 1,
+    borderRadius: 10,
   },
   separator: {
     marginVertical: 30,
     height: 1,
     width: '80%',
+  },
+  buttonContainer: {
+    borderRadius: 10,
+    overflow: 'hidden',
+    backgroundColor: '',
   },
 });
 

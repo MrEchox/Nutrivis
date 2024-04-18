@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView, BackHandler } from 'react-native';
+import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView, BackHandler, useColorScheme } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { User } from '@/src/object_classes/user';
 import { useState } from 'react';
@@ -7,6 +7,7 @@ import { collection, query, where, getDocs, connectFirestoreEmulator } from "fir
 import { db } from "../../firebase.config.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from 'expo-router';
+import { commonStyles } from '../../components/commonStyles';
 
 const loginScreen = () => {
 
@@ -73,40 +74,52 @@ const loginScreen = () => {
         }
     }
 
+    const colorScheme = useColorScheme();
+    const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
+    const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
+    const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
+    const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
+
     return (
-        <View style={styles.container}>
-                <Text style={styles.title}>Prisijungimas</Text>
+        <View style={[styles.container, themeBackground]}>
+            <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+                <Text style={[styles.title, themeTextStyle]}>Prisijungimas</Text>
                 <Text> </Text>
-                <View style={styles.inputContainer}> 
-                    <Text style={styles.label}>El. paštas:</Text>
+                    <Text style={[styles.label, themeTextStyle]}>El. paštas:</Text>
                     <TextInput
-                        style={styles.input}
+                        style={[styles.input, themeTextStyle]}
                         placeholder="Įveskite prisijungimo el. paštą"
                         onChangeText={(text) => setEmail(text)}
                     />
-                </View>
-                <View style={styles.inputContainer}> 
-                    <Text style={styles.label}>Slaptažodis:</Text>
+                    <Text> </Text>
+                    <Text style={[styles.label, themeTextStyle]}>Slaptažodis:</Text>
                     <TextInput secureTextEntry={true}
-                        style={styles.input}
+                        style={[styles.input, themeTextStyle]}
                         placeholder="Įveskite prisijungimo slaptažodį"
                         onChangeText={(text) => setPassword(text)}
                     />
-                </View>
-                <Button 
+                    <Text> </Text>
+            <View style={styles.buttonContainer}>
+                <Button color={themeSvg}
                     title="Prisijungti"
                     onPress={handleLogin}
                 />
-                <Text> </Text>
-                <Button 
+            </View>
+            <Text> </Text>
+            <View style={styles.buttonContainer}>
+                <Button color={themeSvg}
                     title="Prisijungti su Google"
                 />
-                <Text> </Text>
-                <Text>Jungiates pirmą kartą?</Text>
-                <Button 
+            </View>
+            <Text> </Text>
+                <Text style={themeTextStyle}>Jungiatės pirmą kartą?</Text>
+            <View style={styles.buttonContainer}>
+                <Button color={themeSvg}
                     title="Registruotis"
                     onPress={() => router.replace('../session/register')}
                 />
+            </View>
+                </View>
         </View>
     );
 }
@@ -115,34 +128,42 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
-    },
-    title: {
+        justifyContent: 'flex-start',
+        paddingTop: 30,
+      },
+      title: {
         fontSize: 20,
         fontWeight: 'bold',
-        alignSelf: 'center',
-    },
-    separator: {
-        marginVertical: 30,
-        height: 1,
-        width: '80%',
-    },
-    label: {
+      },
+      label: {
         marginRight: 10,
         paddingLeft: 10,
-        alignSelf: 'center',
-    },
-    inputContainer: {
+        paddingBottom: 10,
+        fontWeight: "500",
+      },
+      inputContainer: {
         width: '80%',
         marginBottom: 20,
         borderWidth: 1,
         borderRadius: 5,
         borderColor: '#ccc',
         alignSelf: 'center',
-    },
-    input: {
+      },
+      input: {
         padding: 10,
-    },
+        borderWidth: 1,
+        borderRadius: 10,
+      },
+      separator: {
+        marginVertical: 30,
+        height: 1,
+        width: '80%',
+      },
+      buttonContainer: {
+        borderRadius: 10,
+        overflow: 'hidden',
+        backgroundColor: '',
+      },
 });
 
 export default loginScreen;

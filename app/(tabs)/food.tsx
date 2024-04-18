@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, FlatList, Modal, Button, TextInput } from 'react-native';
+import { StyleSheet, TouchableOpacity, FlatList, Modal, Button, TextInput, useColorScheme } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { food_object_eaten } from '@/src/object_classes/food_object_eaten'; 
 import { useFocusEffect } from '@react-navigation/native';
+import { commonStyles } from '../../components/commonStyles';
 
 
 // Unique identifiers
@@ -64,14 +65,24 @@ export default function Foods() {
     fetchData();
   }, [refreshPage]);
 
+  const colorScheme = useColorScheme();
+  const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
+  const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
+  const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
+  const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
+
   const renderFoodItem = ({ item, index }) => (
     <TouchableOpacity onPress={() => handleFoodItemClick(item, index)}>
-      <Text>{item[0].replace(FOOD_PREFIX, '')}</Text>
+      <View style={[styles.FoodItemStyle, {backgroundColor:themeSvg}]}>
+        <Text style={themeTextStyle}>{item[0].replace(FOOD_PREFIX, '')}</Text>
+      </View>
     </TouchableOpacity>
   );
   const renderScannedFoodItem = ({ item, index }) => (
     <TouchableOpacity onPress={() => handleFoodItemClick(item, index)}>
-      <Text>{item[0].replace(FOOD_BARCODE_PREFIX, '')}</Text>
+      <View style={[styles.FoodItemStyle, {backgroundColor:themeSvg}]}>
+        <Text style={themeTextStyle}>{item[0].replace(FOOD_BARCODE_PREFIX, '')}</Text>
+      </View>
     </TouchableOpacity>
   );
 
@@ -130,12 +141,12 @@ export default function Foods() {
 
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Maisto puslapis</Text>
-      <View style={styles.container} /* Container for local food objects */> 
-        <Text style={styles.title}>Įvesti maisto produktai</Text>
+    <View style={[styles.container, themeBackground]}>
+      <Text style={[styles.title, themeTextStyle, {paddingTop:20}]}>Maisto puslapis</Text>
+      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      <View style={[styles.container, commonStyles.mainStatsContainer, themeContainer]} /* Container for local food objects */> 
+        <Text style={[styles.title, themeTextStyle]}>Įvesti maisto produktai</Text>
         <FlatList
-          
           data={localFoodValues}
           renderItem={renderFoodItem}
           keyExtractor={(item, index) => item}
@@ -150,46 +161,69 @@ export default function Foods() {
           }}
         >
           <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-            <Text>Food information: {selectedItemIndex !== null ? selectedItemIndex.toString() : ''}</Text>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Suvalgytas produkto kiekis</Text>
+            <View style={[styles.modalContent, commonStyles.mainStatsContainer, themeContainer]}>
+            <Text style={[themeTextStyle, {fontWeight:"500"}]}>
+              Pasirinkta: {selectedItemIndex ? JSON.parse(selectedItemIndex).name + ' ' : ''} 
+              ({selectedItemIndex ? JSON.parse(selectedItemIndex).calories : ''} kcal)
+            </Text>
+            <Text style={[themeTextStyle]}>
+              (Angl.: {selectedItemIndex ? JSON.parse(selectedItemIndex).carbs + ' g, ' : ''}
+              Rieb.: {selectedItemIndex ? JSON.parse(selectedItemIndex).fat + ' g, ' : ''}
+              Prot.: {selectedItemIndex ? JSON.parse(selectedItemIndex).protein + ' g' : ''}
+              
+              )
+            </Text>
+            <View style={[themeContainer, {paddingBottom: 10}]}>
+              <Text style={[styles.label, themeTextStyle, {fontWeight:"500", paddingBottom: 10}]}>Suvalgytas produkto kiekis</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, themeTextStyle]}
                   placeholder="Įveskite kiekį gramais"
                   keyboardType="numeric"
                   onChangeText={(text) => setEatenGrams(text)}
                 />
-                <Button
-                title="Įvesti"
-                onPress={() => { // On press saves the eaten food to local storage
-                  const name = selectedItemIndex.split(',')[0].split(':')[1]; // Don't worry abt it, it works
-                  var date = new Date();
-                  const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-                  handleFoodSave(currentDate, eatenGrams, name, calories, carbs, fat, protein);
-              }}
-              />
+                <View style={[styles.buttonContainer, { marginTop: 10 }]}> 
+                  <Button
+                  color={themeSvg}
+                  title="Įvesti"
+                  onPress={() => { // On press saves the eaten food to local storage
+                    const name = selectedItemIndex.split(',')[0].split(':')[1]; // Don't worry abt it, it works
+                    var date = new Date();
+                    const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+                  
+                    const eatenFood = new food_object_eaten(currentDate, parseFloat(eatenGrams), name, calories, carbs, fat, protein);
+                    eatenFood.saveLocal();
+                  }}
+                  />
+              </View>
             </View>
-            <Button
-              title="Panaikinti"
-              onPress={() => {
-                setModalVisible(!modalVisible);
-                removeItem(selectedItemKey);
-                setRefreshPage(prevState => !prevState); // Toggle refreshPage state to trigger page refresh
-              }}
-            />
-            <Button
-              title="Uždaryti"
-              onPress={() => {
-                setModalVisible(!modalVisible);
-              }}
-            />
+            <View style={{ flexDirection: 'row', backgroundColor: 'transparent'}}>
+              <View style={[styles.buttonContainer, { marginRight: 15 }]}> 
+                <Button
+                  title="Panaikinti"
+                  color = {themeSvg}
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                    removeItem(selectedItemKey);
+                    setRefreshPage(prevState => !prevState); // Toggle refreshPage state to trigger page refresh
+                  }}
+                />
+              </View>
+              <View style={styles.buttonContainer}>
+                <Button
+                  color={themeSvg}
+                  title="Uždaryti"
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                  }}
+                />
+              </View>
+            </View>
             </View>
           </View>
         </Modal>
       </View>
-      <View style={styles.container} /* Container for scanned food objects */>
-        <Text style={styles.title}>Skenuoti maisto produktai</Text>
+      <View style={[styles.container, commonStyles.mainStatsContainer, themeContainer]} /* Container for scanned food objects */>
+        <Text style={[styles.title, themeTextStyle]}>Skenuoti maisto produktai</Text>
         <FlatList
           data={localFoodBarcodeValues}
           renderItem={renderScannedFoodItem}
@@ -237,9 +271,29 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 10,
+    borderWidth: 1,
+    borderRadius: 10,
   },
   label: {
     marginRight: 10,
     paddingLeft: 10,
   },
+  separator: {
+    marginVertical: 30,
+    height: 1,
+    width: '80%',
+},
+buttonContainer: {
+  borderRadius: 10,
+  overflow: 'hidden',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 1 },
+  shadowOpacity: 0.25,
+},
+FoodItemStyle: {
+  paddingHorizontal: 16,
+  paddingVertical: 8,
+  borderRadius: 10,
+  marginBottom: 8,
+}
 });

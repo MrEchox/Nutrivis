@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TextInput, Button, Pressable } from 'react-native';
+import { StyleSheet, TextInput, Button, Pressable, useColorScheme} from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ProgressBar } from 'react-native-paper';
+import { commonStyles } from '../../components/commonStyles';
+import CircularProgress from '../../components/CircularProgress';
+import { getSvgByName } from '../../components/SVGs';
+import {Svg } from 'react-native-svg';
 import { daily_water_object } from '@/src/object_classes/daily_water';
 import { useFocusEffect } from '@react-navigation/native';
-
 
 const Food_Eaten_Prefix = '@Food_Eaten:';
 const Goal_Prefix = '@Goal:';
@@ -19,6 +23,21 @@ export default function Tracking() {
   const [goalCarbs, setGoalCarbs] = useState(0);
   const [goalFat, setGoalFat] = useState(0);
   const [goalProtein, setGoalProtein] = useState(0);
+
+  //Theme consts, to be moved elsewhere
+  const colorScheme = useColorScheme();
+
+  const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
+  const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
+  const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
+  const themeProg = colorScheme === 'light' ? '#669bbc' : '#003049';
+  const themeProgF = colorScheme === 'light' ? '#ffffff' : '#ffffff';
+  const themeProgBack = colorScheme === 'light' ? commonStyles.lightProgress : commonStyles.darkProgress;
+  const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049'
+
+  const minusSvg = getSvgByName("minus", themeSvg);
+  const plusSvg = getSvgByName("plus", themeSvg);
+  const waterSvg = getSvgByName("water", themeSvg);
 
   var date = new Date();
   const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear(); // dd/mm/yyyy
@@ -106,8 +125,7 @@ export default function Tracking() {
         console.error('Error fetching data:', error);
       }
     };
-
-  useFocusEffect( // When focusing on page, fetch data
+    useFocusEffect( // When focusing on page, fetch data
     React.useCallback(() => {
       fetchData();
       // Return cleanup function
@@ -169,45 +187,119 @@ export default function Tracking() {
         break;
     }
   };
-
   return (
-      <View style={styles.container}>
-        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-    
-        <View style={styles.inputContainer}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.title}>Kasdienis maisto medžiagų sėkimas</Text>
-              <Text>Viso kalorijų per dieną: {sumCalories} Rekomenduojama: {goalCalories}</Text>
-              <Text>Viso angliavandenių per dieną: {sumCarbs} Rekomenduojama: {goalCarbs}</Text>
-              <Text>Viso riebalų per dieną: {sumFat} Rekomenduojama: {goalFat}</Text>
-              <Text>Viso baltymų per dieną: {sumProtein} Rekomenduojama: {goalProtein}</Text>
+    <View style={[styles.container, themeBackground]}>
+      <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+      <View style={[styles.statsItem, themeContainer]}>
+            <Text style={[styles.text, themeTextStyle]}>Kalorijos</Text>
+            <View style={[styles.progressBarContainer, themeContainer]}>
+            <CircularProgress
+              size={110} 
+              strokeWidth={10}
+              //progressPercent={60}
+              progressPercent={(sumCalories/goalCalories)*100}
+              text="50%" //does nothing currently
+              fill={themeProg}
+              back={themeProgF}
+            />
             </View>
-
-            <View style={styles.inputContainer}>
-              <Text style={styles.title}>Kasdienis vandens sekimas</Text>
-              <View style={styles.label}>
-                <Text style={{width:'auto', textAlign: 'center'}}>Šią dieną jūs išgėrėte</Text>
-              </View>
-              <View style={styles.inputContainer2}>
-                <View style={styles.buttonLeft}>
-                  <Button title="-500" onPress={() => handleWaterDrink('minus5')}></Button>
-                </View>
-                <View style={styles.buttonLeft}>
-                  <Button title="-200" onPress={() => handleWaterDrink('minus2')}></Button>
-                </View>
-                <View>
-                  <Text style={styles.inputContainer}>{Watah}ml</Text>
-                </View>
-                <View style={styles.buttonRight}> 
-                  <Button title="+200" onPress={() => handleWaterDrink('add2')}></Button> 
-                </View>
-                <View style={styles.buttonRight}> 
-                  <Button title="+500" onPress={() => handleWaterDrink('add5')}></Button> 
-                </View>
-              </View>
+            <Text style={[styles.text, themeTextStyle]}>{sumCalories}/{goalCalories}</Text>
+            <Text>{'\n'}</Text>
+          </View>
+        <View style={[styles.column, themeContainer]}>
+          <View style={[styles.statsItem, themeContainer]}>
+          <Text style={[styles.text, themeTextStyle]}>Baltymai</Text>
+            <View style={styles.progressBarContainer}>
+              <ProgressBar progress={(sumProtein/goalProtein)} color={themeProg} style={themeProgBack}/>
             </View>
+            <Text style={[styles.text, themeTextStyle]}>{sumProtein}/{goalProtein} g</Text>
+          </View>
+          <View style={[styles.statsItem, themeContainer]}>
+          <Text style={[styles.text, themeTextStyle]}>Angliavandeniai</Text>
+            <View style={styles.progressBarContainer}>
+              <ProgressBar progress={(sumCarbs/goalCarbs)} color={themeProg} style={themeProgBack} />
+            </View>
+            <Text style={[styles.text, themeTextStyle]}>{sumCarbs}/{goalCarbs} g</Text>
+          </View>
+          <View style={[styles.statsItem, themeContainer]}>
+          <Text style={[styles.text, themeTextStyle]}>Riebalai</Text>
+            <View style={styles.progressBarContainer}>
+              <ProgressBar progress={(sumFat/goalFat)} color={themeProg} style={themeProgBack} />
+            </View>
+            <Text style={[styles.text, themeTextStyle]}>{sumFat}/{goalFat} g</Text>
+          </View>
         </View>
       </View>
+
+      <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+        <View style={[styles.column, themeContainer]}>
+          <Text style={[styles.text, themeTextStyle]}>Pr</Text>
+          <Text style={[styles.text, themeTextStyle]}>An</Text>
+          <Text style={[styles.text, themeTextStyle]}>Tr</Text>
+          <Text style={[styles.text, themeTextStyle]}>Kt</Text>
+          <Text style={[styles.text, themeTextStyle]}>Pe</Text>
+          <Text style={[styles.text, themeTextStyle]}>Še</Text>
+          <Text style={[styles.text, themeTextStyle]}>Sk</Text>
+        </View>
+      </View>
+
+      <View style={[commonStyles.mainStatsContainer, themeContainer, { alignItems: 'center'}]}>
+        <View style={[styles.column, themeContainer]}>
+          <Pressable style={[styles.waterIntakeButton]} onPress={() => handleWaterDrink('minus5')}> 
+            <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
+              {minusSvg}
+            </Svg>
+            <Text style={[styles.waterIntakeText, themeTextStyle, {bottom:42, fontSize: 13}]}>500</Text>
+          </Pressable>
+          <Pressable style={[styles.waterIntakeButton]} onPress={() => handleWaterDrink('minus2')}> 
+            <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
+              {minusSvg}
+            </Svg>
+            <Text style={[styles.waterIntakeText, themeTextStyle, {bottom:42, fontSize: 13}]}>200</Text>
+          </Pressable>
+          <View style={[styles.waterIntakeButton, themeContainer]}>
+            <Svg width="100" height="100" style={{ transform: [{ scale: 1 }] }} >
+              {waterSvg}
+            </Svg>
+          </View>
+          <Text style={[styles.waterIntakeText, themeTextStyle]}>{Watah}ml</Text>
+          <Pressable style={styles.waterIntakeButton} onPress={() => handleWaterDrink('add2')} >
+            <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
+              {plusSvg}
+            </Svg>
+            <Text style={[styles.waterIntakeText, themeTextStyle, {bottom:42, fontSize: 13}]}>200</Text>
+          </Pressable>
+          <Pressable style={styles.waterIntakeButton} onPress={() => handleWaterDrink('add5')} >
+            <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
+              {plusSvg}
+            </Svg>
+            <Text style={[styles.waterIntakeText, themeTextStyle, {bottom:42, fontSize: 13}]}>500</Text>
+          </Pressable>
+        </View>
+      </View>
+      <View style={[styles.columnContainer, themeBackground]}>
+        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+        <Text style={[styles.text, themeTextStyle]}>Maistas 1</Text>
+          <Svg width="100" height="100" style={{ transform: [{ scale: 0.8 }] }} >
+                {waterSvg}
+              </Svg>
+        </View>
+        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+        <Text style={[styles.text, themeTextStyle]}>Maistas 2</Text>
+        <Svg width="100" height="100" style={{ transform: [{ scale: 0.8 }] }} >
+                {waterSvg}
+              </Svg>
+        </View>
+      </View>
+      
+
+      {/* <Text>Tracking Tab</Text>
+      <Text>Viso kalorijų per dieną: {sumCalories} Rekomenduojama: {goalCalories}</Text>
+      <Text>Viso angliavandenių per dieną: {sumCarbs} Rekomenduojama: {goalCarbs}</Text>
+      <Text>Viso riebalų per dieną: {sumFat} Rekomenduojama: {goalFat}</Text>
+      <Text>Viso baltymų per dieną: {sumProtein} Rekomenduojama: {goalProtein}</Text> */}
+      </View>
+      
   );
 };
 
@@ -215,53 +307,50 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+    justifyContent: 'flex-start',
+    paddingTop: 30,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    padding: 0,
-  },
-  label: {
-    marginRight: 10,
-    paddingLeft: 10,
-  },
-  inputContainer: {
-    width: 'auto',
-    marginTop: 20,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: '#ccc',
-    padding: 10,
-  },
-  inputContainer2: {
-    width: '100%',
-    marginBottom: 20,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: '#ccc',
-    padding: 10,
-    display: 'flex',
+  column: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  columnContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '47%',
+  },
+  statsItem: {
     alignItems: 'center',
   },
-  input: {
-    padding: 10,
+  text: {
+    fontSize: 16,
+    marginBottom: 5,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  statsCounter: {
+    fontSize: 16,
   },
-  buttonLeft: {
-    width: 'auto',
+  waterIntakeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  waterIntakeButton: {
+    width: 100,
+    height: 100,
+    margin: -10,
+  },
+  waterIntakeText: {
+    position: 'absolute',
+    bottom: 32,
     left: 0,
-  },
-  buttonRight: {
-    width: 'auto',
     right: 0,
+    textAlign: 'center',
+    fontSize: 20,
+  },
+  progressBarContainer: {
+    borderRadius: 5,
+    overflow: 'hidden',
+    marginBottom: 5,
   },
 });
