@@ -1,4 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {collection, query, where, getDocs, addDoc} from "firebase/firestore";
+import {db} from "../../firebase.config.js";
 
 // This is the class for the food object. This object is used to store the nutritional information of a food item.
 // Since this is not TypeScript, we have to manually check the types of the parameters. 
@@ -9,7 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const prefix = '@Food_Eaten:';
 
 export class food_object_eaten {
-        constructor(date, amount, name, calories, carbs, fat, protein) {
+        constructor(date, amount, name, calories, carbs, fat, protein, email) {
         if (typeof date !== 'string') {
             throw new Error('Date must be a string');
         }
@@ -39,17 +41,42 @@ export class food_object_eaten {
         this.carbs = carbs;
         this.fat = fat;
         this.protein = protein;
+        this.email = email;
     }
 
     async saveLocal() {
         try {
             const jsonValue = JSON.stringify(this);
-            var id = prefix + this.date + ":" + this.name; // @EatenFood:date:name
+            var id = prefix + this.date + ":" + this.name + ":" + this.email; // @EatenFood:date:name
             await AsyncStorage.setItem(id, jsonValue);
             AsyncStorage.getItem(id).then((res) => console.log("Added eaten food:\n" + res))
         }
         catch (e) {
             console.log(e);
+        }
+    }
+    
+    async save(email) {
+        try {
+            const collectionRef = collection(db, "users");
+            const q = query(collectionRef, where("email", "==", email));
+            const querySnapshot = await getDocs(q);
+            
+            querySnapshot.forEach((doc) => {
+                const userDocId = doc.id;
+                const dailyFoodCollectionRef = collection(db, "users", userDocId, "food_eaten");
+                addDoc(dailyFoodCollectionRef, {
+                    date: this.date,
+                    amount: this.amount,
+                    name: this.name,
+                    calories: this.calories,
+                    carbs: this.carbs,
+                    fat: this.fat,
+                    protein: this.protein
+                });
+            });
+        } catch (e) {
+            console.error("Error adding document: ", e);
         }
     }
 }

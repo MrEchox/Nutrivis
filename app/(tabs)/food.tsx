@@ -112,6 +112,22 @@ export default function Foods() {
     }
   };
 
+  const getLoggedInEmail = async () => {
+    const loginVal = await AsyncStorage.getItem("@LoggedIn:");
+    if (loginVal) {
+      const status = JSON.parse(loginVal);
+      return status.email;
+    }
+    return "";
+  };
+
+  const handleFoodSave = async (currentDate, eatenGrams, name, calories, carbs, fat, protein) => {
+    const email = await getLoggedInEmail();
+    const eatenFood = new food_object_eaten(currentDate, parseFloat(eatenGrams), name, calories, carbs, fat, protein, email);
+    eatenFood.saveLocal();
+    eatenFood.save(email);
+  }
+
 
   return (
     <View style={styles.container}>
@@ -149,10 +165,8 @@ export default function Foods() {
                 onPress={() => { // On press saves the eaten food to local storage
                   const name = selectedItemIndex.split(',')[0].split(':')[1]; // Don't worry abt it, it works
                   var date = new Date();
-                  const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-
-                  const eatenFood = new food_object_eaten(currentDate, parseFloat(eatenGrams), name, calories, carbs, fat, protein);
-                  eatenFood.saveLocal();
+                  const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                  handleFoodSave(currentDate, eatenGrams, name, calories, carbs, fat, protein);
               }}
               />
             </View>

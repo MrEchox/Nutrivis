@@ -13,16 +13,16 @@ const loginScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    async function changeLoginStatus(username: string) {
+    async function changeLoginStatus(email: string, username: string) {
         const keys = await AsyncStorage.getAllKeys();
         const loginKey = keys.filter(key => key.startsWith("@LoggedIn:"));
-
-        console.log(loginKey);
 
         if (loginKey.length > 0) {
             const loginVal = await AsyncStorage.getItem("@LoggedIn:");
             if (loginVal) {
                 const status = JSON.parse(loginVal);
+                console.log(status);
+                status.email = email;
                 status.username = username;
                 await AsyncStorage.setItem("@LoggedIn:", JSON.stringify(status));
                 console.log(status);
@@ -30,8 +30,8 @@ const loginScreen = () => {
             }
         }
         else {
-            await AsyncStorage.setItem("@LoggedIn:", JSON.stringify({ username: username}));
-            console.log({ username: username });
+            await AsyncStorage.setItem("@LoggedIn:", JSON.stringify({ email: email, username: username }));
+            console.log({ email: email });
             router.replace('../');
         }
     }
@@ -42,10 +42,7 @@ const loginScreen = () => {
 
         const q = query(collectionRef, where("email", "==", email));
         const querySnapshot = await getDocs(q);
-
-        console.log(querySnapshot.size);
-        console.log(bcrypt.compareSync(password, querySnapshot.docs[0].data().password));
-
+        
         if (querySnapshot.size > 0) {
             // Check if password is correct
             if (bcrypt.compareSync(password, querySnapshot.docs[0].data().password)) {
@@ -53,15 +50,12 @@ const loginScreen = () => {
                 const keys = await AsyncStorage.getAllKeys();
                 const userKey = keys.filter(key => key.startsWith("@User:" + email));
 
-                console.log(userKey);
-                console.log(keys);
-
                 if (userKey.length > 0) {
                     const userVal = await AsyncStorage.getItem(userKey[0]);
                     if (userVal) {
                         const user = JSON.parse(userVal);
                         console.log(user);
-                        changeLoginStatus(user.username);
+                        changeLoginStatus(user.email, user.username);
                         router.replace('../(tabs)/home')
                         console.log(user);
                     }
@@ -71,7 +65,7 @@ const loginScreen = () => {
                     var LogInUser = new User(querySnapshot.docs[0].data().email, querySnapshot.docs[0].data().username,
                         querySnapshot.docs[0].data().password, querySnapshot.docs[0].data().salt);
                     console.log(LogInUser);
-                    changeLoginStatus(LogInUser.username);
+                    changeLoginStatus(LogInUser.email, LogInUser.username);
                     router.replace('../(tabs)/home')
                     LogInUser.saveLocal();
                 }
