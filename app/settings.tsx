@@ -12,12 +12,13 @@ import { router } from 'expo-router';
 
 import { commonStyles } from '../components/commonStyles';
 import { HelperText } from 'react-native-paper';
+import { count } from 'firebase/firestore';
 
 
 const Goal_Prefix = '@Goal:';
 
 //---Calorie Tab---
-const SettingsScreen = () => {
+const SettingsScreen =  () => {
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('male');
   const [height, setHeight] = useState('');
@@ -38,7 +39,62 @@ const SettingsScreen = () => {
 
 
   // Function to calculate recomended calories
+  
   const handleCaloriesAndSteps = async () => {
+    
+// Checking input data for age error
+  const inputAge = parseInt(age);
+ // if (!isNaN(inputAge)) {
+    if (inputAge >= 12 && inputAge <= 120) {
+      setAge(age);
+      //alert('');
+    } else {
+      //<View>
+      
+       // <HelperText type="error" visible={hasErrors()}>
+      alert('Amžius turi būti daugiau 12(netinkama vaikam)!');
+      //</HelperText>
+     // </View>
+    }
+    
+ // }else {
+   //alert('Prašome įvesti tinkamą amžių.');
+  //}
+
+  // Checking input data for height error
+  const inputheight = parseInt(height);
+  //if (!isNaN(inputheight)) {
+    if (inputheight >= 12 && inputheight <= 260) {
+      setHeight(height);
+      //alert('');
+    } else {
+      //<View>
+      //  <HelperText type="error" visible={hasErrors()}>
+      alert(' Ūgis turi atitikti realius matmenis cm !');
+     // </HelperText>
+     //</View>
+    }
+ // } else {
+   // alert('Prašome įvesti tinkamą ūgį.');
+ // }
+
+  // Checking input data for weight error
+  const inputweight = parseInt(weight);
+  //if (!isNaN(inputweight)) {
+    if (inputweight >= 0) {
+      setHeight(weight);
+      //alert('');
+    } else {
+      //<View>
+        //<HelperText type="error" visible={hasErrors()}>
+      alert ('Svoris turibūti teigiamas!');
+      //</HelperText>
+      //</View>
+    }
+  //} else {
+    //alert('Prašome įvesti tinkamą svorį.');
+  //}
+
     const email = await getLoggedInEmail();
 
     const calculatedRecommendedCalories = calculateRecommendedCalories(age, gender, height, weight, activityLevel, weightObjective);
@@ -51,6 +107,7 @@ const SettingsScreen = () => {
     Math.round(calorieGoal * 0.2 / 9), Math.round(calorieGoal * 0.3 / 4), calculatedStepGoal, email);
     goal_object.saveLocal()
     goal_object.save(email);
+    
   };
 
   
@@ -79,58 +136,10 @@ const SettingsScreen = () => {
         router.replace('./session/login');
     }
   }
-// Checking input data for age error
-  const inputAge = parseInt(age);
- // if (!isNaN(inputAge)) {
-    if (inputAge >= 12 && inputAge <= 120) {
-      setAge(age);
-      //alert('');
-    } else {
-      //<View>
-      
-       // <HelperText type="error" visible={hasErrors()}>
-      alert('Amžius turi būti daugiau 12(netinkama vaikam)!');
-      //</HelperText>
-     // </View>
-    }
+
+  
     
- // }else {
-   //alert('Prašome įvesti tinkamą amžių.');
-  //}
-
-  // Checking input data for height error
-  const inputheight = parseInt(height);
-  //if (!isNaN(inputheight)) {
-    if (inputheight >= 12 && inputheight <= 260) {
-      setHeight(height);
-     // alert('');
-    } else {
-      //<View>
-      //  <HelperText type="error" visible={hasErrors()}>
-      alert(' Ūgis turi atitikti realius matmenis cm !');
-     // </HelperText>
-     //</View>
-    }
- // } else {
-   // alert('Prašome įvesti tinkamą ūgį.');
- // }
-
-  // Checking input data for weight error
-  const inputweight = parseInt(weight);
-  //if (!isNaN(inputweight)) {
-    if (inputweight >= 0) {
-      setHeight(weight);
-     // alert('');
-    } else {
-      //<View>
-        //<HelperText type="error" visible={hasErrors()}>
-      alert ('Svoris turibūti teigiamas!');
-      //</HelperText>
-      //</View>
-    }
-  //} else {
-    //alert('Prašome įvesti tinkamą svorį.');
-  //}
+    
   return (
     
     <SafeAreaView style={[styles.container, themeBackground]}>
