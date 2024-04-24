@@ -331,7 +331,7 @@ export default function Tracking() {
               </Svg>
         </View>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-          <Text style={[styles.text, themeTextStyle]}>Maisto istorija:</Text> #TODO: fix this shit possibly add parse function for json vals
+          <Text style={[styles.text, themeTextStyle]}>Maisto istorija:</Text>
           <FlatList
             data = {eatenFoods}
             keyExtractor={(item, index) => item}
