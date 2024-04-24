@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TextInput, Button, Pressable, useColorScheme} from 'react-native';
+import { StyleSheet, TextInput, Button, Pressable, useColorScheme, FlatList, TouchableOpacity} from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProgressBar } from 'react-native-paper';
@@ -23,6 +23,8 @@ export default function Tracking() {
   const [goalCarbs, setGoalCarbs] = useState(0);
   const [goalFat, setGoalFat] = useState(0);
   const [goalProtein, setGoalProtein] = useState(0);
+
+  const [eatenFoods, setEatenFoods] = useState([]); // Angry for type never or smth
 
   //Theme consts, to be moved elsewhere
   const colorScheme = useColorScheme();
@@ -53,8 +55,19 @@ export default function Tracking() {
     return "";
   };
 
+  const renderEatenFoodItem = ({ item, index }) => (
+    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Text>{item.date.split('-')[1]} {item.name} {item.amount}g</Text>
+      <TouchableOpacity onPress={() => removeEatenFoodItem(item, index)}>
+        <Text style={{ color: 'red', fontWeight: 'bold' }}>X</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
     const fetchData = async () => {
       try {
+        setEatenFoods([]); // Clear eaten foods list
+
         const email = await getLoggedInEmail();
 
         // Fetch all keys from AsyncStorage
@@ -63,9 +76,9 @@ export default function Tracking() {
         // Filter keys to only include those belonging to your app
         const appKeysGoal = allKeys.filter(key => key.startsWith(Goal_Prefix + "local"  + ":" + email));
         const appKeysEatenUnfiltered = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix + currentDate)); // Gets todays eaten food values
-        console.log(appKeysEatenUnfiltered);
-        const appKeysEaten = appKeysEatenUnfiltered.filter(key => key.includes(email));
+        const appKeysEaten = appKeysEatenUnfiltered.filter(key => key.includes(email)); // Filter out only todays eaten food values for the logged in user
         const appKeysWater = allKeys.filter(key => key.startsWith('@Water:' + currentDate)); // Gets todays drank water values
+
 
         // Fetch values corresponding to the filtered keys
         const unfilteredValuesGoalLocal = await AsyncStorage.multiGet(appKeysGoal);
@@ -73,12 +86,15 @@ export default function Tracking() {
           const data = JSON.parse(value);
           return data.email === email;
         });
+
+        // Eaten values
         const unfilteredValuesEaten = await AsyncStorage.multiGet(appKeysEaten);
         const valuesEaten = unfilteredValuesEaten.filter(([key, value]) => {
           const data = JSON.parse(value);
-          console.log(data);
           return data.email === email;
         });
+        
+        // Water values
         const unfilteredValuesWater = await AsyncStorage.multiGet(appKeysWater);
         const valuesWater = unfilteredValuesWater.filter(([key, value]) => {
           const data = JSON.parse(value);
@@ -109,6 +125,10 @@ export default function Tracking() {
         console.log(valuesEaten);
         
         valuesEaten.forEach(element => {
+          // Add to list
+          setEatenFoods(prevEatenFoods => [...prevEatenFoods, JSON.parse(element[1])]);
+
+          // Add to counter
           const eatenVals = JSON.parse(element[1]);
           Calories += eatenVals.calories / 100 * eatenVals.amount;
           Carbs += eatenVals.carbs / 100 * eatenVals.amount;
@@ -133,6 +153,33 @@ export default function Tracking() {
       };
     }, [])
   );
+
+  const removeEatenFoodItem = async (item, index) => {
+    try {
+      // Get the key from the item's data
+      const keyToRemove = Food_Eaten_Prefix + currentDate + ":" + item.email + ":" + item.name;
+      
+      // Remove the item from AsyncStorage
+      await AsyncStorage.removeItem(keyToRemove);
+      
+      // Remove the item from the state
+      setEatenFoods(prevEatenFoods => {
+        const updatedFoods = prevEatenFoods.filter((_, i) => i !== index);
+        return updatedFoods;
+      });
+  
+      // Update sums after removing an item
+      setSumCalories(sumCalories - (item.calories / 100 * item.amount));
+      setSumCarbs(sumCarbs - (item.carbs / 100 * item.amount));
+      setSumFat(sumFat - (item.fat / 100 * item.amount));
+      setSumProtein(sumProtein - (item.protein / 100 * item.amount));
+  
+    } catch (error) {
+      console.error('Error removing food item:', error);
+    }
+  };
+
+
 
   const handleWaterDrink = async (operation: string) => {
     const email = await getLoggedInEmail();
@@ -284,21 +331,15 @@ export default function Tracking() {
               </Svg>
         </View>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-        <Text style={[styles.text, themeTextStyle]}>Maistas 2</Text>
-        <Svg width="100" height="100" style={{ transform: [{ scale: 0.8 }] }} >
-                {waterSvg}
-              </Svg>
+          <Text style={[styles.text, themeTextStyle]}>Maisto istorija:</Text> #TODO: fix this shit possibly add parse function for json vals
+          <FlatList
+            data = {eatenFoods}
+            keyExtractor={(item, index) => item}
+            renderItem={renderEatenFoodItem}
+          />
         </View>
       </View>
-      
-
-      {/* <Text>Tracking Tab</Text>
-      <Text>Viso kalorijų per dieną: {sumCalories} Rekomenduojama: {goalCalories}</Text>
-      <Text>Viso angliavandenių per dieną: {sumCarbs} Rekomenduojama: {goalCarbs}</Text>
-      <Text>Viso riebalų per dieną: {sumFat} Rekomenduojama: {goalFat}</Text>
-      <Text>Viso baltymų per dieną: {sumProtein} Rekomenduojama: {goalProtein}</Text> */}
-      </View>
-      
+    </View>
   );
 };
 
