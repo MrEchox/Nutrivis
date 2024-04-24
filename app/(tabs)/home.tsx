@@ -56,10 +56,10 @@ export default function Tracking() {
   };
 
   const renderEatenFoodItem = ({ item, index }) => (
-    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-      <Text>{item.date.split('-')[1]} {item.name} {item.amount}g</Text>
+    <View style={[styles.FoodItemStyle, {backgroundColor:themeSvg}]}>
+      <Text style={themeTextStyle}>{item.date.substring(10, 15)} {item.name} {item.amount} g</Text>
       <TouchableOpacity onPress={() => removeEatenFoodItem(item, index)}>
-        <Text style={{ color: 'red', fontWeight: 'bold' }}>X</Text>
+        <Text style={{ color: '#cf5a5a', fontWeight: 'bold' }}>X</Text>
       </TouchableOpacity>
     </View>
   );
@@ -249,7 +249,7 @@ export default function Tracking() {
               back={themeProgF}
             />
             </View>
-            <Text style={[styles.text, themeTextStyle]}>{sumCalories}/{goalCalories} kcal</Text>
+            <Text style={[styles.text, themeTextStyle]}>{sumCalories.toFixed(0)}/{goalCalories} kcal</Text>
             <Text>{'\n'}</Text>
           </View>
         <View style={[styles.column, themeContainer]}>
@@ -258,21 +258,21 @@ export default function Tracking() {
             <View style={styles.progressBarContainer}>
               <ProgressBar progress={(sumProtein/goalProtein)} color={themeProg} style={themeProgBack}/>
             </View>
-            <Text style={[styles.text, themeTextStyle]}>{sumProtein}/{goalProtein} g</Text>
+            <Text style={[styles.text, themeTextStyle]}>{sumProtein.toFixed(0)}/{goalProtein} g</Text>
           </View>
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Angliavandeniai</Text>
             <View style={styles.progressBarContainer}>
               <ProgressBar progress={(sumCarbs/goalCarbs)} color={themeProg} style={themeProgBack} />
             </View>
-            <Text style={[styles.text, themeTextStyle]}>{sumCarbs}/{goalCarbs} g</Text>
+            <Text style={[styles.text, themeTextStyle]}>{sumCarbs.toFixed(0)}/{goalCarbs} g</Text>
           </View>
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Riebalai</Text>
             <View style={styles.progressBarContainer}>
               <ProgressBar progress={(sumFat/goalFat)} color={themeProg} style={themeProgBack} />
             </View>
-            <Text style={[styles.text, themeTextStyle]}>{sumFat}/{goalFat} g</Text>
+            <Text style={[styles.text, themeTextStyle]}>{sumFat.toFixed(0)}/{goalFat} g</Text>
           </View>
         </View>
       </View>
@@ -323,22 +323,17 @@ export default function Tracking() {
           </Pressable>
         </View>
       </View>
-      <View style={[styles.columnContainer, themeBackground]}>
-        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-        <Text style={[styles.text, themeTextStyle]}>Maistas 1</Text>
-          <Svg width="100" height="100" style={{ transform: [{ scale: 0.8 }] }} >
-                {waterSvg}
-              </Svg>
-        </View>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Maisto istorija:</Text>
-          <FlatList
-            data = {eatenFoods}
-            keyExtractor={(item, index) => item}
-            renderItem={renderEatenFoodItem}
-          />
+          <View style={{ maxHeight: 100, backgroundColor:''}}>
+            <FlatList
+              data={eatenFoods}
+              keyExtractor={(item, index) => item}
+              renderItem={renderEatenFoodItem}
+            />
+          </View>
         </View>
-      </View>
+
     </View>
   );
 };
@@ -393,4 +388,13 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: 5,
   },
+  FoodItemStyle: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginBottom: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  }
 });

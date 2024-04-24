@@ -23,7 +23,7 @@ export const commonStyles = StyleSheet.create({
       backgroundColor: "#70b577"
     },
     darkContainer:{
-      backgroundColor: '#12ba69',
+      backgroundColor: '#70b577',
     },
     lightThemeText:{
       color: "#000000",
