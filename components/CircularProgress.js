@@ -6,9 +6,15 @@ const CircularProgress = (props) => {
   const { size, strokeWidth, text, back, fill} = props;
   const radius = (size - strokeWidth) / 2;
   const circum = 2 * Math.PI * radius;
-  const offset = 1 - (1 - props.progressPercent / 100) * circum;
+  let offset;
 
+  if (props.progressPercent <= 100) {
+    offset = 1 - (1 - props.progressPercent / 100) * circum;
+  } else {
+    offset = 1;
+  }
   return (
+    
     <View style={{ margin: 10 }}>
       <Svg width={size} height={size} viewBox="0 0 95 110">
         {/* Egg shape */}
