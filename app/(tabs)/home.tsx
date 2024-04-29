@@ -9,6 +9,7 @@ import { getSvgByName } from '../../components/SVGs';
 import {Svg } from 'react-native-svg';
 import { daily_water_object } from '@/src/object_classes/daily_water';
 import { useFocusEffect } from '@react-navigation/native';
+import { BarChart } from "react-native-gifted-charts";
 
 const Food_Eaten_Prefix = '@Food_Eaten:';
 const Goal_Prefix = '@Goal:';
@@ -233,6 +234,18 @@ export default function Tracking() {
         break;
     }
   };
+
+  //Needs actual data here !!!
+  const barData = [
+    {value: 250, label: 'Pr'},
+    {value: 500, label: 'An'},
+    {value: 445, label: 'Tr'},
+    {value: 320, label: 'Kt'},
+    {value: 500, label: 'Pe'},
+    {value: 256, label: 'Še'},
+    {value: 300, label: 'Sk'},
+  ];
+  
   return (
     <View style={[styles.container, themeBackground]}>
       <View style={[commonStyles.mainStatsContainer, themeContainer]}>
@@ -278,7 +291,26 @@ export default function Tracking() {
       </View>
 
       <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-        <View style={[styles.column, themeContainer]}>
+      <View style={[styles.statsItem, themeContainer]}>
+            <Text style={[styles.text, themeTextStyle]}>Savaitė</Text>
+            <View style={[styles.progressBarContainer, themeContainer]}>
+            <BarChart
+                  barWidth={30}
+                  noOfSections={3}
+                  barBorderRadius={5}
+                  frontColor={themeSvg}
+                  data={barData}
+                  yAxisThickness={0}
+                  xAxisThickness={0}
+                  hideYAxisText={true}
+                  xAxisLabelTextStyle={[themeTextStyle]}
+                  dashGap={0}
+                  xAxisColor={'red'}
+              />
+            </View>
+          </View>
+        
+        {/* <View style={[styles.column, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Pr</Text>
           <Text style={[styles.text, themeTextStyle]}>An</Text>
           <Text style={[styles.text, themeTextStyle]}>Tr</Text>
@@ -286,7 +318,7 @@ export default function Tracking() {
           <Text style={[styles.text, themeTextStyle]}>Pe</Text>
           <Text style={[styles.text, themeTextStyle]}>Še</Text>
           <Text style={[styles.text, themeTextStyle]}>Sk</Text>
-        </View>
+        </View> */}
       </View>
 
       <View style={[commonStyles.mainStatsContainer, themeContainer, { alignItems: 'center'}]}>

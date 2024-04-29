@@ -19,7 +19,6 @@ export default function TabTwoScreen() {
     const [refreshPage, setRefreshPage] = useState(false);
     const [pageEnter, setPageEnter] = useState(true);
 
-
     const fetchData = async () => {
         try {
             const keysBetweenStartAndEnd = [];
@@ -148,7 +147,6 @@ export default function TabTwoScreen() {
         };
       }, [refreshPage])
     );
-
     return (
         <View style={styles.container}>
         <Text style={styles.title}>'Report' tab</Text>
@@ -159,6 +157,8 @@ export default function TabTwoScreen() {
                 <Button title="Praėjusi savaitė" onPress={() => onChangeDate(-1)} />
                 <Button title="Kita savaitė" onPress={() => onChangeDate(1)} />
             </View>
+        </View>
+        <View>
         </View>
         <Text>Calories: {calories}</Text>
         <Text>Carbs: {carbs}</Text>
