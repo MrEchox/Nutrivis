@@ -153,6 +153,7 @@ export default function Foods() {
 
                   const eatenFood = new food_object_eaten(currentDate, parseFloat(eatenGrams), name, calories, carbs, fat, protein);
                   eatenFood.saveLocal();
+                  setModalVisible(!modalVisible);
               }}
               />
             </View>
