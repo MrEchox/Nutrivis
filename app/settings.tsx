@@ -28,17 +28,19 @@ const SettingsScreen = () => {
   const handleCaloriesAndSteps = () => {
     const calculatedRecommendedCalories = calculateRecommendedCalories(age, gender, height, weight, activityLevel, weightObjective);
     setCalorieGoal(calculatedRecommendedCalories);
-
+  
+    // Calculate step goal and perform additional operations after setting the calorie goal
     const calculatedStepGoal = calculateStepGoal(age, gender, height, weight, activityLevel);
     setStepGoal(calculatedStepGoal);
-
-    //Object structure - calories, carbs, fat, protein
-    console.log(calorieGoal, Math.round(calorieGoal * 0.5 / 4), Math.round(calorieGoal * 0.2 / 9), Math.round(calorieGoal * 0.3 / 4));
-
-    const goal_object = new daily_goal_object(calorieGoal, Math.round(calorieGoal * 0.5 / 4), 
-    Math.round(calorieGoal * 0.2 / 9), Math.round(calorieGoal * 0.3 / 4), calculatedStepGoal);
-    goal_object.saveLocal()
+  
+    // Additional operations
+    console.log(calculatedRecommendedCalories, Math.round(calculatedRecommendedCalories * 0.5 / 4), Math.round(calculatedRecommendedCalories * 0.2 / 9), Math.round(calculatedRecommendedCalories * 0.3 / 4));
+    
+    const goal_object = new daily_goal_object(calculatedRecommendedCalories, Math.round(calculatedRecommendedCalories * 0.5 / 4), 
+    Math.round(calculatedRecommendedCalories * 0.2 / 9), Math.round(calculatedRecommendedCalories * 0.3 / 4), calculatedStepGoal);
+    goal_object.saveLocal();
   };
+  
 
   async function handleLogout() {
     const loginVal = await AsyncStorage.getItem("@LoggedIn:");
@@ -164,6 +166,18 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
   },
   label: {
     marginRight: 10,

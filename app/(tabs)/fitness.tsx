@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, PermissionsAndroid, Alert, TextInput } from 'react-native';
+import { StyleSheet, Alert, TextInput } from 'react-native'; //, PermissionsAndroid
 import { Text, View } from '@/components/Themed';
 import { Pedometer } from 'expo-sensors';
 
