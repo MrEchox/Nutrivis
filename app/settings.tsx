@@ -109,14 +109,11 @@ const SettingsScreen =  () => {
     goal_object.save(email);
     
   };
-
   
-  
-
   const colorScheme = useColorScheme();
   const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
   const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
-  const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
+  const themeTextStyle = colorScheme === 'light' ? [commonStyles.lightThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }] : [commonStyles.darkThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }];
   const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
   
   async function handleLogout() {
@@ -242,7 +239,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingTop: 30,
+    paddingTop: 60,
   },
   title: {
     fontSize: 20,

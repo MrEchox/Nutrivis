@@ -1,9 +1,10 @@
-import { StyleSheet, Button } from 'react-native';
+import { StyleSheet, Button, useColorScheme } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { parse } from 'expo-linking';
+import { commonStyles } from '@/components/commonStyles';
 
 export default function TabTwoScreen() {
     
@@ -147,42 +148,84 @@ export default function TabTwoScreen() {
         };
       }, [refreshPage])
     );
+    
+    const colorScheme = useColorScheme();
+    const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
+    const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
+    const themeTextStyle = colorScheme === 'light' ? [commonStyles.lightThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }] : [commonStyles.darkThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }];
+    const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
+
     return (
-        <View style={styles.container}>
-        <Text style={styles.title}>'Report' tab</Text>
-        <View>
-            <Text>Data: {startDate.toLocaleDateString('lt-LT')} - {endDate.toLocaleDateString('lt-LT')}</Text>
-            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-            <View style={{flexDirection: 'row'}}>
-                <Button title="Praėjusi savaitė" onPress={() => onChangeDate(-1)} />
-                <Button title="Kita savaitė" onPress={() => onChangeDate(1)} />
+        <View style={[styles.container, themeBackground, {paddingTop: 20}]}>
+            <Text style={[styles.title, {paddingBottom: 20}]}>Jūsų savaitės</Text>
+            <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+                <Text style={[themeTextStyle, {alignSelf:"center"}]}>Data: {startDate.toLocaleDateString('lt-LT')} - {endDate.toLocaleDateString('lt-LT')}</Text>
+                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+                <View style={[styles.columnContainer, {backgroundColor:'transparent'}]}>
+                    <View style={styles.buttonContainer}>
+                        <Button color={themeSvg} title="Praėjusi savaitė" onPress={() => onChangeDate(-1)} />
+                    </View>
+                    <View style={[styles.buttonContainer, {marginLeft: 15}]}>
+                        <Button color={themeSvg} title="Kita savaitė" onPress={() => onChangeDate(1)} />
+                    </View>
+                </View>
             </View>
-        </View>
-        <View>
-        </View>
-        <Text>Calories: {calories}</Text>
-        <Text>Carbs: {carbs}</Text>
-        <Text>Fat: {fat}</Text>
-        <Text>Protein: {protein}</Text>
-        <Text>Water: {water}</Text>
-        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+            <View>
+            </View>
+            <Text>Kalorijos: {calories} kcal</Text>
+            <Text>Angliavandeniai: {carbs} g</Text>
+            <Text>Riebalai: {fat} g</Text>
+            <Text>Baltymai: {protein} g</Text>
+            <Text>Vanduo: {water} ml</Text>
+            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      paddingTop: 60,
     },
     title: {
-        fontSize: 20,
-        fontWeight: 'bold',
+      fontSize: 20,
+      fontWeight: 'bold',
+    },
+    label: {
+      marginRight: 10,
+      paddingLeft: 10,
+      paddingBottom: 10,
+      fontWeight: "500",
+    },
+    inputContainer: {
+      width: '80%',
+      marginBottom: 20,
+      borderWidth: 1,
+      borderRadius: 5,
+      borderColor: '#ccc',
+      alignSelf: 'center',
+    },
+    input: {
+      padding: 10,
+      borderWidth: 1,
+      borderRadius: 10,
     },
     separator: {
-        marginVertical: 30,
-        height: 1,
-        width: '80%',
+      marginVertical: 30,
+      height: 1,
+      width: '80%',
     },
-});
+    buttonContainer: {
+      borderRadius: 10,
+      overflow: 'hidden',
+      backgroundColor: '',
+    },
+    columnContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+    },
+  });

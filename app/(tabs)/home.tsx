@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TextInput, Button, Pressable, useColorScheme, FlatList, TouchableOpacity} from 'react-native';
+import { StyleSheet, TextInput, Button, Pressable, useColorScheme, FlatList, TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProgressBar } from 'react-native-paper';
@@ -30,7 +30,7 @@ export default function Tracking() {
   //Theme consts, to be moved elsewhere
   const colorScheme = useColorScheme();
 
-  const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
+  const themeTextStyle = colorScheme === 'light' ? [commonStyles.lightThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }] : [commonStyles.darkThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }];
   const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
   const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
   const themeProg = colorScheme === 'light' ? '#669bbc' : '#003049';
@@ -247,7 +247,8 @@ export default function Tracking() {
   ];
   
   return (
-    <View style={[styles.container, themeBackground]}>
+    <SafeAreaView style={[styles.container, themeBackground]}>
+      <ScrollView style={[{paddingTop: 20}]}>
       <View style={[commonStyles.mainStatsContainer, themeContainer]}>
       <View style={[styles.statsItem, themeContainer]}>
             <Text style={[styles.text, themeTextStyle]}>Kalorijos</Text>
@@ -269,21 +270,21 @@ export default function Tracking() {
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Baltymai</Text>
             <View style={styles.progressBarContainer}>
-              <ProgressBar progress={(sumProtein/goalProtein)} color={themeProg} style={themeProgBack}/>
+              {/* <ProgressBar progress={(sumProtein/goalProtein)} color={themeProg} style={themeProgBack}/> */}
             </View>
             <Text style={[styles.text, themeTextStyle]}>{sumProtein.toFixed(0)}/{goalProtein} g</Text>
           </View>
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Angliavandeniai</Text>
             <View style={styles.progressBarContainer}>
-              <ProgressBar progress={(sumCarbs/goalCarbs)} color={themeProg} style={themeProgBack} />
+              {/* <ProgressBar progress={(sumCarbs/goalCarbs)} color={themeProg} style={themeProgBack} /> */}
             </View>
             <Text style={[styles.text, themeTextStyle]}>{sumCarbs.toFixed(0)}/{goalCarbs} g</Text>
           </View>
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Riebalai</Text>
             <View style={styles.progressBarContainer}>
-              <ProgressBar progress={(sumFat/goalFat)} color={themeProg} style={themeProgBack} />
+              {/* <ProgressBar progress={(sumFat/goalFat)} color={themeProg} style={themeProgBack} /> */}
             </View>
             <Text style={[styles.text, themeTextStyle]}>{sumFat.toFixed(0)}/{goalFat} g</Text>
           </View>
@@ -295,7 +296,7 @@ export default function Tracking() {
             <Text style={[styles.text, themeTextStyle]}>Savaitė</Text>
             <View style={[styles.progressBarContainer, themeContainer]}>
             <BarChart
-                  barWidth={30}
+                  barWidth={22}
                   noOfSections={3}
                   barBorderRadius={5}
                   frontColor={themeSvg}
@@ -306,19 +307,10 @@ export default function Tracking() {
                   xAxisLabelTextStyle={[themeTextStyle]}
                   dashGap={0}
                   xAxisColor={'red'}
+                  height={100}
               />
             </View>
           </View>
-        
-        {/* <View style={[styles.column, themeContainer]}>
-          <Text style={[styles.text, themeTextStyle]}>Pr</Text>
-          <Text style={[styles.text, themeTextStyle]}>An</Text>
-          <Text style={[styles.text, themeTextStyle]}>Tr</Text>
-          <Text style={[styles.text, themeTextStyle]}>Kt</Text>
-          <Text style={[styles.text, themeTextStyle]}>Pe</Text>
-          <Text style={[styles.text, themeTextStyle]}>Še</Text>
-          <Text style={[styles.text, themeTextStyle]}>Sk</Text>
-        </View> */}
       </View>
 
       <View style={[commonStyles.mainStatsContainer, themeContainer, { alignItems: 'center'}]}>
@@ -365,17 +357,16 @@ export default function Tracking() {
             />
           </View>
         </View>
-
-    </View>
+        <Text></Text>
+        </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    paddingTop: 30,
+    //alignItems: 'center',
   },
   column: {
     flexDirection: 'row',
@@ -388,7 +379,7 @@ const styles = StyleSheet.create({
     width: '47%',
   },
   statsItem: {
-    alignItems: 'center',
+    alignItems: 'center'
   },
   text: {
     fontSize: 16,
@@ -405,7 +396,7 @@ const styles = StyleSheet.create({
   waterIntakeButton: {
     width: 100,
     height: 100,
-    margin: -10,
+    margin: -16,
   },
   waterIntakeText: {
     position: 'absolute',
