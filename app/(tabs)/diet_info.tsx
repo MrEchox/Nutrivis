@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { View, FlatList, Text, useColorScheme, TouchableOpacity} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { commonStyles } from '../../components/commonStyles';
+
+const prefix = '@Topic:';
 
 const pages = [
     { title: '● Kalorijos',               quizId: 'calories_quiz' },
@@ -22,20 +25,46 @@ const pages = [
 ];
 
 const PageList = () => {
+
+    const [completedQuizzes, setCompletedQuizzes] = useState([]);
+
     const colorScheme = useColorScheme();
     const router = useRouter();
+
     const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
     const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
 
+    useEffect(() => {
+        const fetchCompletedQuizzes = async () => {
+            const keys = pages.map((item) => prefix + item.quizId);
+            const results = await AsyncStorage.multiGet(keys);
 
-    const renderItem = ({ item }) => (
-        <TouchableOpacity
-            style={[themeTextStyle, {padding: 10}]}
-            onPress={() => router.push(`../dieting/quiz_screen?quizId=${item.quizId}`)}
-        >
-            <Text>{item.title}</Text>
-        </TouchableOpacity>
-    );
+            const completed = results
+                .filter(([key, value]) => value === 'true')
+                .map(([key, _]) => key.replace(prefix, ''));
+
+            setCompletedQuizzes(completed);
+        };
+
+        fetchCompletedQuizzes();
+    }, []);
+
+    const renderItem = ({ item }) => {
+        const isCompleted = completedQuizzes.includes(item.quizId);
+
+        return (
+            <TouchableOpacity
+                style={[
+                    themeTextStyle,
+                    { padding: 10 },
+                    isCompleted ? { backgroundColor: 'lightgreen' } : {},
+                ]}
+                onPress={() => router.push(`../dieting/quiz_screen?quizId=${item.quizId}`)}
+            >
+                <Text>{item.title}</Text>
+            </TouchableOpacity>
+        );
+    };
     
 
     return (
