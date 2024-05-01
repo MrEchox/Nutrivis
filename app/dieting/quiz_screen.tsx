@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import quizContent from './quiz_content'; // Importing the structured quiz content
 import { Button } from 'react-native-paper';
+
 
 const QuizScreen = ({ navigation }) => {
     // Retrieve the 'quizId' parameter from the route
     const { quizId } = useLocalSearchParams();
     console.log('Quiz ID:', quizId); // Debug line
+
+    const router = useRouter();
 
     // Filter the content based on 'quizId'
     const quizData = quizContent.find((item) => item.quizId === quizId).content;
@@ -26,7 +29,7 @@ const QuizScreen = ({ navigation }) => {
         if (nextIndex < quizData.length) {
             setCurrentIndex(nextIndex);
         } else {
-            navigation.navigate('/congrats_screen', { score });
+            router.push('../dieting/congrats_screen?score=' + score + '&quizId=' + quizId);
         }
     };
 

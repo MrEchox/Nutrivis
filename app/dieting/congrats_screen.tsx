@@ -1,16 +1,25 @@
 import React from 'react';
 import { View, Text, Button } from 'react-native';
-import quizContent from './quiz_content'; // Importing the structured quiz content
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
-function CongratsScreen({ route, navigation }) {
-    const { score } = route.params;
+import quizContent from './quiz_content';
+
+export default function CongratsScreen() {
+    const { score } = useLocalSearchParams();
+    const { quizId } = useLocalSearchParams();
+    const router = useRouter();
+
+    const countQuizQuestions = quizContent
+        .filter((item) => item.quizId === quizId)
+        .flatMap((item) => item.content)
+        .filter((contentItem) => contentItem.type === 'quiz')
+        .length;
+
 
     return (
         <View>
-            <Text>Congratulations! You scored {score} out of {quizContent.filter((item) => item.type === 'quiz').length}</Text>
-            <Button title="Start Again" onPress={() => navigation.navigate('QuizScreen')} />
+            <Text>Sveikiname! Jūs surinkote {score} iš {countQuizQuestions} taškų</Text>
+            <Button title="Grįžti atgal" onPress={() => router.replace('../(tabs)/diet_info')} />
         </View>
     );
 }
-
-export default CongratsScreen;
