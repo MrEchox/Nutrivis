@@ -1,4 +1,5 @@
 const quizContent = [
+    // Has to start and end with 'info' type content
     {
         quizId: 'calories_quiz', // Unique identifier for this quiz
         content: [
@@ -21,6 +22,10 @@ const quizContent = [
                 question: 'Which is not a calorie-dense food?',
                 options: ['Avocado', 'Nuts', 'Leafy greens', 'Cheese'],
                 correctAnswer: 'Leafy greens',
+            },
+            {
+                type: 'info',
+                text: 'Aha',
             },
         ],
     },
