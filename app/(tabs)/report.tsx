@@ -10,6 +10,7 @@ export default function TabTwoScreen() {
     
     const FOOD_PREFIX = '@Food_Eaten:';
     const WATER_PREFIX = '@Water:';
+    const USER_PREFIX = '@LoggedIn:';
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date()); //these are changed on useFocusEffect
     const [calories, setCalories] = useState(0);
@@ -27,12 +28,17 @@ export default function TabTwoScreen() {
             // Fetch all keys from AsyncStorage
             const allKeys = await AsyncStorage.getAllKeys();
 
+            const loggedInKey = allKeys.filter(key => key.startsWith(USER_PREFIX));
+            const loggedIn = await AsyncStorage.getItem(loggedInKey[0]);
+            const loggedInEmail = JSON.parse(loggedIn).email;
+
             // Gets keys only between start and end dates
             const appKeysFood = allKeys.filter(key => key.startsWith(FOOD_PREFIX));
             for (const foodKey of appKeysFood) {
-                const [day, month, year] = foodKey.split(':')[1].split(/[ -]/)[0].split('/'); //long-ass function, but it works, don't worry about it
+                const splits = foodKey.split(':');
+                const [day, month, year] = splits[1].split(/[ -]/)[0].split('/'); //long-ass function, but it works, don't worry about it
                 const date = new Date(`${year}-${month}-${day}`);
-                if (date >= startDate && date <= endDate) {
+                if (date >= startDate && date <= endDate && splits[splits.length - 1] === loggedInEmail) {
                     keysBetweenStartAndEnd.push(foodKey);
                 }
             }
@@ -63,9 +69,10 @@ export default function TabTwoScreen() {
             const appKeysWater = allKeys.filter(key => key.startsWith(WATER_PREFIX));
             const waterKeysBetweenStartAndEnd = [];
             for (const waterKey of appKeysWater) {
-                const [day, month, year] = waterKey.split(':')[1].split(/[ -]/)[0].split('/');
+                const splits = waterKey.split(':');
+                const [day, month, year] = splits[1].split(/[ -]/)[0].split('/');
                 const date = new Date(`${year}-${month}-${day}`);
-                if (date >= startDate && date <= endDate) {
+                if (date >= startDate && date <= endDate && splits[splits.length - 1] === loggedInEmail) {
                     waterKeysBetweenStartAndEnd.push(waterKey);
                 }
             }
