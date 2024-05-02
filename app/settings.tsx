@@ -132,7 +132,7 @@ const SettingsScreen = () => {
     );
     await goal_object.saveLocal();
     await goal_object.save(email);
-    router.replace("./home");
+    //router.replace("./home");
   };
   
   const colorScheme = useColorScheme();

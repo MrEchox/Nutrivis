@@ -275,7 +275,8 @@ export default function Tracking() {
     }
   };
 
-  // Function to handle water drink operations
+
+
   const handleWaterDrink = async (operation: string) => {
   
     const email = await getLoggedInEmail();
