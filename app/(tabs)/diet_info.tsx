@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { View, FlatList, Text, useColorScheme, TouchableOpacity} from 'react-native';
+import { View, FlatList, Text, useColorScheme, TouchableOpacity, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { commonStyles } from '../../components/commonStyles';
@@ -33,7 +33,7 @@ const PageList = () => {
 
     const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
     const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
-
+    const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
     useEffect(() => {
         const fetchCompletedQuizzes = async () => {
             const keys = pages.map((item) => prefix + item.quizId);
@@ -53,16 +53,16 @@ const PageList = () => {
         const isCompleted = completedQuizzes.includes(item.quizId);
 
         return (
-            <TouchableOpacity
-                style={[
-                    themeTextStyle,
-                    { padding: 10 },
-                    isCompleted ? { backgroundColor: 'lightgreen' } : {},
-                ]}
-                onPress={() => router.push(`../dieting/quiz_screen?quizId=${item.quizId}`)}
-            >
-                <Text>{item.title}</Text>
-            </TouchableOpacity>
+                <TouchableOpacity
+                    style={[
+                        themeTextStyle,
+                        { padding: 10 },
+                        isCompleted ? { backgroundColor: 'lightgreen' } : {},
+                    ]}
+                    onPress={() => router.push(`../dieting/quiz_screen?quizId=${item.quizId}`)}
+                >
+                    <Text style={themeTextStyle}>{item.title}</Text>
+                </TouchableOpacity>
         );
     };
     
@@ -79,3 +79,45 @@ const PageList = () => {
 };
 
 export default PageList;
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      paddingTop: 30,
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: 'bold',
+    },
+    label: {
+      marginRight: 10,
+      paddingLeft: 10,
+      paddingBottom: 10,
+      fontWeight: "500",
+    },
+    inputContainer: {
+      width: '80%',
+      marginBottom: 20,
+      borderWidth: 1,
+      borderRadius: 5,
+      borderColor: '#ccc',
+      alignSelf: 'center',
+    },
+    input: {
+      padding: 10,
+      borderWidth: 1,
+      borderRadius: 10,
+    },
+    separator: {
+      marginVertical: 30,
+      height: 1,
+      width: '80%',
+    },
+    buttonContainer: {
+      borderRadius: 10,
+      overflow: 'hidden',
+      backgroundColor: '',
+    },
+  });
