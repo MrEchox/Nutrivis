@@ -179,8 +179,6 @@ export default function Tracking() {
     }
   };
 
-
-
   const handleWaterDrink = async (operation: string) => {
     const email = await getLoggedInEmail();
 
@@ -326,11 +324,11 @@ export default function Tracking() {
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Maisto istorija:</Text>
           <View style={{ maxHeight: 100, backgroundColor:''}}>
-            <FlatList
-              data={eatenFoods}
-              keyExtractor={(item, index) => item}
-              renderItem={renderEatenFoodItem}
-            />
+          <FlatList
+            data={eatenFoods}
+            keyExtractor={(item, index) => index.toString()} // or use a unique ID if available
+            renderItem={renderEatenFoodItem}
+          />
           </View>
         </View>
 
