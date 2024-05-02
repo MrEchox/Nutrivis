@@ -195,7 +195,7 @@ export default function Foods() {
                   
                     handleFoodSave(eatenGrams, name, calories, carbs, fat, protein);
                     setModalVisible(!modalVisible);
-                    router.replace('../home');
+                    //router.replace('../home');
                   }}
                   />
               </View>

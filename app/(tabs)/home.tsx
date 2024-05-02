@@ -179,8 +179,6 @@ export default function Tracking() {
     }
   };
 
-
-
   const handleWaterDrink = async (operation: string) => {
     const email = await getLoggedInEmail();
 
