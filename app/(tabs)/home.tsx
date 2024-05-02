@@ -15,6 +15,9 @@ const Food_Eaten_Prefix = '@Food_Eaten:';
 const Goal_Prefix = '@Goal:';
 
 export default function Tracking() {
+
+  // -------------- Constants and Variables --------------
+
   const [sumCalories, setSumCalories] = useState(0);
   const [sumCarbs, setSumCarbs] = useState(0);
   const [sumFat, setSumFat] = useState(0);
@@ -24,6 +27,16 @@ export default function Tracking() {
   const [goalCarbs, setGoalCarbs] = useState(0);
   const [goalFat, setGoalFat] = useState(0);
   const [goalProtein, setGoalProtein] = useState(0);
+
+  const barData = [
+    { value: 0, label: 'Pr' },
+    { value: 0, label: 'An' },
+    { value: 0, label: 'Tr' },
+    { value: 0, label: 'Kt' },
+    { value: 0, label: 'Pe' },
+    { value: 0, label: 'Še' },
+    { value: 0, label: 'Sk' },
+  ];
 
   const [eatenFoods, setEatenFoods] = useState([]); // Angry for type never or smth
 
@@ -42,11 +55,17 @@ export default function Tracking() {
   const plusSvg = getSvgByName("plus", themeSvg);
   const waterSvg = getSvgByName("water", themeSvg);
 
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date()); //these are changed on useFocusEffect
+
   var date = new Date();
   const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear(); // dd/mm/yyyy
 
   const [Watah, setWatah] = useState(0);
 
+  // -----------------------------------------------------------------------------------------
+
+  // Gets the current user's email
   const getLoggedInEmail = async () => {
     const loginVal = await AsyncStorage.getItem("@LoggedIn:");
     if (loginVal) {
@@ -56,6 +75,7 @@ export default function Tracking() {
     return "";
   };
 
+  // Render eaten food item
   const renderEatenFoodItem = ({ item, index }) => (
     <View style={[styles.FoodItemStyle, {backgroundColor:themeSvg}]}>
       <Text style={themeTextStyle}>{item.date.substring(10, 15)} {item.name} {item.amount} g</Text>
@@ -65,9 +85,11 @@ export default function Tracking() {
     </View>
   );
 
-    const fetchData = async () => {
+  // Function to fetch data from AsyncStorage
+  const fetchData = async () => {
       try {
         setEatenFoods([]); // Clear eaten foods list
+        const keysBetweenStartAndEnd = [];
 
         const email = await getLoggedInEmail();
 
@@ -76,10 +98,13 @@ export default function Tracking() {
 
         // Filter keys to only include those belonging to your app
         const appKeysGoal = allKeys.filter(key => key.startsWith(Goal_Prefix + "local"  + ":" + email));
+
+        const appKeysEatenAll = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix)); // Gets all eaten food values
+        const appKeysEatenAllFiltered = appKeysEatenAll.filter(key => key.includes(email)); // Filter out only eaten food values for the logged in user
+
         const appKeysEatenUnfiltered = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix + currentDate)); // Gets todays eaten food values
         const appKeysEaten = appKeysEatenUnfiltered.filter(key => key.includes(email)); // Filter out only todays eaten food values for the logged in user
         const appKeysWater = allKeys.filter(key => key.startsWith('@Water:' + currentDate)); // Gets todays drank water values
-
 
         // Fetch values corresponding to the filtered keys
         const unfilteredValuesGoalLocal = await AsyncStorage.multiGet(appKeysGoal);
@@ -144,8 +169,10 @@ export default function Tracking() {
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-    };
-    useFocusEffect( // When focusing on page, fetch data
+  };
+
+  // Function calls on page focus
+  useFocusEffect( // When focusing on page, fetch data
     React.useCallback(() => {
       fetchData();
       // Return cleanup function
@@ -155,6 +182,27 @@ export default function Tracking() {
     }, [])
   );
 
+  // Function to set the start and end dates for the current week
+  const setDates = () => {
+    let currentDate = new Date();
+    let currentDayOfWeek = currentDate.getDay();
+    let difference = currentDayOfWeek - 1;
+    if (difference < 0) {
+        difference = 6;
+    }
+    let mondayDate = new Date(currentDate);
+
+    mondayDate.setDate(currentDate.getDate() - difference)
+    mondayDate.setHours(0, 0, 0, 0);
+    setStartDate(mondayDate);
+
+    let sundayDate = new Date(mondayDate);
+    sundayDate.setDate(mondayDate.getDate() + 6);
+    setEndDate(sundayDate);
+    sundayDate.setHours(23, 59, 59, 999);
+  }
+
+  // Function to remove an eaten food item
   const removeEatenFoodItem = async (item, index) => {
     try {
       // Get the key from the item's data
@@ -180,9 +228,9 @@ export default function Tracking() {
     }
   };
 
-
-
+  // Function to handle water drink operations
   const handleWaterDrink = async (operation: string) => {
+  
     const email = await getLoggedInEmail();
 
     switch (operation) {
@@ -234,17 +282,6 @@ export default function Tracking() {
         break;
     }
   };
-
-  //Needs actual data here !!!
-  const barData = [
-    {value: 250, label: 'Pr'},
-    {value: 500, label: 'An'},
-    {value: 445, label: 'Tr'},
-    {value: 320, label: 'Kt'},
-    {value: 500, label: 'Pe'},
-    {value: 256, label: 'Še'},
-    {value: 300, label: 'Sk'},
-  ];
   
   return (
     <SafeAreaView style={[styles.container, themeBackground]}>
