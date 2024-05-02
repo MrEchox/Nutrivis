@@ -256,21 +256,21 @@ export default function Tracking() {
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Baltymai</Text>
             <View style={styles.progressBarContainer}>
-              <ProgressBar progress={(sumProtein/goalProtein)} color={themeProg} style={themeProgBack}/>
+              {/* <ProgressBar progress={(sumProtein/goalProtein)} color={themeProg} style={themeProgBack}/> */}
             </View>
             <Text style={[styles.text, themeTextStyle]}>{sumProtein.toFixed(0)}/{goalProtein} g</Text>
           </View>
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Angliavandeniai</Text>
             <View style={styles.progressBarContainer}>
-              <ProgressBar progress={(sumCarbs/goalCarbs)} color={themeProg} style={themeProgBack} />
+              {/* <ProgressBar progress={(sumCarbs/goalCarbs)} color={themeProg} style={themeProgBack} /> */}
             </View>
             <Text style={[styles.text, themeTextStyle]}>{sumCarbs.toFixed(0)}/{goalCarbs} g</Text>
           </View>
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Riebalai</Text>
             <View style={styles.progressBarContainer}>
-              <ProgressBar progress={(sumFat/goalFat)} color={themeProg} style={themeProgBack} />
+              {/* <ProgressBar progress={(sumFat/goalFat)} color={themeProg} style={themeProgBack} /> */}
             </View>
             <Text style={[styles.text, themeTextStyle]}>{sumFat.toFixed(0)}/{goalFat} g</Text>
           </View>
