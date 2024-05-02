@@ -152,7 +152,9 @@ export default function Tracking() {
         
         valuesEaten.forEach(element => {
           // Add to list
-          setEatenFoods(prevEatenFoods => [...prevEatenFoods, JSON.parse(element[1])]);
+          const newEatenFood = JSON.parse(element[1]);
+          setEatenFoods(prevEatenFoods => [...prevEatenFoods, { ...newEatenFood, key: `${newEatenFood.date}:${newEatenFood.name}` }]);
+
 
           // Add to counter
           const eatenVals = JSON.parse(element[1]);
@@ -205,14 +207,16 @@ export default function Tracking() {
   // Function to remove an eaten food item
   const removeEatenFoodItem = async (item, index) => {
     try {
+      //@EatenFood:date:name:email
+
       // Get the key from the item's data
-      const keyToRemove = Food_Eaten_Prefix + currentDate + ":" + item.email + ":" + item.name;
-      
+      const keyToRemove = `${Food_Eaten_Prefix}${item.date}:${item.name}:${item.email}`;
+  
       // Remove the item from AsyncStorage
       await AsyncStorage.removeItem(keyToRemove);
-      
+  
       // Remove the item from the state
-      setEatenFoods(prevEatenFoods => {
+      setEatenFoods((prevEatenFoods) => {
         const updatedFoods = prevEatenFoods.filter((_, i) => i !== index);
         return updatedFoods;
       });
@@ -389,7 +393,7 @@ export default function Tracking() {
           <View style={{ maxHeight: 100, backgroundColor:''}}>
             <FlatList
               data={eatenFoods}
-              keyExtractor={(item, index) => item}
+              keyExtractor={(item, index) => `${item.date}:${item.name}:${index}`}
               renderItem={renderEatenFoodItem}
             />
           </View>
