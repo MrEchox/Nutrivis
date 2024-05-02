@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { food_object_eaten } from '@/src/object_classes/food_object_eaten'; 
 import { useFocusEffect } from '@react-navigation/native';
 import { commonStyles } from '../../components/commonStyles';
+import { router } from 'expo-router';
 
 
 // Unique identifiers
@@ -140,6 +141,7 @@ export default function Foods() {
     const email = await getLoggedInEmail();
     const eatenFood = new food_object_eaten(currentDate, parseFloat(eatenGrams), name, calories, carbs, fat, protein, email);
     eatenFood.saveLocal();
+    eatenFood.saveLocal();
     eatenFood.save(email);
   }
 
@@ -193,6 +195,7 @@ export default function Foods() {
                     const name = selectedItemIndex.split(',')[0].split(':')[1]; // Don't worry abt it, it works
                   
                     handleFoodSave(eatenGrams, name, calories, carbs, fat, protein);
+                    router.replace('../home');
                   }}
                   />
               </View>
@@ -206,6 +209,7 @@ export default function Foods() {
                     setModalVisible(!modalVisible);
                     removeItem(selectedItemKey);
                     setRefreshPage(prevState => !prevState); // Toggle refreshPage state to trigger page refresh
+                    setModalVisible(!modalVisible)
                   }}
                 />
               </View>
