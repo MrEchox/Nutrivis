@@ -130,11 +130,8 @@ export default function Tracking() {
           }
           const valuesFood = await AsyncStorage.multiGet(keysBetweenStartAndEnd);
 
-          console.log("foodval length: "+ valuesFood.length);
-
           for (const foodIndex in valuesFood) {
             const parsedFood = JSON.parse(valuesFood[foodIndex][1]);
-            console.log("foog cals: "+ parsedFood.calories);
             weekCalories[i].value += parsedFood.calories / 100 * parsedFood.amount;
           }
           startDateHere.setDate(startDateHere.getDate() + 1); 
@@ -177,7 +174,7 @@ export default function Tracking() {
         }
 
         // Goal values
-        console.log(valuesGoalLocal);
+        console.log("Goal values: " + valuesGoalLocal);
         const goalValues = JSON.parse(valuesGoalLocal[0][1]);
         setGoalCalories(goalValues.calories);
         setGoalCarbs(goalValues.carbs);
@@ -189,7 +186,7 @@ export default function Tracking() {
         var Fat = 0
         var Protein = 0
 
-        console.log(valuesEaten);
+        console.log("Eaten values: " + valuesEaten);
         
         valuesEaten.forEach(element => {
           // Add to list
