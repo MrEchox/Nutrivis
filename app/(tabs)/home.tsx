@@ -89,7 +89,6 @@ export default function Tracking() {
   const fetchData = async () => {
       try {
         setEatenFoods([]); // Clear eaten foods list
-        setDates(); // Set the start and end dates for the current week
         var keysBetweenStartAndEnd = [];
 
         const email = await getLoggedInEmail();
@@ -131,8 +130,11 @@ export default function Tracking() {
           }
           const valuesFood = await AsyncStorage.multiGet(keysBetweenStartAndEnd);
 
+          console.log("foodval length: "+ valuesFood.length);
+
           for (const foodIndex in valuesFood) {
             const parsedFood = JSON.parse(valuesFood[foodIndex][1]);
+            console.log("foog cals: "+ parsedFood.calories);
             weekCalories[i].value += parsedFood.calories / 100 * parsedFood.amount;
           }
           startDateHere.setDate(startDateHere.getDate() + 1); 
@@ -215,6 +217,7 @@ export default function Tracking() {
   // Function calls on page focus
   useFocusEffect( // When focusing on page, fetch data
     React.useCallback(() => {
+      setDates(); // Set the start and end dates for the current week
       fetchData();
       // Return cleanup function
       return () => {
