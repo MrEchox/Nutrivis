@@ -28,7 +28,7 @@ export default function Tracking() {
   const [goalFat, setGoalFat] = useState(0);
   const [goalProtein, setGoalProtein] = useState(0);
 
-  const barData = [
+  const [barData, setBarData] = useState([
     { value: 0, label: 'Pr' },
     { value: 0, label: 'An' },
     { value: 0, label: 'Tr' },
@@ -36,9 +36,9 @@ export default function Tracking() {
     { value: 0, label: 'Pe' },
     { value: 0, label: 'Še' },
     { value: 0, label: 'Sk' },
-  ];
+  ]);
 
-  const [eatenFoods, setEatenFoods] = useState([]); // Angry for type never or smth
+  const [eatenFoods, setEatenFoods] = useState([]);
 
   //Theme consts, to be moved elsewhere
   const colorScheme = useColorScheme();
@@ -63,7 +63,7 @@ export default function Tracking() {
 
   const [Watah, setWatah] = useState(0);
 
-  // -----------------------------------------------------------------------------------------
+  // -------------------------------- End of constants -----------------------------------
 
   // Gets the current user's email
   const getLoggedInEmail = async () => {
@@ -89,18 +89,57 @@ export default function Tracking() {
   const fetchData = async () => {
       try {
         setEatenFoods([]); // Clear eaten foods list
-        const keysBetweenStartAndEnd = [];
+        setDates(); // Set the start and end dates for the current week
+        var keysBetweenStartAndEnd = [];
 
         const email = await getLoggedInEmail();
 
         // Fetch all keys from AsyncStorage
         const allKeys = await AsyncStorage.getAllKeys();
 
-        // Filter keys to only include those belonging to your app
         const appKeysGoal = allKeys.filter(key => key.startsWith(Goal_Prefix + "local"  + ":" + email));
 
         const appKeysEatenAll = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix)); // Gets all eaten food values
         const appKeysEatenAllFiltered = appKeysEatenAll.filter(key => key.includes(email)); // Filter out only eaten food values for the logged in user
+
+        ///////////////////////////////////////start of bar chart data/////////////////////////////////////
+        var weekCalories = [
+          { value: 0, label: 'Pr' },
+          { value: 0, label: 'An' },
+          { value: 0, label: 'Tr' },
+          { value: 0, label: 'Kt' },
+          { value: 0, label: 'Pe' },
+          { value: 0, label: 'Åe' },
+          { value: 0, label: 'Sk' },
+        ];
+
+        var startDateHere = startDate;
+
+        //set calories eaten for each day of the week
+        for (let i = 0; i < 7; i++) {  
+          for (const foodKey of appKeysEatenAllFiltered) {
+            keysBetweenStartAndEnd = []; // clear days food
+            const splits = foodKey.split(':');
+            const [day, month, year] = splits[1].split(/[ -]/)[0].split('/'); //long-ass function, but it works, don't worry about it
+            const date = new Date(`${year}-${month}-${day}`);
+            var nextDay = new Date();
+            nextDay = new Date(new Date(startDateHere).getTime() + 60 * 60 * 24 * 1000);
+
+            if (date >= startDateHere && date < nextDay && splits[splits.length - 1] === email) {
+                keysBetweenStartAndEnd.push(foodKey);
+            }
+          }
+          const valuesFood = await AsyncStorage.multiGet(keysBetweenStartAndEnd);
+
+          for (const foodIndex in valuesFood) {
+            const parsedFood = JSON.parse(valuesFood[foodIndex][1]);
+            weekCalories[i].value += parsedFood.calories / 100 * parsedFood.amount;
+          }
+          startDateHere.setDate(startDateHere.getDate() + 1); 
+        }
+
+        setBarData(weekCalories);
+        ///////////////////////////////////////end of bar chart data/////////////////////////////////////
 
         const appKeysEatenUnfiltered = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix + currentDate)); // Gets todays eaten food values
         const appKeysEaten = appKeysEatenUnfiltered.filter(key => key.includes(email)); // Filter out only todays eaten food values for the logged in user
@@ -337,6 +376,7 @@ export default function Tracking() {
             <Text style={[styles.text, themeTextStyle]}>Savaitė</Text>
             <View style={[styles.progressBarContainer, themeContainer]}>
             <BarChart
+                  key={JSON.stringify(barData)}
                   barWidth={22}
                   noOfSections={3}
                   barBorderRadius={5}
