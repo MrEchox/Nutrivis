@@ -29,10 +29,10 @@ export default function Tracking() {
   const [goalProtein, setGoalProtein] = useState(0);
 
   const [barData, setBarData] = useState([
-    { value: 0, label: 'Pr' },
-    { value: 0, label: 'An' },
-    { value: 0, label: 'Tr' },
-    { value: 0, label: 'Kt' },
+    { value: 100, label: 'Pr' },
+    { value: 130, label: 'An' },
+    { value: 80, label: 'Tr' },
+    { value: 70, label: 'Kt' },
     { value: 0, label: 'Pe' },
     { value: 0, label: 'Še' },
     { value: 0, label: 'Sk' },
@@ -103,12 +103,12 @@ export default function Tracking() {
 
         ///////////////////////////////////////start of bar chart data/////////////////////////////////////
         var weekCalories = [
-          { value: 0, label: 'Pr' },
-          { value: 0, label: 'An' },
-          { value: 0, label: 'Tr' },
-          { value: 0, label: 'Kt' },
+          { value: 100, label: 'Pr' },
+          { value: 130, label: 'An' },
+          { value: 80, label: 'Tr' },
+          { value: 70, label: 'Kt' },
           { value: 0, label: 'Pe' },
-          { value: 0, label: 'Åe' },
+          { value: 0, label: 'Še' },
           { value: 0, label: 'Sk' },
         ];
 
@@ -132,9 +132,13 @@ export default function Tracking() {
 
           for (const foodIndex in valuesFood) {
             const parsedFood = JSON.parse(valuesFood[foodIndex][1]);
+            console.log(parsedFood.calories);
             weekCalories[i].value += parsedFood.calories / 100 * parsedFood.amount;
+            console.log(weekCalories[i].value);
           }
           startDateHere.setDate(startDateHere.getDate() + 1); 
+
+          console.log("day: " + i +" weekcals: " + weekCalories[i]);
         }
 
         setBarData(weekCalories);
@@ -350,21 +354,21 @@ export default function Tracking() {
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Baltymai</Text>
             <View style={styles.progressBarContainer}>
-              {/* <ProgressBar progress={(sumProtein/goalProtein)} color={themeProg} style={themeProgBack}/> */}
+              <ProgressBar progress={(sumProtein/goalProtein)} color={themeProg} style={themeProgBack}/>
             </View>
             <Text style={[styles.text, themeTextStyle]}>{sumProtein.toFixed(0)}/{goalProtein} g</Text>
           </View>
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Angliavandeniai</Text>
             <View style={styles.progressBarContainer}>
-              {/* <ProgressBar progress={(sumCarbs/goalCarbs)} color={themeProg} style={themeProgBack} /> */}
+              <ProgressBar progress={(sumCarbs/goalCarbs)} color={themeProg} style={themeProgBack}/>
             </View>
             <Text style={[styles.text, themeTextStyle]}>{sumCarbs.toFixed(0)}/{goalCarbs} g</Text>
           </View>
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Riebalai</Text>
             <View style={styles.progressBarContainer}>
-              {/* <ProgressBar progress={(sumFat/goalFat)} color={themeProg} style={themeProgBack} /> */}
+              <ProgressBar progress={(sumFat/goalFat)} color={themeProg} style={themeProgBack} />
             </View>
             <Text style={[styles.text, themeTextStyle]}>{sumFat.toFixed(0)}/{goalFat} g</Text>
           </View>
