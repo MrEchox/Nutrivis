@@ -56,16 +56,19 @@ const TabTwoScreen = () => {
         user.saveLocal();
         // Save the object to the database
         user.save();
-
-        Alert.alert(
-            "Valio!",
-            "Sėkmingai užsiregistravote!",
-            [
-                { text: 'OK', onPress: () => {
-                    console.log('OK Pressed')
-                    router.replace('../session/login')}}
-            ],
-            );
+        if (password == repeatPassword && querySnapshot.size > 0)
+        {
+            router.replace('./session/login');
+            /*Alert.alert(
+                "Valio!",
+                "Sėkmingai užsiregistravote!",
+                [
+                    { text: 'OK', onPress: () => {
+                        console.log('OK Pressed');
+                    }}
+                ],
+                );*/
+        }
     }
     
     const colorScheme = useColorScheme();

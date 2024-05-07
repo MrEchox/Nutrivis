@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Text, View } from '@/components/Themed';
 import { food_object } from '@/src/object_classes/food_object';
 import { commonStyles } from '../../components/commonStyles';
+import { router } from 'expo-router';
 
 const AddFoodScreen = () => {
     var [name, setName] = useState('');
@@ -21,6 +22,7 @@ const AddFoodScreen = () => {
         Alert.alert('Valio!', 'Maisto produktas pridėtas sėkmingai!', [
             { text: 'OK' }
         ]);
+        router.replace('./food');
     };
 
     const colorScheme = useColorScheme();

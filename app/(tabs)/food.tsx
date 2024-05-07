@@ -142,6 +142,7 @@ export default function Foods() {
     const eatenFood = new food_object_eaten(currentDate, parseFloat(eatenGrams), name, calories, carbs, fat, protein, email);
     eatenFood.saveLocal();
     eatenFood.save(email);
+    router.replace('./home');
   }
 
 
@@ -195,7 +196,6 @@ export default function Foods() {
                   
                     handleFoodSave(eatenGrams, name, calories, carbs, fat, protein);
                     setModalVisible(!modalVisible);
-                    //router.replace('../home');
                   }}
                   />
               </View>
