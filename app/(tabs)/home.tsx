@@ -332,7 +332,7 @@ export default function Tracking() {
   
   return (
     <SafeAreaView style={[styles.container, themeBackground]}>
-      <ScrollView style={[{paddingTop: 20}]}>
+      <ScrollView style={[{paddingTop: 10}]}>
       <View style={[commonStyles.mainStatsContainer, themeContainer]}>
       <View style={[styles.statsItem, themeContainer]}>
             <Text style={[styles.text, themeTextStyle]}>Kalorijos</Text>
@@ -451,6 +451,7 @@ export default function Tracking() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginRight: -20,
     //alignItems: 'center',
   },
   column: {
