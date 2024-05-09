@@ -8,19 +8,19 @@ import { commonStyles } from '../../components/commonStyles';
 const prefix = '@Topic:';
 
 const pages = [
-  { title: '● Kalorijos', quizId: 'calories_quiz' },
-  { title: '● Angliavandeniai', quizId: 'carbs_quiz' },
-  { title: '● Baltymai', quizId: 'protein_quiz' },
-  { title: '● Riebalai - lipidai', quizId: 'fats_quiz' },
-  { title: '● Skaidulos', quizId: 'fiber_quiz' },
-  { title: '● Hidratacija', quizId: 'hydration_quiz' },
-  { title: '● Papildai', quizId: 'supplements_quiz' },
-  { title: '● Sportavimo tipai', quizId: 'exercise_types_quiz' },
-  { title: '● Maisto valgymo laikas', quizId: 'eating_time_quiz' },
-  { title: '● Maisto planavimas', quizId: 'meal_planning_quiz' },
-  { title: '● Nutukimas', quizId: 'obesity_quiz' },
-  { title: '● Anoreksija', quizId: 'anorexia_quiz' },
-  { title: '● Emocinis valgymas', quizId: 'emotional_eating_quiz' },
+  { title: 'Kalorijos', quizId: 'calories_quiz' },
+  { title: 'Angliavandeniai', quizId: 'carbs_quiz' },
+  { title: 'Baltymai', quizId: 'protein_quiz' },
+  { title: 'Riebalai - lipidai', quizId: 'fats_quiz' },
+  { title: 'Skaidulos', quizId: 'fiber_quiz' },
+  { title: 'Hidratacija', quizId: 'hydration_quiz' },
+  { title: 'Papildai', quizId: 'supplements_quiz' },
+  { title: 'Sportavimo tipai', quizId: 'exercise_types_quiz' },
+  { title: 'Valgymo laikas', quizId: 'eating_time_quiz' },
+  { title: 'Maisto planavimas', quizId: 'meal_planning_quiz' },
+  { title: 'Nutukimas', quizId: 'obesity_quiz' },
+  { title: 'Anoreksija', quizId: 'anorexia_quiz' },
+  { title: 'Emocinis valgymas', quizId: 'emotional_eating_quiz' },
   // Add more pages as needed
 ];
 
@@ -73,12 +73,18 @@ const PageList = () => {
                 key={item.quizId}
                 style={[
                   styles.item,
-                  completedQuizzes.includes(item.quizId) ? { backgroundColor: 'lightgreen' } : {},
                 ]}
                 onPress={() => handleItemClick(item.quizId)}
               >
-                <Text style={themeTextStyle}>{item.title}</Text>
+                
+                {completedQuizzes.includes(item.quizId) && (
+                <Image
+                source={require('../../assets/images/nutrivis_magnif.png')}
+                style={[{ width: 40, height: 55, marginBottom:0, position:'absolute', right:15, bottom:-25}]}
+              />
+              )}<Text style={themeTextStyle}>{item.title}</Text>
               </TouchableOpacity>
+              
             </View>
           ))}
         </View>
@@ -90,7 +96,7 @@ const PageList = () => {
 
   return (
     <View style={[themeBackground, styles.container]}>
-      <View style={[styles.columnContainer, commonStyles.mainStatsContainer, themeContainer, {marginLeft:20}]}>
+      <View style={[styles.columnContainer, commonStyles.mainStatsContainer, themeContainer, { width: '95%' }]}>
         <View style={[styles.column, { alignItems: 'center' }]}>
           <Image
             source={require('../../assets/images/nutrivis_magnif.png')}
@@ -98,7 +104,7 @@ const PageList = () => {
           />
         </View>
         <View style={[styles.column, { alignItems: 'center' }]}>
-          <Text style={[themeTextStyle, { fontSize: 70 }]}>1/13</Text>
+          <Text style={[themeTextStyle, { fontSize: 60 }]}>1/13</Text>
         </View>
       </View>
       <View style={styles.listContainer}>
@@ -133,7 +139,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   item: {
-    padding: 10,
+    padding: 0,
     marginBottom: 10,
   },
 });
