@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { View, Text, TouchableOpacity, useColorScheme, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, useColorScheme, StyleSheet, Image, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { commonStyles } from '../../components/commonStyles';
@@ -34,6 +34,7 @@ const PageList = () => {
   const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
   const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
   const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
+  const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049'
 
   useEffect(() => {
     const fetchCompletedQuizzes = async () => {
@@ -68,24 +69,23 @@ const PageList = () => {
       columns.push(
         <View key={i} style={styles.column}>
           {columnItems.map((item) => (
-            <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-              <TouchableOpacity
-                key={item.quizId}
-                style={[
-                  styles.item,
-                ]}
-                onPress={() => handleItemClick(item.quizId)}
-              >
-                
+            <TouchableOpacity
+              key={item.quizId}
+              style={[
+                styles.item
+              ]}
+              onPress={() => handleItemClick(item.quizId)}
+            >
+              <View style={[commonStyles.mainStatsContainer, themeContainer, 
+                  completedQuizzes.includes(item.quizId) ? { backgroundColor: themeSvg } : {}, { paddingBottom: 60}]}>
                 {completedQuizzes.includes(item.quizId) && (
-                <Image
-                source={require('../../assets/images/nutrivis_magnif.png')}
-                style={[{ width: 40, height: 55, marginBottom:0, position:'absolute', right:15, bottom:-25}]}
-              />
-              )}<Text style={themeTextStyle}>{item.title}</Text>
-              </TouchableOpacity>
-              
-            </View>
+                  <Image
+                    source={require('../../assets/images/nutrivis_award2.png')}
+                    style={[{ width: 68, height: 90, marginBottom: 0, position: 'absolute', right: 20, top: 5 }]}
+                  />
+                )}<Text style={[themeTextStyle, { fontSize: 20 }]}>{item.title}</Text>
+              </View>
+            </TouchableOpacity>
           ))}
         </View>
       );
@@ -96,20 +96,22 @@ const PageList = () => {
 
   return (
     <View style={[themeBackground, styles.container]}>
-      <View style={[styles.columnContainer, commonStyles.mainStatsContainer, themeContainer, { width: '95%' }]}>
-        <View style={[styles.column, { alignItems: 'center' }]}>
-          <Image
-            source={require('../../assets/images/nutrivis_magnif.png')}
-            style={[{ width: 121, height: 167, marginBottom: 20 }]}
-          />
+      <ScrollView style={[{ paddingTop: 10 }]}>
+        <View style={[styles.columnContainer, commonStyles.mainStatsContainer, themeContainer, { width: '95%' }]}>
+          <View style={[styles.column, { alignItems: 'center' }]}>
+            <Image
+              source={require('../../assets/images/nutrivis_magnif.png')}
+              style={[{ width: 121, height: 167, marginBottom: 20 }]}
+            />
+          </View>
+          <View style={[styles.column, { alignItems: 'center' }]}>
+            <Text style={[themeTextStyle, { fontSize: 60 }]}>{completedQuizzes.length}/13</Text>
+          </View>
         </View>
-        <View style={[styles.column, { alignItems: 'center' }]}>
-          <Text style={[themeTextStyle, { fontSize: 60 }]}>1/13</Text>
+        <View style={styles.listContainer}>
+          {renderColumns()}
         </View>
-      </View>
-      <View style={styles.listContainer}>
-        {renderColumns()}
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -122,6 +124,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 10,
     marginTop: 0,
+    marginRight: -27,
   },
 
   listContainer: {
