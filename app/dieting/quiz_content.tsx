@@ -125,7 +125,7 @@ const quizContent = [
         content: [
         {
             type: 'info',
-            text: 'Vanduo yra vienas svarbiausių organizmo elementų. Learn more about them.',
+            text: 'Vanduo yra vienas svarbiausių organizmo elementų. Sužinokime daugiau apie jį',
         },
         {
             type: 'quiz',
@@ -185,7 +185,7 @@ const quizContent = [
         },
         {
             type: 'info',
-            text: 'Kardio treniruotės - bėgimas, dviračio minimas ar plaukimas',
+            text: 'Kardio treniruotės - bėgimas, važiavimas dviračiu ar plaukimas',
         },
         {
             type: 'quiz',
