@@ -25,7 +25,7 @@ const quizContent = [
             },
             {
                 type: 'info',
-                text: 'Aha',
+                text: 'Suvartotas kalorijų kiekis ir jų kokybė yra svarbūs sveikos mitybos ir kūno svorio palaikymo aspektai.',
             },
         ],
     },
