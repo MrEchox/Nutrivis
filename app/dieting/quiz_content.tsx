@@ -89,7 +89,7 @@ const quizContent = [
         },
         {
             type: 'quiz',
-            question: 'Kuris maistas yra gerūjų riebalų šaltinis?',
+            question: 'Kuris maistas yra gerųjų riebalų šaltinis?',
             options: ['Bulvės', 'Blynai', 'Lašiša', 'Konservuoti vaisiai'],
             correctAnswer: 'Lašiša',
         },
@@ -129,7 +129,7 @@ const quizContent = [
         },
         {
             type: 'quiz',
-            question: 'Kokia yra pagridinė vandens svarba organizme?',
+            question: 'Kokia yra pagrindinė vandens svarba organizme?',
             options: ['Energijos šaltinis', 'Medžiagų transportavimas', 'Lastelių stuktūros sudedamoji dalis', 'Hormonų gamyba'],
             correctAnswer: 'Lastelių stuktūros sudedamoji dalis',
         },
