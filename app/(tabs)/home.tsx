@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TextInput, Button, Pressable, useColorScheme, FlatList, TouchableOpacity} from 'react-native';
+import { StyleSheet, TextInput, Button, Pressable, useColorScheme, FlatList, TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProgressBar } from 'react-native-paper';
@@ -9,11 +9,15 @@ import { getSvgByName } from '../../components/SVGs';
 import {Svg } from 'react-native-svg';
 import { daily_water_object } from '@/src/object_classes/daily_water';
 import { useFocusEffect } from '@react-navigation/native';
+import { BarChart } from "react-native-gifted-charts";
 
 const Food_Eaten_Prefix = '@Food_Eaten:';
 const Goal_Prefix = '@Goal:';
 
 export default function Tracking() {
+
+  // -------------- Constants and Variables --------------
+
   const [sumCalories, setSumCalories] = useState(0);
   const [sumCarbs, setSumCarbs] = useState(0);
   const [sumFat, setSumFat] = useState(0);
@@ -24,12 +28,22 @@ export default function Tracking() {
   const [goalFat, setGoalFat] = useState(0);
   const [goalProtein, setGoalProtein] = useState(0);
 
-  const [eatenFoods, setEatenFoods] = useState([]); // Angry for type never or smth
+  const [barData, setBarData] = useState([
+    { value: 0, label: 'Pr' },
+    { value: 0, label: 'An' },
+    { value: 0, label: 'Tr' },
+    { value: 0, label: 'Kt' },
+    { value: 0, label: 'Pe' },
+    { value: 0, label: 'Še' },
+    { value: 0, label: 'Sk' },
+  ]);
+
+  const [eatenFoods, setEatenFoods] = useState([]);
 
   //Theme consts, to be moved elsewhere
   const colorScheme = useColorScheme();
 
-  const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
+  const themeTextStyle = colorScheme === 'light' ? [commonStyles.lightThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }] : [commonStyles.darkThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }];
   const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
   const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
   const themeProg = colorScheme === 'light' ? '#669bbc' : '#003049';
@@ -41,11 +55,17 @@ export default function Tracking() {
   const plusSvg = getSvgByName("plus", themeSvg);
   const waterSvg = getSvgByName("water", themeSvg);
 
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date()); //these are changed on useFocusEffect
+
   var date = new Date();
   const currentDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear(); // dd/mm/yyyy
 
   const [Watah, setWatah] = useState(0);
 
+  // -------------------------------- End of constants -----------------------------------
+
+  // Gets the current user's email
   const getLoggedInEmail = async () => {
     const loginVal = await AsyncStorage.getItem("@LoggedIn:");
     if (loginVal) {
@@ -55,6 +75,7 @@ export default function Tracking() {
     return "";
   };
 
+  // Render eaten food item
   const renderEatenFoodItem = ({ item, index }) => (
     <View style={[styles.FoodItemStyle, {backgroundColor:themeSvg}]}>
       <Text style={themeTextStyle}>{item.date.substring(10, 15)} {item.name} {item.amount} g</Text>
@@ -64,21 +85,68 @@ export default function Tracking() {
     </View>
   );
 
-    const fetchData = async () => {
+  // Function to fetch data from AsyncStorage
+  const fetchData = async () => {
       try {
         setEatenFoods([]); // Clear eaten foods list
+        var keysBetweenStartAndEnd = [];
 
         const email = await getLoggedInEmail();
 
         // Fetch all keys from AsyncStorage
         const allKeys = await AsyncStorage.getAllKeys();
 
-        // Filter keys to only include those belonging to your app
         const appKeysGoal = allKeys.filter(key => key.startsWith(Goal_Prefix + "local"  + ":" + email));
+
+        const appKeysEatenAll = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix)); // Gets all eaten food values
+        const appKeysEatenAllFiltered = appKeysEatenAll.filter(key => key.includes(email)); // Filter out only eaten food values for the logged in user
+
+        ///////////////////////////////////////start of bar chart data/////////////////////////////////////
+        var weekCalories = [
+          { value: 0, label: 'Pr' },
+          { value: 0, label: 'An' },
+          { value: 0, label: 'Tr' },
+          { value: 0, label: 'Kt' },
+          { value: 0, label: 'Pe' },
+          { value: 0, label: 'Še' },
+          { value: 0, label: 'Sk' },
+        ];
+
+        var startDateHere = startDate;
+
+        //set calories eaten for each day of the week
+        for (let i = 0; i < 7; i++) {  
+          keysBetweenStartAndEnd = []; // clear days food
+          for (const foodKey of appKeysEatenAllFiltered) {
+            const splits = foodKey.split(':');
+            const [day, month, year] = splits[1].split(/[ -]/)[0].split('/'); //long-ass function, but it works, don't worry about it
+            const date = new Date(`${year}-${month}-${day}`);
+            var nextDay = new Date();
+            nextDay = new Date(new Date(startDateHere).getTime() + 60 * 60 * 24 * 1000);
+
+            if (date >= startDateHere && date < nextDay && splits[splits.length - 1] === email) {
+                keysBetweenStartAndEnd.push(foodKey);
+            }
+          }
+          const valuesFood = await AsyncStorage.multiGet(keysBetweenStartAndEnd);
+
+          for (const foodIndex in valuesFood) {
+            const parsedFood = JSON.parse(valuesFood[foodIndex][1]);
+            console.log(parsedFood.calories);
+            weekCalories[i].value += parsedFood.calories / 100 * parsedFood.amount;
+            console.log(weekCalories[i].value);
+          }
+          startDateHere.setDate(startDateHere.getDate() + 1); 
+
+          console.log("day: " + i +" weekcals: " + weekCalories[i].value);
+        }
+
+        setBarData(weekCalories);
+        ///////////////////////////////////////end of bar chart data/////////////////////////////////////
+
         const appKeysEatenUnfiltered = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix + currentDate)); // Gets todays eaten food values
         const appKeysEaten = appKeysEatenUnfiltered.filter(key => key.includes(email)); // Filter out only todays eaten food values for the logged in user
         const appKeysWater = allKeys.filter(key => key.startsWith('@Water:' + currentDate)); // Gets todays drank water values
-
 
         // Fetch values corresponding to the filtered keys
         const unfilteredValuesGoalLocal = await AsyncStorage.multiGet(appKeysGoal);
@@ -110,7 +178,7 @@ export default function Tracking() {
         }
 
         // Goal values
-        console.log(valuesGoalLocal);
+        console.log("Goal values: " + valuesGoalLocal);
         const goalValues = JSON.parse(valuesGoalLocal[0][1]);
         setGoalCalories(goalValues.calories);
         setGoalCarbs(goalValues.carbs);
@@ -122,11 +190,13 @@ export default function Tracking() {
         var Fat = 0
         var Protein = 0
 
-        console.log(valuesEaten);
+        console.log("Eaten values: " + valuesEaten);
         
         valuesEaten.forEach(element => {
           // Add to list
-          setEatenFoods(prevEatenFoods => [...prevEatenFoods, JSON.parse(element[1])]);
+          const newEatenFood = JSON.parse(element[1]);
+          setEatenFoods(prevEatenFoods => [...prevEatenFoods, { ...newEatenFood, key: `${newEatenFood.date}:${newEatenFood.name}` }]);
+
 
           // Add to counter
           const eatenVals = JSON.parse(element[1]);
@@ -143,27 +213,61 @@ export default function Tracking() {
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-    };
-    useFocusEffect( // When focusing on page, fetch data
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setDates();
+      return () => {
+        // Any cleanup you want to do when the component is unmounted or loses focus
+      };
+    }, [])
+  )
+
+  // Function calls on page focus
+  useFocusEffect( // When focusing on page, fetch data
     React.useCallback(() => {
       fetchData();
       // Return cleanup function
       return () => {
         // Any cleanup you want to do when the component is unmounted or loses focus
       };
-    }, [])
+    }, [startDate])
   );
 
+  // Function to set the start and end dates for the current week
+  const setDates = () => {
+    let currentDate = new Date();
+    let currentDayOfWeek = currentDate.getDay();
+    let difference = currentDayOfWeek - 1;
+    if (difference < 0) {
+        difference = 6;
+    }
+    let mondayDate = new Date(currentDate);
+
+    mondayDate.setDate(currentDate.getDate() - difference)
+    mondayDate.setHours(0, 0, 0, 0);
+    setStartDate(mondayDate);
+
+    let sundayDate = new Date(mondayDate);
+    sundayDate.setDate(mondayDate.getDate() + 6);
+    setEndDate(sundayDate);
+    sundayDate.setHours(23, 59, 59, 999);
+  }
+
+  // Function to remove an eaten food item
   const removeEatenFoodItem = async (item, index) => {
     try {
+      //@EatenFood:date:name:email
+
       // Get the key from the item's data
-      const keyToRemove = Food_Eaten_Prefix + currentDate + ":" + item.email + ":" + item.name;
-      
+      const keyToRemove = `${Food_Eaten_Prefix}${item.date}:${item.name}:${item.email}`;
+  
       // Remove the item from AsyncStorage
       await AsyncStorage.removeItem(keyToRemove);
-      
+  
       // Remove the item from the state
-      setEatenFoods(prevEatenFoods => {
+      setEatenFoods((prevEatenFoods) => {
         const updatedFoods = prevEatenFoods.filter((_, i) => i !== index);
         return updatedFoods;
       });
@@ -179,7 +283,9 @@ export default function Tracking() {
     }
   };
 
+  // Function to handle water drink operations
   const handleWaterDrink = async (operation: string) => {
+  
     const email = await getLoggedInEmail();
 
     switch (operation) {
@@ -231,8 +337,10 @@ export default function Tracking() {
         break;
     }
   };
+  
   return (
-    <View style={[styles.container, themeBackground]}>
+    <SafeAreaView style={[styles.container, themeBackground]}>
+      <ScrollView style={[{paddingTop: 10}]}>
       <View style={[commonStyles.mainStatsContainer, themeContainer]}>
       <View style={[styles.statsItem, themeContainer]}>
             <Text style={[styles.text, themeTextStyle]}>Kalorijos</Text>
@@ -261,7 +369,7 @@ export default function Tracking() {
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Angliavandeniai</Text>
             <View style={styles.progressBarContainer}>
-              {/* <ProgressBar progress={(sumCarbs/goalCarbs)} color={themeProg} style={themeProgBack} /> */}
+              <ProgressBar progress={(sumCarbs/goalCarbs)} color={themeProg} style={themeProgBack}/>
             </View>
             <Text style={[styles.text, themeTextStyle]}>{sumCarbs.toFixed(0)}/{goalCarbs} g</Text>
           </View>
@@ -276,14 +384,25 @@ export default function Tracking() {
       </View>
 
       <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-        <View style={[styles.column, themeContainer]}>
-          <Text style={[styles.text, themeTextStyle]}>Pr</Text>
-          <Text style={[styles.text, themeTextStyle]}>An</Text>
-          <Text style={[styles.text, themeTextStyle]}>Tr</Text>
-          <Text style={[styles.text, themeTextStyle]}>Kt</Text>
-          <Text style={[styles.text, themeTextStyle]}>Pe</Text>
-          <Text style={[styles.text, themeTextStyle]}>Še</Text>
-          <Text style={[styles.text, themeTextStyle]}>Sk</Text>
+        <View style={[styles.statsItem, themeContainer]}>
+          <Text style={[styles.text, themeTextStyle]}>Savaitė</Text>
+          <View style={[styles.progressBarContainer, themeContainer]}>
+          <BarChart
+                key={JSON.stringify(barData)}
+                barWidth={22}
+                noOfSections={3}
+                barBorderRadius={5}
+                frontColor={themeSvg}
+                data={barData}
+                yAxisThickness={0}
+                xAxisThickness={0}
+                hideYAxisText={true}
+                xAxisLabelTextStyle={[themeTextStyle]}
+                dashGap={0}
+                xAxisColor={'red'}
+                height={100}
+            />
+          </View>
         </View>
       </View>
 
@@ -324,24 +443,24 @@ export default function Tracking() {
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Maisto istorija:</Text>
           <View style={{ maxHeight: 100, backgroundColor:''}}>
-          <FlatList
-            data={eatenFoods}
-            keyExtractor={(item, index) => index.toString()} // or use a unique ID if available
-            renderItem={renderEatenFoodItem}
-          />
+            <FlatList
+              data={eatenFoods}
+              keyExtractor={(item, index) => `${item.date}:${item.name}:${index}`}
+              renderItem={renderEatenFoodItem}
+            />
           </View>
         </View>
-
-    </View>
+        <Text></Text>
+        </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    paddingTop: 30,
+    marginRight: -20,
+    //alignItems: 'center',
   },
   column: {
     flexDirection: 'row',
@@ -354,7 +473,7 @@ const styles = StyleSheet.create({
     width: '47%',
   },
   statsItem: {
-    alignItems: 'center',
+    alignItems: 'center'
   },
   text: {
     fontSize: 16,
@@ -371,7 +490,7 @@ const styles = StyleSheet.create({
   waterIntakeButton: {
     width: 100,
     height: 100,
-    margin: -10,
+    margin: -16,
   },
   waterIntakeText: {
     position: 'absolute',
