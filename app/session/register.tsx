@@ -58,16 +58,16 @@ const TabTwoScreen = () => {
         user.save();
         if (password == repeatPassword && querySnapshot.size > 0)
         {
-            router.replace('./session/login');
-            /*Alert.alert(
+            Alert.alert(
                 "Valio!",
                 "Sėkmingai užsiregistravote!",
                 [
                     { text: 'OK', onPress: () => {
                         console.log('OK Pressed');
+                        router.replace('./session/login');
                     }}
                 ],
-                );*/
+            );
         }
     }
     
