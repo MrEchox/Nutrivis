@@ -41,7 +41,11 @@ export default function CongratsScreen() {
     return (
         <View style={[themeBackground, styles.container]}>
             <View style={[themeContainer, commonStyles.mainStatsContainer]}>
+              {score === '0' ? (
+                <Text style={[themeTextStyle, styles.label]}>Ups! Jūs surinkote {score} iš {countQuizQuestions} taškų. Sėkmės kitą kartą</Text>
+              ) : (
                 <Text style={[themeTextStyle, styles.label]}>Sveikiname! Jūs surinkote {score} iš {countQuizQuestions} taškų.</Text>
+                )}
                 <View style={[{alignSelf:'center'}]}>
                     <Image 
                       source={require('../../assets/images/nutrivis_hmm.png')}
