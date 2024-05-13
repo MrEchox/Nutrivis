@@ -134,22 +134,13 @@ const SettingsScreen = () => {
     await goal_object.save(email);
     //router.replace("./home");
   };
-
+  
   const colorScheme = useColorScheme();
-  const themeBackground =
-    colorScheme === "light"
-      ? commonStyles.lightBackground
-      : commonStyles.darkBackground;
-  const themeContainer =
-    colorScheme === "light"
-      ? commonStyles.lightContainer
-      : commonStyles.darkContainer;
-  const themeTextStyle =
-    colorScheme === "light"
-      ? commonStyles.lightThemeText
-      : commonStyles.darkThemeText;
-  const themeSvg = colorScheme === "light" ? "#ffffff" : "#003049";
-
+  const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
+  const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
+  const themeTextStyle = colorScheme === 'light' ? [commonStyles.lightThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }] : [commonStyles.darkThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }];
+  const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
+  
   async function handleLogout() {
     const loginVal = await AsyncStorage.getItem("@LoggedIn:");
     if (loginVal) {
@@ -299,9 +290,10 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-start",
-    paddingTop: 30,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingTop: 60,
+    marginRight: -20,
   },
   title: {
     fontSize: 20,

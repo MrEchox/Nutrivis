@@ -3,6 +3,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { Text, StyleSheet } from 'react-native';
 import { useEffect } from 'react';
 
 import { useColorScheme } from '@/components/useColorScheme';
@@ -23,6 +24,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    Helvetica: require('../assets/fonts/Helvetica.ttf'),
     ...FontAwesome.font,
   });
 
@@ -43,6 +45,7 @@ export default function RootLayout() {
 
   return <RootLayoutNav />;
 }
+
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();

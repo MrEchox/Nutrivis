@@ -26,7 +26,7 @@ const AddFoodScreen = () => {
     const colorScheme = useColorScheme();
     const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
     const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
-    const themeTextStyle = colorScheme === 'light' ? commonStyles.lightThemeText : commonStyles.darkThemeText;
+    const themeTextStyle = colorScheme === 'light' ? [commonStyles.lightThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }] : [commonStyles.darkThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }];
     const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
     
     return (
