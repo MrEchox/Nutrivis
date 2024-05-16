@@ -2,7 +2,7 @@ import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView, BackHandler, A
 import { Text, View } from '@/components/Themed';
 import { User } from '@/src/object_classes/user';
 import { useState } from 'react';
-import bcrypt from 'bcryptjs';
+import CryptoES from 'crypto-es';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase.config.js";
 import { router } from 'expo-router';
@@ -16,11 +16,40 @@ const TabTwoScreen = () => {
     const [username, setUsername] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
 
+    const isEmail = (input: string) => {
+        // Regular expression to match email pattern
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+        return emailRegex.test(input);
+      };
+
     async function handleRegister() {
         if (password !== repeatPassword) {
             Alert.alert(
                 "Klaida",
                 "Slaptažodžiai nesutampa",
+                [
+                    { text: 'OK', onPress: () => console.log('OK Pressed') }
+                ],
+                );
+            return;
+        }
+
+        if (email === '' || password === '' || username === '') {
+            Alert.alert(
+                "Klaida",
+                "Užpildykite visus laukus",
+                [
+                    { text: 'OK', onPress: () => console.log('OK Pressed') }
+                ],
+                );
+            return;
+        }
+
+        if (isEmail(email) === false) {
+            Alert.alert(
+                "Klaida",
+                "Neteisingas el. pašto formatas",
                 [
                     { text: 'OK', onPress: () => console.log('OK Pressed') }
                 ],
@@ -45,18 +74,23 @@ const TabTwoScreen = () => {
         }
 
         // Hash the password
-        const saltRounds = 7;
-        const salt = bcrypt.genSaltSync(saltRounds);
-        const hash = bcrypt.hashSync(password, salt);
+        const hash = CryptoES.SHA256(password).toString();
+
+        const salt = CryptoES.lib.WordArray.random(128 / 8).toString();
 
         // Make a user object
         const user = new User( email, username, hash, salt);
 
-        // Save the object to local storage
+        //Save the object to local storage
         user.saveLocal();
         // Save the object to the database
         user.save();
-        if (password == repeatPassword && querySnapshot.size > 0)
+
+        const querySnapshot2 = await getDocs(q);
+
+        console.log("SNAPSHOT SIZE" + querySnapshot2.size);
+
+        if (password == repeatPassword && querySnapshot2.size > 0)
         {
             Alert.alert(
                 "Valio!",
@@ -64,7 +98,7 @@ const TabTwoScreen = () => {
                 [
                     { text: 'OK', onPress: () => {
                         console.log('OK Pressed');
-                        router.replace('./session/login');
+                        router.replace('../session/login');
                     }}
                 ],
             );

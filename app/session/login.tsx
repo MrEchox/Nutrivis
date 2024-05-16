@@ -2,12 +2,12 @@ import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView, BackHandler, u
 import { Text, View } from '@/components/Themed';
 import { User } from '@/src/object_classes/user';
 import { useState } from 'react';
-import bcrypt from 'bcryptjs';
 import { collection, query, where, getDocs, connectFirestoreEmulator } from "firebase/firestore";
 import { db } from "../../firebase.config.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from 'expo-router';
 import { commonStyles } from '../../components/commonStyles';
+import CryptoES from 'crypto-es';
 
 const loginScreen = () => {
 
@@ -46,7 +46,7 @@ const loginScreen = () => {
         
         if (querySnapshot.size > 0) {
             // Check if password is correct
-            if (bcrypt.compareSync(password, querySnapshot.docs[0].data().password)) {
+            if (CryptoES.SHA256(password) == querySnapshot.docs[0].data().password) {
 
                 const keys = await AsyncStorage.getAllKeys();
                 const userKey = keys.filter(key => key.startsWith("@User:" + email));
