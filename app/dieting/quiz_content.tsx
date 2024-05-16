@@ -35,6 +35,7 @@ const quizContent = [
             content: [
             {
                 type: 'info',
+
                 text: 'Angliavandeniai yra esminiai makroelementai. Praplėskim žinias apie juos.',
             },
             {
@@ -359,7 +360,6 @@ const quizContent = [
         },
     ],
 },
-
 ];
 
 export default quizContent;

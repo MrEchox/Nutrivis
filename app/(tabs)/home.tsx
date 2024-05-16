@@ -283,7 +283,6 @@ export default function Tracking() {
     }
   };
 
-  // Function to handle water drink operations
   const handleWaterDrink = async (operation: string) => {
   
     const email = await getLoggedInEmail();
@@ -369,7 +368,7 @@ export default function Tracking() {
           <View style={[styles.statsItem, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Angliavandeniai</Text>
             <View style={styles.progressBarContainer}>
-              <ProgressBar progress={(sumCarbs/goalCarbs)} color={themeProg} style={themeProgBack}/>
+              {/* <ProgressBar progress={(sumCarbs/goalCarbs)} color={themeProg} style={themeProgBack}/> */}
             </View>
             <Text style={[styles.text, themeTextStyle]}>{sumCarbs.toFixed(0)}/{goalCarbs} g</Text>
           </View>

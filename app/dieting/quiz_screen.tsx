@@ -42,7 +42,7 @@ const QuizScreen = ({ navigation }) => {
 
     return (
         <View style={[themeBackground, styles.container]}>
-            <Text style={[themeTextStyle, styles.label]}>{`Klausimynas: ${quizId}`}</Text> {/* Display the quiz identifier */}
+            <Text style={[themeTextStyle, styles.label]}>{`Quiz: ${quizId}`}</Text> {/* Display the quiz identifier */}
             {currentContent.type === 'info' && (
                 <View style={[themeContainer, commonStyles.mainStatsContainer]}>
                     <Text style={themeTextStyle}>{currentContent.text}</Text>
