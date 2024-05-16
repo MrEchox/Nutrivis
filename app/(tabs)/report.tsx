@@ -1,4 +1,4 @@
-import { StyleSheet, Button, useColorScheme } from 'react-native';
+import { StyleSheet, Button, useColorScheme, TouchableOpacity } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from '@react-navigation/native';
@@ -96,7 +96,7 @@ export default function TabTwoScreen() {
 
             // Fetch values corresponding to the filtered keys
             const valuesFood = await AsyncStorage.multiGet(keysBetweenStartAndEnd);
-            
+
             var caloriesHere = 0;
             var carbsHere = 0;
             var fatHere = 0;
@@ -137,100 +137,100 @@ export default function TabTwoScreen() {
             console.log('Water:', waterHere);
 
             ///////////////////////////////////////start of bar chart data/////////////////////////////////////
-        var weekCalories = [
-            { value: 0, label: 'Pr' },
-            { value: 0, label: 'An' },
-            { value: 0, label: 'Tr' },
-            { value: 0, label: 'Kt' },
-            { value: 0, label: 'Pe' },
-            { value: 0, label: 'Še' },
-            { value: 0, label: 'Sk' },
-        ];
+            var weekCalories = [
+                { value: 0, label: 'Pr' },
+                { value: 0, label: 'An' },
+                { value: 0, label: 'Tr' },
+                { value: 0, label: 'Kt' },
+                { value: 0, label: 'Pe' },
+                { value: 0, label: 'Še' },
+                { value: 0, label: 'Sk' },
+            ];
 
-        var weekCarbs = [
-            { value: 0, label: 'Pr' },
-            { value: 0, label: 'An' },
-            { value: 0, label: 'Tr' },
-            { value: 0, label: 'Kt' },
-            { value: 0, label: 'Pe' },
-            { value: 0, label: 'Še' },
-            { value: 0, label: 'Sk' },
-        ];
+            var weekCarbs = [
+                { value: 0, label: 'Pr' },
+                { value: 0, label: 'An' },
+                { value: 0, label: 'Tr' },
+                { value: 0, label: 'Kt' },
+                { value: 0, label: 'Pe' },
+                { value: 0, label: 'Še' },
+                { value: 0, label: 'Sk' },
+            ];
 
-        var weekFat = [
-            { value: 0, label: 'Pr' },
-            { value: 0, label: 'An' },
-            { value: 0, label: 'Tr' },
-            { value: 0, label: 'Kt' },
-            { value: 0, label: 'Pe' },
-            { value: 0, label: 'Še' },
-            { value: 0, label: 'Sk' },
-        ];
+            var weekFat = [
+                { value: 0, label: 'Pr' },
+                { value: 0, label: 'An' },
+                { value: 0, label: 'Tr' },
+                { value: 0, label: 'Kt' },
+                { value: 0, label: 'Pe' },
+                { value: 0, label: 'Še' },
+                { value: 0, label: 'Sk' },
+            ];
 
-        var weekProtein = [
-            { value: 0, label: 'Pr' },
-            { value: 0, label: 'An' },
-            { value: 0, label: 'Tr' },
-            { value: 0, label: 'Kt' },
-            { value: 0, label: 'Pe' },
-            { value: 0, label: 'Še' },
-            { value: 0, label: 'Sk' },
-        ];
+            var weekProtein = [
+                { value: 0, label: 'Pr' },
+                { value: 0, label: 'An' },
+                { value: 0, label: 'Tr' },
+                { value: 0, label: 'Kt' },
+                { value: 0, label: 'Pe' },
+                { value: 0, label: 'Še' },
+                { value: 0, label: 'Sk' },
+            ];
 
-  
-        var startDateHere = new Date(startDate);
-  
-          //set calories eaten for each day of the week
-        for (let i = 0; i < 7; i++) {  
-            keysBetweenStartAndEnd = [];
 
-            var nextDay = new Date();
+            var startDateHere = new Date(startDate);
 
-            nextDay = new Date(new Date(startDateHere).getTime() + 60 * 60 * 24 * 1000);
+            //set calories eaten for each day of the week
+            for (let i = 0; i < 7; i++) {
+                keysBetweenStartAndEnd = [];
 
-            for (const foodKey of appKeysFood) {
-              const splits = foodKey.split(':');
-              const [day, month, year] = splits[1].split(/[ -]/)[0].split('/'); //long-ass function, but it works, don't worry about it
-              const date = new Date(`${year}-${month}-${day}`);
+                var nextDay = new Date();
 
-              if (date >= startDateHere && date < nextDay && splits[splits.length - 1] === loggedInEmail) {
+                nextDay = new Date(new Date(startDateHere).getTime() + 60 * 60 * 24 * 1000);
 
-                  keysBetweenStartAndEnd.push(foodKey);
-              }
+                for (const foodKey of appKeysFood) {
+                    const splits = foodKey.split(':');
+                    const [day, month, year] = splits[1].split(/[ -]/)[0].split('/'); //long-ass function, but it works, don't worry about it
+                    const date = new Date(`${year}-${month}-${day}`);
+
+                    if (date >= startDateHere && date < nextDay && splits[splits.length - 1] === loggedInEmail) {
+
+                        keysBetweenStartAndEnd.push(foodKey);
+                    }
+                }
+
+                console.log("Start date here: " + startDateHere);
+                console.log("NextDay: " + nextDay)
+
+                console.log("keys between length: " + keysBetweenStartAndEnd.length);
+
+                const valuesFood = await AsyncStorage.multiGet(keysBetweenStartAndEnd);
+
+                for (const foodIndex in valuesFood) {
+                    const parsedFood = JSON.parse(valuesFood[foodIndex][1]);
+                    console.log(parsedFood.calories);
+                    weekCalories[i].value += parsedFood.calories / 100 * parsedFood.amount;
+                    weekCarbs[i].value += parsedFood.carbs / 100 * parsedFood.amount;
+                    weekFat[i].value += parsedFood.fat / 100 * parsedFood.amount;
+                    weekProtein[i].value += parsedFood.protein / 100 * parsedFood.amount;
+                    console.log(weekCalories[i].value);
+                }
+                startDateHere.setDate(startDateHere.getDate() + 1);
+
+                console.log("day: " + i + " weekcals: " + weekCalories[i].value);
             }
 
-            console.log("Start date here: " + startDateHere);
-            console.log("NextDay: " + nextDay)
+            setBarData(weekCalories);
+            setCarbsBarData(weekCarbs);
+            setFatBarData(weekFat);
+            setProteinBarData(weekProtein);
+            ///////////////////////////////////////end of bar chart data/////////////////////////////////////
 
-            console.log("keys between length: " + keysBetweenStartAndEnd.length);
-
-            const valuesFood = await AsyncStorage.multiGet(keysBetweenStartAndEnd);
-  
-            for (const foodIndex in valuesFood) {
-              const parsedFood = JSON.parse(valuesFood[foodIndex][1]);
-              console.log(parsedFood.calories);
-              weekCalories[i].value += parsedFood.calories / 100 * parsedFood.amount;
-              weekCarbs[i].value += parsedFood.carbs / 100 * parsedFood.amount;
-              weekFat[i].value += parsedFood.fat / 100 * parsedFood.amount;
-              weekProtein[i].value += parsedFood.protein / 100 * parsedFood.amount;
-              console.log(weekCalories[i].value);
-            }
-            startDateHere.setDate(startDateHere.getDate() + 1); 
-  
-            console.log("day: " + i +" weekcals: " + weekCalories[i].value);
         }
-  
-        setBarData(weekCalories);
-        setCarbsBarData(weekCarbs);
-        setFatBarData(weekFat);
-        setProteinBarData(weekProtein);
-        ///////////////////////////////////////end of bar chart data/////////////////////////////////////
-
-        }   
         catch (error) {
             console.error('Error fetching data:', error);
         }
-      };
+    };
 
     const setDates = (dateNavigate: number) => {
         console.log('Setting dates');
@@ -287,141 +287,187 @@ export default function TabTwoScreen() {
     }
 
     useFocusEffect( // When focusing on page, fetch data
-      React.useCallback(() => {
-        if (pageEnter) {
-            onChangeDate(0);
+        React.useCallback(() => {
+            if (pageEnter) {
+                onChangeDate(0);
 
-            setPageEnter(false);
-        }
+                setPageEnter(false);
+            }
 
-        fetchData();
-        // Return cleanup function
-        return () => {
-          // Any cleanup you want to do when the component is unmounted or loses focus
-        };
-      }, [refreshPage])
+            fetchData();
+            // Return cleanup function
+            return () => {
+                // Any cleanup you want to do when the component is unmounted or loses focus
+            };
+        }, [refreshPage])
     );
-    
+
     const colorScheme = useColorScheme();
     const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
     const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
     const themeTextStyle = colorScheme === 'light' ? [commonStyles.lightThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }] : [commonStyles.darkThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }];
     const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
+    const [selectedStat, setSelectedStat] = useState('calories');
+    const statsData = {
+        calories: caloriesBarData,
+        carbs: carbsBarData,
+        fat: fatBarData,
+        protein: proteinBarData,
+    };
+    const statTranslations = {
+        calories: 'kalorijos',
+        carbs: 'angliavandeniai',
+        fat: 'riebalai',
+        protein: 'baltymai',
+    };
+
 
     return (
-        <View style={[styles.container, themeBackground, {paddingTop: 20}]}>
-            <Text style={[styles.title, {paddingBottom: 20}]}>Jūsų savaitės</Text>
+        <View style={[styles.container, themeBackground, { paddingTop: 20 }]}>
             <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-                <Text style={[themeTextStyle, {alignSelf:"center"}]}>Data: {startDate.toLocaleDateString('lt-LT')} - {endDate.toLocaleDateString('lt-LT')}</Text>
-                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-                <View style={[styles.columnContainer, {backgroundColor:'transparent'}]}>
-                    <View style={styles.buttonContainer}>
-                        <Button color={themeSvg} title="Praėjusi savaitė" onPress={() => onChangeDate(-1)} />
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
+                    <View style={{ backgroundColor: 'transparent' }}>
+                        <Text style={[styles.title, themeTextStyle, { marginTop: -10 }]}>Jūsų savaitė</Text>
+                        <Text style={[{ paddingBottom: 10, fontSize: 12, fontWeight: 'bold' }, themeTextStyle]}>({startDate.toLocaleDateString('lt-LT')} - {endDate.toLocaleDateString('lt-LT')})</Text>
                     </View>
-                    <View style={[styles.buttonContainer, {marginLeft: 15}]}>
-                        <Button color={themeSvg} title="Kita savaitė" onPress={() => onChangeDate(1)} />
+                    <View style={[styles.columnContainer, { backgroundColor: 'transparent', marginLeft:-63, marginTop:-20}]}>
+                        <View style={styles.buttonContainer}>
+                            <Button color={themeSvg} title="   <   " onPress={() => onChangeDate(-1)} />
+                        </View>
+                        <View style={[styles.buttonContainer, { marginLeft: 15 }]}>
+                            <Button color={themeSvg} title="   >   " onPress={() => onChangeDate(1)} />
+                        </View>
                     </View>
                 </View>
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
+                    <View style={{ backgroundColor: 'transparent' }}>
+                        <Text style={themeTextStyle}>Kalorijų suvartota</Text>
+                        <Text style={[themeTextStyle, styles.title]}>{calories} cal</Text>
+                    </View>
+                    <View style={{ backgroundColor: 'transparent' }}>
+                        <Text style={themeTextStyle}>Vandens išgerta   </Text>
+                        <Text style={[themeTextStyle, styles.title]}>{water} ml</Text>
+                    </View>
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
+                    <View style={{ backgroundColor: 'transparent' }}>
+                        <Text style={themeTextStyle}>Nueita žingsnių</Text>
+                        <Text style={[themeTextStyle, styles.title]}>0</Text>
+                    </View>
+                    <View style={{ backgroundColor: 'transparent' }}>
+                        <Text style={themeTextStyle}>Kalorijų sudeginta</Text>
+                        <Text style={[themeTextStyle, styles.title]}>0</Text>
+                    </View>
+
+                </View>
+
+
             </View>
-            <View>
-            </View>
-            <Text>Kalorijos: {calories} kcal</Text>
-            <Text>Angliavandeniai: {carbs} g</Text>
-            <Text>Riebalai: {fat} g</Text>
-            <Text>Baltymai: {protein} g</Text>
-            <Text>Vanduo: {water} ml</Text>
-            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
             <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-                <View style={[styles.statsItem, themeContainer]}>
-                    <Text style={[styles.text, themeTextStyle]}>Savaitės kalorijos</Text>
-                    <View style={[styles.progressBarContainer, themeContainer]}>
-                        <BarChart
-                                key={JSON.stringify(caloriesBarData)}
-                                barWidth={22}
-                                noOfSections={3}
-                                barBorderRadius={5}
-                                frontColor={themeSvg}
-                                data={caloriesBarData}
-                                yAxisThickness={0}
-                                xAxisThickness={0}
-                                hideYAxisText={true}
-                                xAxisLabelTextStyle={[themeTextStyle]}
-                                dashGap={0}
-                                xAxisColor={'red'}
-                                height={100}
-                            />
-                    </View>
+                <Text style={[styles.title, themeTextStyle, { marginTop: -10, marginBottom: 10 }]}>Savaitės {statTranslations[selectedStat]}</Text>
+                <View style={[styles.progressBarContainer, themeContainer]}>
+                    <BarChart
+                        key={JSON.stringify(statsData[selectedStat])}
+                        barWidth={22}
+                        noOfSections={3}
+                        barBorderRadius={5}
+                        frontColor={themeSvg}
+                        data={statsData[selectedStat]}
+                        yAxisThickness={0}
+                        xAxisThickness={0}
+                        hideYAxisText={true}
+                        xAxisLabelTextStyle={[themeTextStyle]}
+                        dashGap={0}
+                        xAxisColor={'red'}
+                        height={100}
+                    />
                 </View>
-            </View>
-            
-            <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-                <View style={[styles.statsItem, themeContainer]}>
-                    <Text style={[styles.text, themeTextStyle]}>Savaitės angliavandeniai</Text>
-                    <View style={[styles.progressBarContainer, themeContainer]}>
-                        <BarChart
-                                key={JSON.stringify(carbsBarData)}
-                                barWidth={22}
-                                noOfSections={3}
-                                barBorderRadius={5}
-                                frontColor={themeSvg}
-                                data={carbsBarData}
-                                yAxisThickness={0}
-                                xAxisThickness={0}
-                                hideYAxisText={true}
-                                xAxisLabelTextStyle={[themeTextStyle]}
-                                dashGap={0}
-                                xAxisColor={'red'}
-                                height={100}
-                            />
+                <View style={[styles.columnContainer, { backgroundColor: 'transparent', paddingVertical: 10, marginLeft: -33 }]}>
+                    <TouchableOpacity onPress={() => setSelectedStat('calories')}>
+                        <Text
+                            style={[
+                                styles.buttonContainer,
+                                themeTextStyle,
+                                { marginRight: 10, padding: 5 },
+                                selectedStat === 'calories'
+                                    ? { backgroundColor: themeSvg, color: 'white' }
+                                    : { color: themeSvg, backgroundColor: 'white' }
+                            ]}
+                        >
+                            Kalorijos
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setSelectedStat('carbs')}>
+                        <Text
+                            style={[
+                                styles.buttonContainer,
+                                themeTextStyle,
+                                { marginRight: 10, padding: 5 },
+                                selectedStat === 'carbs'
+                                    ? { backgroundColor: themeSvg, color: 'white' }
+                                    : { color: themeSvg, backgroundColor: 'white' }
+                            ]}
+                        >
+                            Angl.
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setSelectedStat('fat')}>
+                        <Text
+                            style={[
+                                styles.buttonContainer,
+                                themeTextStyle,
+                                { marginRight: 10, padding: 5 },
+                                selectedStat === 'fat'
+                                    ? { backgroundColor: themeSvg, color: 'white' }
+                                    : { color: themeSvg, backgroundColor: 'white' }
+                            ]}
+                        >
+                            Balt.
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setSelectedStat('protein')}>
+                        <Text
+                            style={[
+                                styles.buttonContainer,
+                                themeTextStyle,
+                                { marginRight: 10, padding: 5 },
+                                selectedStat === 'protein'
+                                    ? { backgroundColor: themeSvg, color: 'white' }
+                                    : { color: themeSvg, backgroundColor: 'white' }
+                            ]}
+                        >
+                            Rieb.
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
+                    <View style={{ backgroundColor: 'transparent' }}>
+                        <Text style={themeTextStyle}>Kalorijų suvartota</Text>
+                        <Text style={[themeTextStyle, styles.title]}>{calories} cal</Text>
+                    </View>
+                    <View style={{ backgroundColor: 'transparent' }}>
+                        <Text style={themeTextStyle}>Tai lygu</Text>
+                        <Text style={[themeTextStyle, styles.title]}>
+                            {Math.round((calories / 89) * 10) / 10} <Text style={{ fontSize: 16 }}>bananams</Text>
+                        </Text>
                     </View>
                 </View>
             </View>
 
-            
             <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-                <View style={[styles.statsItem, themeContainer]}>
-                    <Text style={[styles.text, themeTextStyle]}>Savaitės riebalai</Text>
-                    <View style={[styles.progressBarContainer, themeContainer]}>
-                        <BarChart
-                                key={JSON.stringify(fatBarData)}
-                                barWidth={22}
-                                noOfSections={3}
-                                barBorderRadius={5}
-                                frontColor={themeSvg}
-                                data={fatBarData}
-                                yAxisThickness={0}
-                                xAxisThickness={0}
-                                hideYAxisText={true}
-                                xAxisLabelTextStyle={[themeTextStyle]}
-                                dashGap={0}
-                                xAxisColor={'red'}
-                                height={100}
-                            />
+                <Text style={[styles.title, themeTextStyle, { marginTop: -10, marginBottom: 10 }]}>Savaitės aktyvumas</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
+                    <View style={{ backgroundColor: 'transparent' }}>
+                        <Text style={themeTextStyle}>Nueitas atstumas</Text>
+                        <Text style={[themeTextStyle, styles.title]}>0 km</Text>
                     </View>
-                </View>
-            </View>
-
-            
-            <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-                <View style={[styles.statsItem, themeContainer]}>
-                    <Text style={[styles.text, themeTextStyle]}>Savaitės baltymai</Text>
-                    <View style={[styles.progressBarContainer, themeContainer]}>
-                        <BarChart
-                                key={JSON.stringify(proteinBarData)}
-                                barWidth={22}
-                                noOfSections={3}
-                                barBorderRadius={5}
-                                frontColor={themeSvg}
-                                data={proteinBarData}
-                                yAxisThickness={0}
-                                xAxisThickness={0}
-                                hideYAxisText={true}
-                                xAxisLabelTextStyle={[themeTextStyle]}
-                                dashGap={0}
-                                xAxisColor={'red'}
-                                height={100}
-                            />
+                    <View style={{ backgroundColor: 'transparent' }}>
+                        <Text style={themeTextStyle}>Tai lygu</Text>
+                        <Text style={[themeTextStyle, styles.title]}>
+                            0 <Text style={{ fontSize: 16 }}>bananams</Text>
+                        </Text>
                     </View>
                 </View>
             </View>
@@ -431,43 +477,45 @@ export default function TabTwoScreen() {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      paddingTop: 60,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        paddingTop: 60,
     },
     title: {
-      fontSize: 20,
-      fontWeight: 'bold',
+        fontSize: 20,
+        fontWeight: 'bold',
     },
     label: {
-      marginRight: 10,
-      paddingLeft: 10,
-      paddingBottom: 10,
-      fontWeight: "500",
+        marginRight: 10,
+        paddingLeft: 10,
+        paddingBottom: 10,
+        fontWeight: "500",
     },
     inputContainer: {
-      width: '80%',
-      marginBottom: 20,
-      borderWidth: 1,
-      borderRadius: 5,
-      borderColor: '#ccc',
-      alignSelf: 'center',
+        width: '80%',
+        marginBottom: 20,
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: '#ccc',
+        alignSelf: 'center',
     },
     input: {
-      padding: 10,
-      borderWidth: 1,
-      borderRadius: 10,
+        padding: 10,
+        borderWidth: 1,
+        borderRadius: 10,
     },
     separator: {
-      marginVertical: 30,
-      height: 1,
-      width: '80%',
+        marginVertical: 30,
+        height: 1,
+        width: '80%',
     },
     buttonContainer: {
-      borderRadius: 10,
-      overflow: 'hidden',
-      backgroundColor: '',
+        borderRadius: 10,
+        overflow: 'hidden',
+        backgroundColor: '',
+        fontSize: 15,
+        fontWeight: 'bold',
     },
     columnContainer: {
         flexDirection: 'row',
@@ -486,5 +534,8 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 16,
         marginBottom: 5,
+    },
+    button: {
+        backgroundColor: 'white',
     }
-  });
+});
