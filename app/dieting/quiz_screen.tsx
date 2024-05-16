@@ -53,7 +53,7 @@ const QuizScreen = ({ navigation }) => {
                         />
                     </View>
                     <View style={[styles.buttonContainer]}>
-                        <Button buttonColor={themeSvg} textColor={'white'} onPress={() => handleAnswer()}>Next</Button>
+                        <Button buttonColor={themeSvg} textColor={'white'} onPress={() => handleAnswer()}>Toliau</Button>
                     </View>
                 </View>
             )}

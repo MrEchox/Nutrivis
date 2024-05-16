@@ -25,7 +25,6 @@ const pages = [
 ];
 
 const PageList = () => {
-
   const [completedQuizzes, setCompletedQuizzes] = useState([]);
 
   const colorScheme = useColorScheme();

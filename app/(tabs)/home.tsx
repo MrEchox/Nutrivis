@@ -29,10 +29,10 @@ export default function Tracking() {
   const [goalProtein, setGoalProtein] = useState(0);
 
   const [barData, setBarData] = useState([
-    { value: 100, label: 'Pr' },
-    { value: 130, label: 'An' },
-    { value: 80, label: 'Tr' },
-    { value: 70, label: 'Kt' },
+    { value: 0, label: 'Pr' },
+    { value: 0, label: 'An' },
+    { value: 0, label: 'Tr' },
+    { value: 0, label: 'Kt' },
     { value: 0, label: 'Pe' },
     { value: 0, label: 'Še' },
     { value: 0, label: 'Sk' },
@@ -103,10 +103,10 @@ export default function Tracking() {
 
         ///////////////////////////////////////start of bar chart data/////////////////////////////////////
         var weekCalories = [
-          { value: 100, label: 'Pr' },
-          { value: 130, label: 'An' },
-          { value: 80, label: 'Tr' },
-          { value: 70, label: 'Kt' },
+          { value: 0, label: 'Pr' },
+          { value: 0, label: 'An' },
+          { value: 0, label: 'Tr' },
+          { value: 0, label: 'Kt' },
           { value: 0, label: 'Pe' },
           { value: 0, label: 'Še' },
           { value: 0, label: 'Sk' },
@@ -116,8 +116,8 @@ export default function Tracking() {
 
         //set calories eaten for each day of the week
         for (let i = 0; i < 7; i++) {  
+          keysBetweenStartAndEnd = []; // clear days food
           for (const foodKey of appKeysEatenAllFiltered) {
-            keysBetweenStartAndEnd = []; // clear days food
             const splits = foodKey.split(':');
             const [day, month, year] = splits[1].split(/[ -]/)[0].split('/'); //long-ass function, but it works, don't worry about it
             const date = new Date(`${year}-${month}-${day}`);
@@ -138,7 +138,7 @@ export default function Tracking() {
           }
           startDateHere.setDate(startDateHere.getDate() + 1); 
 
-          console.log("day: " + i +" weekcals: " + weekCalories[i]);
+          console.log("day: " + i +" weekcals: " + weekCalories[i].value);
         }
 
         setBarData(weekCalories);
@@ -215,16 +215,24 @@ export default function Tracking() {
       }
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      setDates();
+      return () => {
+        // Any cleanup you want to do when the component is unmounted or loses focus
+      };
+    }, [])
+  )
+
   // Function calls on page focus
   useFocusEffect( // When focusing on page, fetch data
     React.useCallback(() => {
-      setDates(); // Set the start and end dates for the current week
       fetchData();
       // Return cleanup function
       return () => {
         // Any cleanup you want to do when the component is unmounted or loses focus
       };
-    }, [])
+    }, [startDate])
   );
 
   // Function to set the start and end dates for the current week
@@ -375,26 +383,26 @@ export default function Tracking() {
       </View>
 
       <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-      <View style={[styles.statsItem, themeContainer]}>
-            <Text style={[styles.text, themeTextStyle]}>Savaitė</Text>
-            <View style={[styles.progressBarContainer, themeContainer]}>
-            <BarChart
-                  key={JSON.stringify(barData)}
-                  barWidth={22}
-                  noOfSections={3}
-                  barBorderRadius={5}
-                  frontColor={themeSvg}
-                  data={barData}
-                  yAxisThickness={0}
-                  xAxisThickness={0}
-                  hideYAxisText={true}
-                  xAxisLabelTextStyle={[themeTextStyle]}
-                  dashGap={0}
-                  xAxisColor={'red'}
-                  height={100}
-              />
-            </View>
+        <View style={[styles.statsItem, themeContainer]}>
+          <Text style={[styles.text, themeTextStyle]}>Savaitė</Text>
+          <View style={[styles.progressBarContainer, themeContainer]}>
+          <BarChart
+                key={JSON.stringify(barData)}
+                barWidth={22}
+                noOfSections={3}
+                barBorderRadius={5}
+                frontColor={themeSvg}
+                data={barData}
+                yAxisThickness={0}
+                xAxisThickness={0}
+                hideYAxisText={true}
+                xAxisLabelTextStyle={[themeTextStyle]}
+                dashGap={0}
+                xAxisColor={'red'}
+                height={100}
+            />
           </View>
+        </View>
       </View>
 
       <View style={[commonStyles.mainStatsContainer, themeContainer, { alignItems: 'center'}]}>
