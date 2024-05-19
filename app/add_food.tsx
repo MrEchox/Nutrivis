@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView, BackHandler, useColorScheme } from 'react-native';
+import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView, BackHandler, useColorScheme, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from '@/components/Themed';
 import { Barcode_Food } from '@/src/object_classes/food_object_barcode'; 
@@ -51,9 +51,15 @@ const AddFoodScreen = () => {
             food_object_barcode.saveLocal();
             // Save the object to the database
             food_object_barcode.save();
-            router.replace(`./food?calories=${calories}&name=${name}&carbs=${carbs}
-            &sugars=${sugars}&fat=${fat}&protein=${protein}
-            &sodium=${sodium}&measuring_unit=${unit}`);
+            Alert.alert('Valio!', 'Skenuotas maisto produktas pridėtas sėkmingai!', [
+                { text: 'OK', onPress: () => 
+                    router.replace(`./food?calories=${calories}&name=${name}&carbs=${carbs},
+                    &sugars=${sugars}&fat=${fat}&protein=${protein},
+                    &sodium=${sodium}&measuring_unit=${unit}`)
+                }
+            ]);
+            
+            
         }
     };
 

@@ -88,7 +88,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="diet_info"
         options={{
-          title: 'Informacija',
+          title: 'Klausimynas',
           tabBarIcon: ({ color }) => <TabBarIcon name="info" color={color} />,
         }}
       />

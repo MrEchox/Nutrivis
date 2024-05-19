@@ -42,8 +42,8 @@ const QuizScreen = ({ navigation }) => {
 
     return (
         <View style={[themeBackground, styles.container]}>
-            <Text style={[themeTextStyle, styles.label]}>{`Quiz: ${quizId}`}</Text> {/* Display the quiz identifier */}
-            {currentContent.type === 'info' && (
+            <Text style={[themeTextStyle, styles.label]}>{`Quiz: ${quizId}`}</Text>
+            {currentContent.type === 'info' && ( // Display the content based on the type
                 <View style={[themeContainer, commonStyles.mainStatsContainer]}>
                     <Text style={themeTextStyle}>{currentContent.text}</Text>
                     <View style={[{alignSelf:'center', paddingTop: 20}]}>
@@ -57,7 +57,7 @@ const QuizScreen = ({ navigation }) => {
                     </View>
                 </View>
             )}
-            {currentContent.type === 'quiz' && (
+            {currentContent.type === 'quiz' && ( // Display the content based on the type
                 <View style={[themeContainer, commonStyles.mainStatsContainer]}>
                     <Text style={themeTextStyle}>{currentContent.question}</Text>
                     {currentContent.options.map((option, index) => (
