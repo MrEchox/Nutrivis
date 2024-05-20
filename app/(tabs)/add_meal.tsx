@@ -1,5 +1,6 @@
 import { StyleSheet, TextInput, Button, ScrollView, useColorScheme, Alert} from 'react-native';
 import React, { useState } from 'react';
+import { router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import { food_object } from '@/src/object_classes/food_object';
 import { commonStyles } from '../../components/commonStyles';
@@ -19,7 +20,7 @@ const AddFoodScreen = () => {
             parseFloat(sugars), parseFloat(fat), parseFloat(protein), parseFloat(salt));
         food_item.saveLocal();
         Alert.alert('Valio!', 'Maisto produktas pridėtas sėkmingai!', [
-            { text: 'OK' }
+            { text: 'OK', onPress: () => router.replace('./food')}
         ]);
     };
 
