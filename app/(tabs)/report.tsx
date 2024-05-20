@@ -1,4 +1,4 @@
-import { StyleSheet, Button, useColorScheme, TouchableOpacity } from 'react-native';
+import { StyleSheet, Button, useColorScheme, TouchableOpacity, SafeAreaView, ScrollView, Image } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from '@react-navigation/native';
@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { parse } from 'expo-linking';
 import { commonStyles } from '@/components/commonStyles';
 import { BarChart } from "react-native-gifted-charts";
+import FunFacts from '../../components/FunFacts';
 
 export default function TabTwoScreen() {
 
@@ -71,6 +72,13 @@ export default function TabTwoScreen() {
         { value: 0, label: 'Še' },
         { value: 0, label: 'Sk' },
     ]);
+
+    const unitMapping = {
+        calories: { unit: 'bananams', divisor: 89, lit: 'Kalorijų', value: calories },
+        carbs: { unit: 'duonai', divisor: 48, lit: 'Angliavandenių', value: carbs },
+        fat: { unit: 'lasiniams', divisor: 10, lit: 'Riebalų', value: fat },
+        protein: { unit: 'kiausiniams', divisor: 13, lit: 'Baltymų', value: protein },
+    };
 
     const fetchData = async () => {
         try {
@@ -323,164 +331,175 @@ export default function TabTwoScreen() {
 
 
     return (
-        <View style={[styles.container, themeBackground, { paddingTop: 20 }]}>
-            <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
-                    <View style={{ backgroundColor: 'transparent' }}>
-                        <Text style={[styles.title, themeTextStyle, { marginTop: -10 }]}>Jūsų savaitė</Text>
-                        <Text style={[{ paddingBottom: 10, fontSize: 12, fontWeight: 'bold' }, themeTextStyle]}>({startDate.toLocaleDateString('lt-LT')} - {endDate.toLocaleDateString('lt-LT')})</Text>
-                    </View>
-                    <View style={[styles.columnContainer, { backgroundColor: 'transparent', marginLeft:-63, marginTop:-20}]}>
-                        <View style={styles.buttonContainer}>
-                            <Button color={themeSvg} title="   <   " onPress={() => onChangeDate(-1)} />
+        <SafeAreaView style={[styles.container, themeBackground]}>
+            <ScrollView style={[{ paddingTop: 10 }]}>
+                <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
+                        <View style={{ backgroundColor: 'transparent' }}>
+                            <Text style={[styles.title, themeTextStyle, { marginTop: -10 }]}>Jūsų savaitė</Text>
+                            <Text style={[{ paddingBottom: 10, fontSize: 12, fontWeight: 'bold' }, themeTextStyle]}>({startDate.toLocaleDateString('lt-LT')} - {endDate.toLocaleDateString('lt-LT')})</Text>
                         </View>
-                        <View style={[styles.buttonContainer, { marginLeft: 15 }]}>
-                            <Button color={themeSvg} title="   >   " onPress={() => onChangeDate(1)} />
+                        <View style={[styles.columnContainer, { backgroundColor: 'transparent', marginLeft: -63, marginTop: -20 }]}>
+                            <View style={styles.buttonContainer}>
+                                <Button color={themeSvg} title="   <   " onPress={() => onChangeDate(-1)} />
+                            </View>
+                            <View style={[styles.buttonContainer, { marginLeft: 15 }]}>
+                                <Button color={themeSvg} title="   >   " onPress={() => onChangeDate(1)} />
+                            </View>
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
+                        <View style={{ backgroundColor: 'transparent' }}>
+                            <Text style={themeTextStyle}>Kalorijų suvartota</Text>
+                            <Text style={[themeTextStyle, styles.title]}>{calories} cal</Text>
+                        </View>
+                        <View style={{ backgroundColor: 'transparent' }}>
+                            <Text style={themeTextStyle}>Vandens išgerta   </Text>
+                            <Text style={[themeTextStyle, styles.title]}>{water} ml</Text>
+                        </View>
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
+                        <View style={{ backgroundColor: 'transparent' }}>
+                            <Text style={themeTextStyle}>Nueita žingsnių</Text>
+                            <Text style={[themeTextStyle, styles.title]}>0</Text>
+                        </View>
+                        <View style={{ backgroundColor: 'transparent' }}>
+                            <Text style={themeTextStyle}>Kalorijų sudeginta</Text>
+                            <Text style={[themeTextStyle, styles.title]}>0</Text>
+                        </View>
+
+                    </View>
+
+
+                </View>
+
+                <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+                    <Text style={[styles.title, themeTextStyle, { marginTop: -10, marginBottom: 10 }]}>Savaitės {statTranslations[selectedStat]}</Text>
+                    <View style={[styles.progressBarContainer, themeContainer]}>
+                        <BarChart
+                            key={JSON.stringify(statsData[selectedStat])}
+                            barWidth={22}
+                            noOfSections={3}
+                            barBorderRadius={5}
+                            frontColor={themeSvg}
+                            data={statsData[selectedStat]}
+                            yAxisThickness={0}
+                            xAxisThickness={0}
+                            hideYAxisText={true}
+                            xAxisLabelTextStyle={[themeTextStyle]}
+                            dashGap={0}
+                            xAxisColor={'red'}
+                            height={100}
+                        />
+                    </View>
+                    <View style={[styles.columnContainer, { backgroundColor: 'transparent', paddingVertical: 10, marginLeft: -43 }]}>
+                        <TouchableOpacity onPress={() => setSelectedStat('calories')}>
+                            <Text
+                                style={[
+                                    styles.buttonContainer,
+                                    themeTextStyle,
+                                    { marginRight: 10, padding: 5 },
+                                    selectedStat === 'calories'
+                                        ? { backgroundColor: themeSvg, color: 'white' }
+                                        : { color: themeSvg, backgroundColor: 'white' }
+                                ]}
+                            >
+                                Kalorijos
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setSelectedStat('carbs')}>
+                            <Text
+                                style={[
+                                    styles.buttonContainer,
+                                    themeTextStyle,
+                                    { marginRight: 10, padding: 5 },
+                                    selectedStat === 'carbs'
+                                        ? { backgroundColor: themeSvg, color: 'white' }
+                                        : { color: themeSvg, backgroundColor: 'white' }
+                                ]}
+                            >
+                                Angl.
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setSelectedStat('fat')}>
+                            <Text
+                                style={[
+                                    styles.buttonContainer,
+                                    themeTextStyle,
+                                    { marginRight: 10, padding: 5 },
+                                    selectedStat === 'fat'
+                                        ? { backgroundColor: themeSvg, color: 'white' }
+                                        : { color: themeSvg, backgroundColor: 'white' }
+                                ]}
+                            >
+                                Rieb.
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setSelectedStat('protein')}>
+                            <Text
+                                style={[
+                                    styles.buttonContainer,
+                                    themeTextStyle,
+                                    { marginRight: 10, padding: 5 },
+                                    selectedStat === 'protein'
+                                        ? { backgroundColor: themeSvg, color: 'white' }
+                                        : { color: themeSvg, backgroundColor: 'white' }
+                                ]}
+                            >
+                                Balt.
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
+                        <View style={{ backgroundColor: 'transparent' }}>
+                            <Text style={themeTextStyle}>{unitMapping[selectedStat].lit} suvartota</Text>
+                            <Text style={[themeTextStyle, styles.title]}>{unitMapping[selectedStat].value}</Text>
+                        </View>
+                        <View style={{ backgroundColor: 'transparent' }}>
+                            <Text style={themeTextStyle}>Tai lygu</Text>
+                            <Text style={[themeTextStyle, styles.title]}>
+                                {Math.round((unitMapping[selectedStat].value / unitMapping[selectedStat].divisor) * 10) / 10} <Text style={{ fontSize: 16 }}>{unitMapping[selectedStat].unit}</Text>
+                            </Text>
                         </View>
                     </View>
                 </View>
 
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
-                    <View style={{ backgroundColor: 'transparent' }}>
-                        <Text style={themeTextStyle}>Kalorijų suvartota</Text>
-                        <Text style={[themeTextStyle, styles.title]}>{calories} cal</Text>
-                    </View>
-                    <View style={{ backgroundColor: 'transparent' }}>
-                        <Text style={themeTextStyle}>Vandens išgerta   </Text>
-                        <Text style={[themeTextStyle, styles.title]}>{water} ml</Text>
+                <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+                    <Text style={[styles.title, themeTextStyle, { marginTop: -10, marginBottom: 10 }]}>Savaitės aktyvumas</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
+                        <View style={{ backgroundColor: 'transparent' }}>
+                            <Text style={themeTextStyle}>Nueitas atstumas</Text>
+                            <Text style={[themeTextStyle, styles.title]}>0 km</Text>
+                        </View>
+                        <View style={{ backgroundColor: 'transparent' }}>
+                            <Text style={themeTextStyle}>Tai lygu</Text>
+                            <Text style={[themeTextStyle, styles.title]}>
+                                0 <Text style={{ fontSize: 16 }}>bananams</Text>
+                            </Text>
+                        </View>
                     </View>
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
-                    <View style={{ backgroundColor: 'transparent' }}>
-                        <Text style={themeTextStyle}>Nueita žingsnių</Text>
-                        <Text style={[themeTextStyle, styles.title]}>0</Text>
+                <View style={[commonStyles.mainStatsContainer, themeContainer, { paddingBottom: 100 }]}>
+                    <Text style={[styles.title, themeTextStyle, { marginTop: -10, marginBottom: 10 }]}>Nutrivio faktai</Text>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginRight: 70, backgroundColor:'transparent'}}>
+                        <FunFacts style={[themeTextStyle ]} calories={calories} waterIntake={water} />
                     </View>
-                    <View style={{ backgroundColor: 'transparent' }}>
-                        <Text style={themeTextStyle}>Kalorijų sudeginta</Text>
-                        <Text style={[themeTextStyle, styles.title]}>0</Text>
-                    </View>
-
-                </View>
-
-
-            </View>
-
-            <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-                <Text style={[styles.title, themeTextStyle, { marginTop: -10, marginBottom: 10 }]}>Savaitės {statTranslations[selectedStat]}</Text>
-                <View style={[styles.progressBarContainer, themeContainer]}>
-                    <BarChart
-                        key={JSON.stringify(statsData[selectedStat])}
-                        barWidth={22}
-                        noOfSections={3}
-                        barBorderRadius={5}
-                        frontColor={themeSvg}
-                        data={statsData[selectedStat]}
-                        yAxisThickness={0}
-                        xAxisThickness={0}
-                        hideYAxisText={true}
-                        xAxisLabelTextStyle={[themeTextStyle]}
-                        dashGap={0}
-                        xAxisColor={'red'}
-                        height={100}
+                    <Image
+                        source={require('../../assets/images/nutrivis_point.png')}
+                        style={[{ width: 124, height: 120, position: 'absolute', alignSelf: 'flex-end', bottom:10, right:10}]}
                     />
                 </View>
-                <View style={[styles.columnContainer, { backgroundColor: 'transparent', paddingVertical: 10, marginLeft: -33 }]}>
-                    <TouchableOpacity onPress={() => setSelectedStat('calories')}>
-                        <Text
-                            style={[
-                                styles.buttonContainer,
-                                themeTextStyle,
-                                { marginRight: 10, padding: 5 },
-                                selectedStat === 'calories'
-                                    ? { backgroundColor: themeSvg, color: 'white' }
-                                    : { color: themeSvg, backgroundColor: 'white' }
-                            ]}
-                        >
-                            Kalorijos
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setSelectedStat('carbs')}>
-                        <Text
-                            style={[
-                                styles.buttonContainer,
-                                themeTextStyle,
-                                { marginRight: 10, padding: 5 },
-                                selectedStat === 'carbs'
-                                    ? { backgroundColor: themeSvg, color: 'white' }
-                                    : { color: themeSvg, backgroundColor: 'white' }
-                            ]}
-                        >
-                            Angl.
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setSelectedStat('fat')}>
-                        <Text
-                            style={[
-                                styles.buttonContainer,
-                                themeTextStyle,
-                                { marginRight: 10, padding: 5 },
-                                selectedStat === 'fat'
-                                    ? { backgroundColor: themeSvg, color: 'white' }
-                                    : { color: themeSvg, backgroundColor: 'white' }
-                            ]}
-                        >
-                            Balt.
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setSelectedStat('protein')}>
-                        <Text
-                            style={[
-                                styles.buttonContainer,
-                                themeTextStyle,
-                                { marginRight: 10, padding: 5 },
-                                selectedStat === 'protein'
-                                    ? { backgroundColor: themeSvg, color: 'white' }
-                                    : { color: themeSvg, backgroundColor: 'white' }
-                            ]}
-                        >
-                            Rieb.
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
-                    <View style={{ backgroundColor: 'transparent' }}>
-                        <Text style={themeTextStyle}>Kalorijų suvartota</Text>
-                        <Text style={[themeTextStyle, styles.title]}>{calories} cal</Text>
-                    </View>
-                    <View style={{ backgroundColor: 'transparent' }}>
-                        <Text style={themeTextStyle}>Tai lygu</Text>
-                        <Text style={[themeTextStyle, styles.title]}>
-                            {Math.round((calories / 89) * 10) / 10} <Text style={{ fontSize: 16 }}>bananams</Text>
-                        </Text>
-                    </View>
-                </View>
-            </View>
 
-            <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-                <Text style={[styles.title, themeTextStyle, { marginTop: -10, marginBottom: 10 }]}>Savaitės aktyvumas</Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
-                    <View style={{ backgroundColor: 'transparent' }}>
-                        <Text style={themeTextStyle}>Nueitas atstumas</Text>
-                        <Text style={[themeTextStyle, styles.title]}>0 km</Text>
-                    </View>
-                    <View style={{ backgroundColor: 'transparent' }}>
-                        <Text style={themeTextStyle}>Tai lygu</Text>
-                        <Text style={[themeTextStyle, styles.title]}>
-                            0 <Text style={{ fontSize: 16 }}>bananams</Text>
-                        </Text>
-                    </View>
-                </View>
-            </View>
-        </View>
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        paddingTop: 60,
+        marginRight: -20,
     },
     title: {
         fontSize: 20,
