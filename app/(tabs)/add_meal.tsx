@@ -20,7 +20,7 @@ const AddFoodScreen = () => {
             parseFloat(sugars), parseFloat(fat), parseFloat(protein), parseFloat(salt));
         food_item.saveLocal();
         Alert.alert('Valio!', 'Maisto produktas pridėtas sėkmingai!', [
-            { text: 'OK', onPress: () => router.replace('./home')}
+            { text: 'OK', onPress: () => router.replace('./food')}
         ]);
     };
 

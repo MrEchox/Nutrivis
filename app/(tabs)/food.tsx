@@ -143,7 +143,7 @@ export default function Foods() {
     eatenFood.saveLocal();
     eatenFood.save(email);
     Alert.alert('Valio!', 'Maisto produktas suvalgytas!', [
-      { text: 'OK'}
+      { text: 'OK', onPress: () => router.replace('./home')}
   ]);
   }
 
