@@ -87,6 +87,24 @@ export default function Tracking() {
 
   // Function to fetch data from AsyncStorage
   const fetchData = async () => {
+    const setDates = () => {
+      let currentDate = new Date();
+      let currentDayOfWeek = currentDate.getDay();
+      let difference = currentDayOfWeek - 1;
+      if (difference < 0) {
+          difference = 6;
+      }
+      let mondayDate = new Date(currentDate);
+  
+      mondayDate.setDate(currentDate.getDate() - difference)
+      mondayDate.setHours(0, 0, 0, 0);
+      setStartDate(mondayDate);
+  
+      let sundayDate = new Date(mondayDate);
+      sundayDate.setDate(mondayDate.getDate() + 6);
+      setEndDate(sundayDate);
+      sundayDate.setHours(23, 59, 59, 999);
+    }
       try {
         setEatenFoods([]); // Clear eaten foods list
         var keysBetweenStartAndEnd = [];
@@ -215,15 +233,6 @@ export default function Tracking() {
       }
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setDates();
-      return () => {
-        // Any cleanup you want to do when the component is unmounted or loses focus
-      };
-    }, [])
-  )
-
   // Function calls on page focus
   useFocusEffect( // When focusing on page, fetch data
     React.useCallback(() => {
@@ -234,26 +243,6 @@ export default function Tracking() {
       };
     }, [startDate])
   );
-
-  // Function to set the start and end dates for the current week
-  const setDates = () => {
-    let currentDate = new Date();
-    let currentDayOfWeek = currentDate.getDay();
-    let difference = currentDayOfWeek - 1;
-    if (difference < 0) {
-        difference = 6;
-    }
-    let mondayDate = new Date(currentDate);
-
-    mondayDate.setDate(currentDate.getDate() - difference)
-    mondayDate.setHours(0, 0, 0, 0);
-    setStartDate(mondayDate);
-
-    let sundayDate = new Date(mondayDate);
-    sundayDate.setDate(mondayDate.getDate() + 6);
-    setEndDate(sundayDate);
-    sundayDate.setHours(23, 59, 59, 999);
-  }
 
   // Function to remove an eaten food item
   const removeEatenFoodItem = async (item, index) => {

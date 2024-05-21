@@ -132,7 +132,7 @@ const SettingsScreen = () => {
     );
     await goal_object.saveLocal();
     await goal_object.save(email);
-    //router.replace("./home");
+    router.replace("./home");
   };
   
   const colorScheme = useColorScheme();
@@ -247,26 +247,6 @@ const SettingsScreen = () => {
               onPress={handleCaloriesAndSteps}
             />
           </View>
-          <Text style={themeTextStyle}>
-            Rekomenduojamas žingsnių skaičius per dieną: {stepGoal}
-          </Text>
-          <Text style={themeTextStyle}>
-            Rekomenduojamas kalorijų kiekis per dieną: {calorieGoal}
-          </Text>
-          <Text style={themeTextStyle}>
-            Rekomenduojamas angliavandenių kiekis gramais:{" "}
-            {Math.round((calorieGoal * 0.5) / 4)}
-          </Text>
-          <Text style={themeTextStyle}>
-            Rekomenduojamas riebalų kiekis gramais:{" "}
-            {Math.round((calorieGoal * 0.2) / 9)}
-          </Text>
-          <Text style={themeTextStyle}>
-            Rekomenduojamas baltymų kiekis gramais:{" "}
-            {Math.round((calorieGoal * 0.3) / 4)}
-          </Text>
-
-          {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
         </View>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
           <Text

@@ -1,4 +1,4 @@
-//import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera/next';
+import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
 import { useEffect, useState } from 'react';
 import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { Link, router } from 'expo-router';
@@ -90,7 +90,6 @@ export default function scannerScreen() {
             );
         };
     }
-
 
     return (
         <View style={styles.container}>
