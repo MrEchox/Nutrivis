@@ -35,6 +35,9 @@ const SettingsScreen = () => {
   const [calorieGoal, setCalorieGoal] = useState(0);
   const [weightObjective, setWeightObjective] = useState(0);
   const [stepGoal, setStepGoal] = useState(0);
+  const [ageError, setAgeError] = useState('');
+  const [heightError, setHeightError] = useState('');
+  const [weightError, setWeightError] = useState('');
 
   const getLoggedInEmail = async () => {
     const loginVal = await AsyncStorage.getItem("@LoggedIn:");
@@ -55,7 +58,7 @@ const SettingsScreen = () => {
     if (inputAge >= 12 && inputAge <= 120) {
       setAge(age);
     } else {
-      alert("Amžius turi būti daugiau 12(netinkama vaikam)!");
+      setAgeError('Amžius turi būti daugiau 12(netinkama vaikam)!');
     }
 
 
@@ -64,7 +67,7 @@ const SettingsScreen = () => {
     if (inputheight >= 12 && inputheight <= 260) {
       setHeight(height);
     } else {
-      alert(" Ūgis turi atitikti realius matmenis cm !");
+      setHeightError(' Ūgis turi atitikti realius matmenis cm !');
     }
 
     // Checking input data for weight error
@@ -72,7 +75,7 @@ const SettingsScreen = () => {
     if (inputweight >= 0) {
       setHeight(weight);
     } else {
-      alert("Svoris turibūti teigiamas!");
+      setWeightError ('Svoris turibūti teigiamas!');
     }
 
     const calculatedRecommendedCalories = calculateRecommendedCalories(
