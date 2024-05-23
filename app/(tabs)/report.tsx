@@ -483,14 +483,13 @@ export default function TabTwoScreen() {
                 <View style={[commonStyles.mainStatsContainer, themeContainer, { paddingBottom: 100 }]}>
                     <Text style={[styles.title, themeTextStyle, { marginTop: -10, marginBottom: 10 }]}>Nutrivio faktai</Text>
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginRight: 70, backgroundColor:'transparent'}}>
-                        <FunFacts style={[themeTextStyle ]} calories={calories} waterIntake={water} />
+                        <FunFacts style={[themeTextStyle ]} calories={calories} water={water} />
                     </View>
                     <Image
                         source={require('../../assets/images/nutrivis_point.png')}
                         style={[{ width: 124, height: 120, position: 'absolute', alignSelf: 'flex-end', bottom:10, right:10}]}
                     />
                 </View>
-
             </ScrollView>
         </SafeAreaView>
     );
