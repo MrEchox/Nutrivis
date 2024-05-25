@@ -5,6 +5,8 @@ import { router } from 'expo-router';
 import {collection, query, where, getDocs, addDoc} from "firebase/firestore";
 import {db} from "../firebase.config.js";
 import { food_object_eaten } from '@/src/object_classes/food_object_eaten'; 
+import { daily_goal_object } from "@/src/object_classes/daily_goal";
+import { daily_water_object } from '@/src/object_classes/daily_water';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry.js';
 
 const syncData = async () => {
@@ -28,14 +30,21 @@ const syncData = async () => {
         const q = query(collectionRef, where("email", "==", loggedInEmail));
         const querySnapshot = await getDocs(q);
         
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach(async (doc) => {
             const userDocId = doc.id;
+
+            console.log('User doc id:', userDocId);
+
             try {
-                const q2 = collection(db, "users", userDocId, "daily_food");
+                const q2 = collection(db, "users", userDocId, "food_eaten");
+
                 for (const food of foodValuesUser) {
                     for (const food of foodValuesUser) {
                         const foodData = JSON.parse(food[1]);
-                        const thisFood = querySnapshot.docs[0].data().daily_food.filter(food => food.name === foodData.name && food.date === foodData.date);
+
+                        const querySnapshot2 = await getDocs(q2);
+
+                        const thisFood = querySnapshot2.docs[0].data().filter(food1 => food1.name === foodData.name && food1.date === foodData.date);
                         if (thisFood.length > 0) {
                             console.log('Food already exists in database');
                         } else {
@@ -51,19 +60,17 @@ const syncData = async () => {
                         }
                     }
                 }
-                const databaseFood = querySnapshot.docs[0].data().daily_food;
-                for (const food of databaseFood) {
-                    const thisFood = foodValuesUser.filter(food => food[1].includes(food.name) && food[1].includes(food.date));
+                const databaseFood = await getDocs(q2);
+
+                for (const food of databaseFood.docs) {
+
+                    const foodData = food.data();
+
+                    const thisFood = foodValuesUser.filter(food1 => food1[1].includes(foodData.name) && food1[1].includes(foodData.date));
+
                     if (thisFood.length === 0) {
-                        addDoc(q2, {
-                            date: food.date,
-                            amount: food.amount,
-                            name: food.name,
-                            calories: food.calories,
-                            carbs: food.carbs,
-                            fat: food.fat,
-                            protein: food.protein
-                        });
+                        const food_eaten_from_database = new food_object_eaten(foodData.date, foodData.amount, foodData.name, foodData.calories, foodData.carbs, foodData.fat, foodData.protein, loggedInEmail);
+                        food_eaten_from_database.saveLocal();
                     }
                 }
                 
@@ -76,7 +83,10 @@ const syncData = async () => {
                 const q3 = collection(db, "users", userDocId, "daily_goal");
                 for (const goal of goalValuesUser) {
                     const goalData = JSON.parse(goal[1]);
-                    const thisGoal = querySnapshot.docs[0].data().daily_goal.filter(goal => goal.date === goalData.date);
+
+                    const querySnapshot3 = await getDocs(q3);
+
+                    const thisGoal = querySnapshot3.docs[0].data().filter(goal1 => goal1.date === goalData.date);
                     if (thisGoal.length > 0) {
                         console.log('Goal already exists in database');
                     } else {
@@ -90,19 +100,13 @@ const syncData = async () => {
                         });
                     }
                 }
-                const databaseGoal = querySnapshot.docs[0].data().daily_goal;
-                for (const goal of databaseGoal) {
-                    console.log('Goal:', goal);
-                    const thisGoal = goalValuesUser.filter(goal => goal[1].includes(goal.date));
+                const databaseGoal = await getDocs(q3);
+                for (const goal of databaseGoal.docs) {
+                    const goalData = goal.data();
+                    const thisGoal = goalValuesUser.filter(goal1 => goal1[1].includes(goalData.date));
                     if (thisGoal.length === 0) {
-                        addDoc(q3, {
-                            date: goal.date,
-                            calories: goal.calories,
-                            carbs: goal.carbs,
-                            fat: goal.fat,
-                            protein: goal.protein,
-                            steps: goal.steps
-                        });
+                        const daily_goal_from_database = new daily_goal_object(goalData.calories, goalData.carbs, goalData.fat, goalData.protein, goalData.stepGoal, goalData.date);
+                        daily_goal_from_database.saveLocal();
                     }
                 }
             }
@@ -114,7 +118,10 @@ const syncData = async () => {
                 const q4 = collection(db, "users", userDocId, "daily_water");
                 for (const water of waterValuesUser) {
                     const waterData = JSON.parse(water[1]);
-                    const thisWater = querySnapshot.docs[0].data().daily_water.filter(water => water.date === waterData.date);
+
+                    const querySnapshot4 = await getDocs(q4);
+
+                    const thisWater = querySnapshot4.docs[0].data().filter(water1 => water1.date === waterData.date);
                     if (thisWater.length > 0) {
                         console.log('Water already exists in database');
                     } else {
@@ -124,14 +131,16 @@ const syncData = async () => {
                         });
                     }
                 }
-                const databaseWater = querySnapshot.docs[0].data().daily_water;
-                for (const water of databaseWater) {
-                    const thisWater = waterValuesUser.filter(water => water[1].includes(water.date));
+                const databaseWater = await getDocs(q4);
+
+                for (const water of databaseWater.docs) {
+
+                    const waterData = water.data();
+
+                    const thisWater = waterValuesUser.filter(water1 => water1[1].includes(waterData.date));
                     if (thisWater.length === 0) {
-                        addDoc(q4, {
-                            date: water.date,
-                            amount: water.amount
-                        });
+                        const daily_water_from_database = new daily_water_object(waterData.date, waterData.water, loggedInEmail);
+                        daily_water_from_database.saveLocal();
                     }
                 }
             }
