@@ -82,7 +82,7 @@ const PageList = () => {
                     source={require('../../assets/images/nutrivis_award2.png')}
                     style={[{ width: 68, height: 90, marginBottom: 0, position: 'absolute', right: 20, top: 5 }]}
                   />
-                )}<Text style={[themeTextStyle, { fontSize: 20 }]}>{item.title}</Text>
+                )}<Text style={[themeTextStyle, { fontSize: 15 }]}>{item.title}</Text>
               </View>
             </TouchableOpacity>
           ))}
@@ -120,10 +120,8 @@ export default PageList;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 10,
-    paddingTop: 10,
-    marginTop: 0,
-    marginRight: -27,
+    marginRight: -20,
+    paddingRight:20
   },
 
   listContainer: {
