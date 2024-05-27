@@ -18,15 +18,3 @@ const FunFacts = ({ calories, water, style}) => {
 };
 
 export default FunFacts;
-
-// 
-// `Šios kalorijos prilygsta mažo šuns dienos kalorijų poreikiui.`,
-//         `Reikėtų plaukti 30 minučių, kad sudegintumėte tiek kalorijų.`,
-//         `Jūs išgėrėte tiek vandens, kiek yra 4 standartiniuose vandens buteliuose.`,
-//         `Jūsų suvartotos kalorijos galėtų nuvažiuoti mažą automobilį 3 mylias.`,
-//         `Jūs suvalgėte tiek maisto, kiek sveria naujagimis kūdikis.`,
-//         `Jūsų suvartotas cukrus prilygsta 3 skardinėms gazuoto gėrimo.`,
-//         `Jūsų suvartotos kalorijos galėtų aprūpinti 15 mylių dviračių kelionę.`,
-//         `Jūsų suvalgytas maistas prilygsta 10 porcijų triufelių.`,
-//         `Jūsų suvartotos kalorijos galėtų maitinti romėnų karių vieną dieną.`,
-//         `Jūsų suvartotos kalorijos galėtų maitinti mažą roverį Marse 2 valandas.`,

@@ -28,9 +28,6 @@ export default function Tracking() {
   const [goalFat, setGoalFat] = useState(0);
   const [goalProtein, setGoalProtein] = useState(0);
 
-  const [scrollEnabled, setScrollEnabled] = useState(true);
-
-
   const [barData, setBarData] = useState([
     { value: 0, label: 'Pr' },
     { value: 0, label: 'An' },
@@ -332,7 +329,7 @@ export default function Tracking() {
 
   return (
     <SafeAreaView style={[styles.container, themeBackground]}>
-      <ScrollView style={[{ paddingTop: 10 }]} scrollEnabled={scrollEnabled}>
+      <ScrollView style={[{ paddingTop: 10 }]}>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
           <View style={[styles.statsItem, themeContainer]}>
             <Text style={[styles.text, themeTextStyle]}>Kalorijos</Text>
@@ -436,15 +433,11 @@ export default function Tracking() {
         </View>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
           <Text style={[styles.text, themeTextStyle]}>Maisto istorija:</Text>
-          <View style={{ height: 150, backgroundColor: '' }}>
+          <View style={{ maxHeight: 100, backgroundColor: '' }}>
             <FlatList
               data={eatenFoods}
               keyExtractor={(item, index) => `${item.date}:${item.name}:${index}`}
               renderItem={renderEatenFoodItem}
-              onTouchStart={() => setScrollEnabled(false)}
-              onTouchEnd={() => setScrollEnabled(true)}
-              onScrollEndDrag={() => setScrollEnabled(true)}
-              onMomentumScrollEnd={() => setScrollEnabled(true)}
             />
           </View>
         </View>
