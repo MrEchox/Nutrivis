@@ -162,7 +162,7 @@ const loginStatus = async () => {
             const loginVal = await AsyncStorage.getItem("@LoggedIn:");
             if (loginVal) {
                 const status = JSON.parse(loginVal);
-                if (status.email === '') {
+                if (status.username === '') {
                     // If user is not logged in, navigate to login screen
                     router.replace('./session/login');
                 } else {
@@ -181,6 +181,8 @@ const loginStatus = async () => {
 };
 
 const IndexScreen = () => {
+
+    
     // Use `useFocusEffect` to run the login status check when the screen is focused
     useFocusEffect(
         React.useCallback(() => {
