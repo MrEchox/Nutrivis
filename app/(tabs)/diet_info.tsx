@@ -17,8 +17,8 @@ const pages = [
   { title: 'Papildai', quizId: 'supplements_quiz' },
   { title: 'Sportavimo tipai', quizId: 'exercise_types_quiz' },
   { title: 'Valgymo laikas', quizId: 'eating_time_quiz' },
-  { title: 'Maisto planavimas', quizId: 'meal_planning_quiz' },
-  { title: 'Nutukimas', quizId: 'obesity_quiz' },
+  { title: 'Maisto planavimas', quizId: 'meal_planing_quiz' },
+  { title: 'Nutukimas', quizId: 'obsesity_quiz' },
   { title: 'Anoreksija', quizId: 'anorexia_quiz' },
   { title: 'Emocinis valgymas', quizId: 'emotional_eating_quiz' },
   // Add more pages as needed
