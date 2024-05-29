@@ -192,7 +192,7 @@ export default function Foods() {
                   color={themeSvg}
                   title="Įvesti"
                   onPress={() => { // On press saves the eaten food to local storage
-                    const name = selectedItemIndex.split(',')[0].split(':')[1]; // Don't worry abt it, it works
+                    const name = JSON.parse(selectedItemIndex).name; // Don't worry abt it, it works
                   
                     handleFoodSave(eatenGrams, name, calories, carbs, fat, protein);
                     setModalVisible(!modalVisible);

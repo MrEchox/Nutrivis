@@ -85,27 +85,29 @@ export default function Tracking() {
     </View>
   );
   const [loading, setLoading] = useState(true);
+
+    // Function to set the start and end dates for the current week
+  const setDates = () => {
+    let currentDate = new Date();
+    let currentDayOfWeek = currentDate.getDay();
+    let difference = currentDayOfWeek - 1;
+    if (difference < 0) {
+        difference = 6;
+    }
+    let mondayDate = new Date(currentDate);
+
+    mondayDate.setDate(currentDate.getDate() - difference)
+    mondayDate.setHours(0, 0, 0, 0);
+    setStartDate(mondayDate);
+
+    let sundayDate = new Date(mondayDate);
+    sundayDate.setDate(mondayDate.getDate() + 6);
+    setEndDate(sundayDate);
+    sundayDate.setHours(23, 59, 59, 999);
+  }
+  
   // Function to fetch data from AsyncStorage
   const fetchData = async () => {
-    // Function to set the start and end dates for the current week
-    const setDates = () => {
-      let currentDate = new Date();
-      let currentDayOfWeek = currentDate.getDay();
-      let difference = currentDayOfWeek - 1;
-      if (difference < 0) {
-          difference = 6;
-      }
-      let mondayDate = new Date(currentDate);
-
-      mondayDate.setDate(currentDate.getDate() - difference)
-      mondayDate.setHours(0, 0, 0, 0);
-      setStartDate(mondayDate);
-
-      let sundayDate = new Date(mondayDate);
-      sundayDate.setDate(mondayDate.getDate() + 6);
-      setEndDate(sundayDate);
-      sundayDate.setHours(23, 59, 59, 999);
-    }
     try {
       setEatenFoods([]); // Clear eaten foods list
       var keysBetweenStartAndEnd = [];
@@ -235,15 +237,25 @@ export default function Tracking() {
   };
 
   // Function calls on page focus
+  useEffect(() => {
+    fetchData();
+  
+    // Return cleanup function
+    return () => {
+      // Any cleanup you want to do when startDate changes
+    };
+  }, [startDate]);
+
+
   useFocusEffect( // When focusing on page, fetch data
-    React.useCallback(() => {
-      fetchData();
-      // Return cleanup function
-      return () => {
-        // Any cleanup you want to do when the component is unmounted or loses focus
-      };
-    }, [startDate])
-  );
+  React.useCallback(() => {
+    setDates();
+    // Return cleanup function
+    return () => {
+      // Any cleanup you want to do when the component is unmounted or loses focus
+    };
+  }, [])
+);
 
   // Function to remove an eaten food item
   const removeEatenFoodItem = async (item, index) => {
