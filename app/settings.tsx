@@ -88,8 +88,8 @@ const SettingsScreen = () => {
     const calculatedRecommendedCalories = calculateRecommendedCalories(
       inputAge,
       gender,
-      inputHeight,
-      inputWeight,
+      height,
+      weight,
       activityLevel,
       weightObjective
     );
@@ -98,8 +98,8 @@ const SettingsScreen = () => {
     const calculatedStepGoal = calculateStepGoal(
       inputAge,
       gender,
-      inputHeight,
-      inputWeight,
+      height,
+      weight,
       activityLevel
     );
     setStepGoal(calculatedStepGoal);

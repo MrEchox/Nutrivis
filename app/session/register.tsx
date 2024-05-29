@@ -7,6 +7,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase.config.js";
 import { router } from 'expo-router';
 import { commonStyles } from '../../components/commonStyles';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const TabTwoScreen = () => {
@@ -52,12 +53,14 @@ const TabTwoScreen = () => {
         user.saveLocal(); // Save the object to local storage
         user.save(); // Save the object to the database
 
+        await AsyncStorage.setItem("@LoggedIn:", JSON.stringify({ email: email, username: username }));
+
         Alert.alert(
             "Valio!",
             "Sėkmingai užsiregistravote!",
             [ { text: 'OK', onPress: () => {
                     console.log('OK Pressed')
-                    router.replace('../session/login')}} ],
+                    router.replace('../settings')}} ],
             );
     }
     
