@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, FlatList, Modal, Button, TextInput, useColorScheme } from 'react-native';
+import { StyleSheet, TouchableOpacity, FlatList, Modal, Button, TextInput, useColorScheme, Alert } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { food_object_eaten } from '@/src/object_classes/food_object_eaten'; 
@@ -142,13 +142,14 @@ export default function Foods() {
     const eatenFood = new food_object_eaten(currentDate, parseFloat(eatenGrams), name, calories, carbs, fat, protein, email);
     eatenFood.saveLocal();
     eatenFood.save(email);
+    Alert.alert('Valio!', 'Maisto produktas suvalgytas!', [
+      { text: 'OK', onPress: () => router.replace('./home')}
+  ]);
   }
 
 
   return (
-    <View style={[styles.container, themeBackground]}>
-      <Text style={[styles.title, themeTextStyle, {paddingTop:20}]}>Maisto puslapis</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+    <View style={[styles.container, themeBackground, {paddingTop: 20}]}>
       <View style={[styles.container, commonStyles.mainStatsContainer, themeContainer]} /* Container for local food objects */> 
         <Text style={[styles.title, themeTextStyle]}>Įvesti maisto produktai</Text>
         <FlatList

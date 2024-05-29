@@ -46,7 +46,8 @@ const loginScreen = () => {
         
         if (querySnapshot.size > 0) {
             // Check if password is correct
-            if (bcrypt.compareSync(password, querySnapshot.docs[0].data().password)) {
+            //if (bcrypt.compareSync(password, querySnapshot.docs[0].data().password)) {
+            if (password === querySnapshot.docs[0].data().password) {
 
                 const keys = await AsyncStorage.getAllKeys();
                 const userKey = keys.filter(key => key.startsWith("@User:" + email));
@@ -60,8 +61,8 @@ const loginScreen = () => {
                         router.replace('../(tabs)/home')
                         console.log(user);
                     }
+                    else alert("Klaida prisijungiant")
                 }
-
                 else {
                     var LogInUser = new User(querySnapshot.docs[0].data().email, querySnapshot.docs[0].data().username,
                         querySnapshot.docs[0].data().password, querySnapshot.docs[0].data().salt);
@@ -71,6 +72,7 @@ const loginScreen = () => {
                     LogInUser.saveLocal();
                 }
             }
+            else alert("Neteisingas slaptažodis")
         }
     }
 
@@ -103,12 +105,6 @@ const loginScreen = () => {
                 <Button color={themeSvg}
                     title="Prisijungti"
                     onPress={handleLogin}
-                />
-            </View>
-            <Text> </Text>
-            <View style={styles.buttonContainer}>
-                <Button color={themeSvg}
-                    title="Prisijungti su Google"
                 />
             </View>
             <Text> </Text>

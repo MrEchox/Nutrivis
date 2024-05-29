@@ -56,7 +56,7 @@ export default function scannerScreen() {
             // Fetch all keys from AsyncStorage
             const allKeys = await AsyncStorage.getAllKeys();
             // // Filter keys to only include those belonging to your app
-            const appKeys = allKeys.filter(key => key.startsWith("@BARCODE_FOOD:"));
+            const appKeys = allKeys.filter(key => key.startsWith("@Barcode_Food:"));
             // // Fetch values corresponding to the filtered keys
             const values = await AsyncStorage.multiGet(appKeys);
 
