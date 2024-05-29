@@ -228,8 +228,6 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
     paddingTop: 60,
     marginRight: -20,
   },

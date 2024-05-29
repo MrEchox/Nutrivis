@@ -75,12 +75,12 @@ const PageList = () => {
               ]}
               onPress={() => handleItemClick(item.quizId)}
             >
-              <View style={[commonStyles.mainStatsContainer, themeContainer, 
+              <View style={[commonStyles.mainStatsContainer, {marginBottom: 10}, themeContainer, 
                   completedQuizzes.includes(item.quizId) ? { backgroundColor: themeSvg } : {}, { paddingBottom: 60}]}>
                 {completedQuizzes.includes(item.quizId) && (
                   <Image
                     source={require('../../assets/images/nutrivis_award2.png')}
-                    style={[{ width: 68, height: 90, marginBottom: 0, position: 'absolute', right: 20, top: 5 }]}
+                    style={[{ width: 50, height: 66, marginBottom: 0, position: 'absolute', right: 10, top: 40 }]}
                   />
                 )}<Text style={[themeTextStyle, { fontSize: 15 }]}>{item.title}</Text>
               </View>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginRight: -20,
-    paddingRight:20
+    paddingRight: 20
   },
 
   listContainer: {

@@ -1,4 +1,4 @@
-import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
+import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera/next';
 import { useEffect, useState } from 'react';
 import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { Link, router } from 'expo-router';

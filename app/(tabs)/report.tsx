@@ -76,9 +76,11 @@ export default function TabTwoScreen() {
     const unitMapping = {
         calories: { unit: 'bananams', divisor: 89, lit: 'Kalorijų', value: calories },
         carbs: { unit: 'duonai', divisor: 48, lit: 'Angliavandenių', value: carbs },
-        fat: { unit: 'lasiniams', divisor: 10, lit: 'Riebalų', value: fat },
-        protein: { unit: 'kiausiniams', divisor: 13, lit: 'Baltymų', value: protein },
+        fat: { unit: 'lašiniams', divisor: 10, lit: 'Riebalų', value: fat },
+        protein: { unit: 'kiaušiniams', divisor: 13, lit: 'Baltymų', value: protein },
     };
+    
+    const steps = 28_684;
 
     const fetchData = async () => {
         try {
@@ -362,11 +364,11 @@ export default function TabTwoScreen() {
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
                         <View style={{ backgroundColor: 'transparent' }}>
                             <Text style={themeTextStyle}>Nueita žingsnių</Text>
-                            <Text style={[themeTextStyle, styles.title]}>0</Text>
+                            <Text style={[themeTextStyle, styles.title]}>{steps}</Text>
                         </View>
                         <View style={{ backgroundColor: 'transparent' }}>
                             <Text style={themeTextStyle}>Kalorijų sudeginta</Text>
-                            <Text style={[themeTextStyle, styles.title]}>0</Text>
+                            <Text style={[themeTextStyle, styles.title]}>{(steps*0.04).toFixed(2)} cal</Text>
                         </View>
 
                     </View>
@@ -470,12 +472,12 @@ export default function TabTwoScreen() {
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
                         <View style={{ backgroundColor: 'transparent' }}>
                             <Text style={themeTextStyle}>Nueitas atstumas</Text>
-                            <Text style={[themeTextStyle, styles.title]}>0 km</Text>
+                            <Text style={[themeTextStyle, styles.title]}>{(steps*0.000762).toFixed(2)} km</Text>
                         </View>
                         <View style={{ backgroundColor: 'transparent' }}>
                             <Text style={themeTextStyle}>Tai lygu</Text>
                             <Text style={[themeTextStyle, styles.title]}>
-                                0 <Text style={{ fontSize: 16 }}>bananams</Text>
+                                {((steps*0.762)/0.2).toFixed(2)} <Text style={{ fontSize: 16 }}>bananams</Text>
                             </Text>
                         </View>
                     </View>
