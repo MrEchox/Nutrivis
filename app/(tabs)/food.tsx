@@ -149,9 +149,7 @@ export default function Foods() {
 
 
   return (
-    <View style={[styles.container, themeBackground]}>
-      <Text style={[styles.title, themeTextStyle, {paddingTop:20}]}>Maisto puslapis</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+    <View style={[styles.container, themeBackground, {paddingTop: 20}]}>
       <View style={[styles.container, commonStyles.mainStatsContainer, themeContainer]} /* Container for local food objects */> 
         <Text style={[styles.title, themeTextStyle]}>Įvesti maisto produktai</Text>
         <FlatList

@@ -331,8 +331,8 @@ export default function Tracking() {
     <SafeAreaView style={[styles.container, themeBackground]}>
       <ScrollView style={[{ paddingTop: 10 }]}>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-          <View style={[styles.statsItem, themeContainer]}>
-            <Text style={[styles.text, themeTextStyle]}>Kalorijos</Text>
+          <View style={[styles.statsItem, themeContainer, {marginBottom: -30}]}>
+            <Text style={[styles.title, styles.text, themeTextStyle]}>Kalorijos</Text>
             <View style={[styles.progressBarContainer, themeContainer]}>
               <CircularProgress
                 size={110}
@@ -346,7 +346,7 @@ export default function Tracking() {
             <Text style={[styles.text, themeTextStyle]}>{sumCalories.toFixed(0)}/{goalCalories} kcal</Text>
             <Text>{'\n'}</Text>
           </View>
-          {/** If loading is false, render the stats
+          
           {!loading && (
             <View style={[styles.column, themeContainer]}>
               <View style={[styles.statsItem, themeContainer]}>
@@ -371,12 +371,12 @@ export default function Tracking() {
                 <Text style={[styles.text, themeTextStyle]}>{sumFat.toFixed(0)}/{goalFat} g</Text>
               </View>
             </View>
-          )}  */}
+          )} 
         </View>
 
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
           <View style={[styles.statsItem, themeContainer]}>
-            <Text style={[styles.text, themeTextStyle]}>Savaitė</Text>
+            <Text style={[styles.title, styles.text, themeTextStyle]}>Savaitė</Text>
             <View style={[styles.progressBarContainer, themeContainer]}>
               <BarChart
                 key={JSON.stringify(barData)}
@@ -504,5 +504,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'
-  }
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
 });
