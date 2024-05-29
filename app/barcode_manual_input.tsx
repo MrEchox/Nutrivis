@@ -6,7 +6,8 @@ import { calculateRecommendedCalories } from '@/src/util/goal_calculations';
 import {Picker} from '@react-native-picker/picker'
 import {collection, query, where, getDocs} from "firebase/firestore";
 import {db} from "../firebase.config.js";
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BarcodeInputScreen = () => {
 
@@ -23,7 +24,28 @@ const SearchBarcode = async (barcode: number) => {
     setFoundBarcode("Rastas barkodas");
   } 
   else {
-    setFoundBarcode("Barkodas nerastas");
+    // Fetch all keys from AsyncStorage
+    const allKeys = await AsyncStorage.getAllKeys();
+    // // Filter keys to only include those belonging to your app
+    const appKeys = allKeys.filter(key => key.startsWith("@Barcode_Food:"));
+    // // Fetch values corresponding to the filtered keys
+    const values = await AsyncStorage.multiGet(appKeys);
+
+    // Check for the barcode in the local storage
+    for (let i = 0; i < values.length; i++) {
+        if (values[i][1] != null) {
+            var item = JSON.parse(values[i][1]);
+            if (item.barcode == barcode) {
+                router.replace(`../food?calories=${item.calories}&name=${item.name}&carbs=${item.carbs}
+                &sugars=${item.sugars}&fat=${item.fat}&protein=${item.protein}
+                &sodium=${item.sodium}&measuring_unit=${item.measuring_unit}`);
+                setFoundBarcode("Rastas barkodas");
+                return;
+            }
+        }
+    }
+
+    setFoundBarcode("Barkodas nerastas");    
   };
 }
 
