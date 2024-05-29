@@ -42,7 +42,6 @@ const QuizScreen = ({ navigation }) => {
 
     return (
         <View style={[themeBackground, styles.container]}>
-            <Text style={[themeTextStyle, styles.label]}>{`Quiz: ${quizId}`}</Text>
             {currentContent.type === 'info' && ( // Display the content based on the type
                 <View style={[themeContainer, commonStyles.mainStatsContainer]}>
                     <Text style={themeTextStyle}>{currentContent.text}</Text>

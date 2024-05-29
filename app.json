@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.nutrivis"
     },
     "web": {
       "bundler": "metro",
@@ -43,6 +44,6 @@
         "projectId": "3d942ac0-c4b0-405c-9d75-712bd75a837a"
       }
     },
-    "owner": "Valgyk arba būsi suvalgytas"
+    "owner": "mr_echox"
   }
 }

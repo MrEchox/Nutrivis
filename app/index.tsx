@@ -180,8 +180,8 @@ const loginStatus = async () => {
     }
 };
 
-const IndexScreen = () => {
 
+const IndexScreen = () => {
     
     // Use `useFocusEffect` to run the login status check when the screen is focused
     useFocusEffect(
