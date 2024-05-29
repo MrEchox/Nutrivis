@@ -8,7 +8,7 @@ export default function TabTwoScreen() {
 
   const [isPedometerAvailable, setIsPedometerAvailable] = useState('checking');
   const [stepCount, setStepCount] = useState(0);
-  const [height, setHeight] = useState(0);
+  const height = 180;
 
   const subscribe = async () => {
     const isAvailable = await Pedometer.isAvailableAsync();
@@ -52,13 +52,6 @@ export default function TabTwoScreen() {
     <View style={[styles.container, themeBackground, { paddingTop: 20 }]}>
       <View style={[commonStyles.mainStatsContainer, themeContainer]}>
         <Text style={[styles.title, themeTextStyle]}>Žingsnių sekimas</Text>
-        <Text style={[styles.label, themeTextStyle]}>Įveskite savo ūgį (cm)</Text>
-        <TextInput
-          style={[styles.input, themeTextStyle]}
-          placeholder="Įveskite savo ūgį"
-          keyboardType="numeric"
-          onChangeText={(text) => setHeight(parseFloat(text))}
-        />
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
           <View style={{ backgroundColor: 'transparent' }}>
             <Text style={themeTextStyle}>Nueita žingsnių</Text>
