@@ -1,4 +1,4 @@
-import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
+import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera/next';
 import { useEffect, useState } from 'react';
 import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { Link, router } from 'expo-router';
@@ -56,7 +56,7 @@ export default function scannerScreen() {
             // Fetch all keys from AsyncStorage
             const allKeys = await AsyncStorage.getAllKeys();
             // // Filter keys to only include those belonging to your app
-            const appKeys = allKeys.filter(key => key.startsWith("@BARCODE_FOOD:"));
+            const appKeys = allKeys.filter(key => key.startsWith("@Barcode_Food:"));
             // // Fetch values corresponding to the filtered keys
             const values = await AsyncStorage.multiGet(appKeys);
 
