@@ -2,7 +2,7 @@ import { StyleSheet, TextInput, Button, ScrollView, SafeAreaView, BackHandler, A
 import { Text, View } from '@/components/Themed';
 import { User } from '@/src/object_classes/user';
 import { useState } from 'react';
-import bcrypt from 'bcryptjs';
+//var bcrypt = require('bcryptjs');
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase.config.js";
 import { router } from 'expo-router';
@@ -16,14 +16,13 @@ const TabTwoScreen = () => {
     const [username, setUsername] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
 
+
     async function handleRegister() {
         if (password !== repeatPassword) {
             Alert.alert(
                 "Klaida",
                 "Slaptažodžiai nesutampa",
-                [
-                    { text: 'OK', onPress: () => console.log('OK Pressed') }
-                ],
+                [ { text: 'OK', onPress: () => console.log('OK Pressed') } ],
                 );
             return;
         }
@@ -37,34 +36,28 @@ const TabTwoScreen = () => {
             Alert.alert(
                 "Klaida",
                 "Toks el. paštas jau užregistruotas",
-                [
-                    { text: 'OK', onPress: () => console.log('OK Pressed') }
-                ],
+                [ { text: 'OK', onPress: () => console.log('OK Pressed') } ],
                 );
             return;
         }
 
         // Hash the password
+        /*
         const saltRounds = 7;
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(password, salt);
+        */
 
-        // Make a user object
-        const user = new User( email, username, hash, salt);
-
-        // Save the object to local storage
-        user.saveLocal();
-        // Save the object to the database
-        user.save();
+        const user = new User( email, username, password, "0"); // Make a user object (..., hash (password), salt)
+        user.saveLocal(); // Save the object to local storage
+        user.save(); // Save the object to the database
 
         Alert.alert(
             "Valio!",
             "Sėkmingai užsiregistravote!",
-            [
-                { text: 'OK', onPress: () => {
+            [ { text: 'OK', onPress: () => {
                     console.log('OK Pressed')
-                    router.replace('../session/login')}}
-            ],
+                    router.replace('../session/login')}} ],
             );
     }
     
@@ -132,40 +125,40 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         paddingTop: 30,
-      },
-      title: {
+    },
+    title: {
         fontSize: 20,
         fontWeight: 'bold',
-      },
-      label: {
+    },
+    label: {
         marginRight: 10,
         paddingLeft: 10,
         paddingBottom: 10,
         fontWeight: "500",
-      },
-      inputContainer: {
+    },
+    inputContainer: {
         width: '80%',
         marginBottom: 20,
         borderWidth: 1,
         borderRadius: 5,
         borderColor: '#ccc',
         alignSelf: 'center',
-      },
-      input: {
+    },
+    input: {
         padding: 10,
         borderWidth: 1,
         borderRadius: 10,
-      },
-      separator: {
+    },
+    separator: {
         marginVertical: 30,
         height: 1,
         width: '80%',
-      },
-      buttonContainer: {
+    },
+    buttonContainer: {
         borderRadius: 10,
         overflow: 'hidden',
         backgroundColor: '',
-      },
+    },
 });
 
 export default TabTwoScreen;

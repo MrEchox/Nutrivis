@@ -10,8 +10,7 @@ import {
   useColorScheme,
 } from "react-native";
 import { Text, View } from "@/components/Themed";
-import { calculateStepGoal } from "@/src/util/goal_calculations";
-import { calculateRecommendedCalories } from "@/src/util/goal_calculations";
+import { calculateStepGoal, calculateRecommendedCalories } from "@/src/util/goal_calculations";
 import { Picker } from "@react-native-picker/picker";
 import { StatusBar } from "expo-status-bar";
 import { Barcode_Food } from "@/src/object_classes/food_object_barcode";
@@ -21,11 +20,9 @@ import { router } from "expo-router";
 
 import { commonStyles } from "../components/commonStyles";
 import { HelperText } from "react-native-paper";
-import { count } from "firebase/firestore";
 
 const Goal_Prefix = "@Goal:";
 
-//---Calorie Tab---
 const SettingsScreen = () => {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("male");
@@ -33,8 +30,9 @@ const SettingsScreen = () => {
   const [weight, setWeight] = useState("");
   const [activityLevel, setActivityLevel] = useState("sedentary");
   const [calorieGoal, setCalorieGoal] = useState(0);
-  const [weightObjective, setWeightObjective] = useState(0);
+  const [weightObjective, setWeightObjective] = useState("maintain");
   const [stepGoal, setStepGoal] = useState(0);
+  const [username, setUsername] = useState("");
 
   const getLoggedInEmail = async () => {
     const loginVal = await AsyncStorage.getItem("@LoggedIn:");
@@ -45,79 +43,53 @@ const SettingsScreen = () => {
     return "";
   };
 
-  // Function to calculate recomended calories
+  const getLoggedInName = async () => {
+    const loginVal = await AsyncStorage.getItem("@LoggedIn:");
+    if (loginVal) {
+      const status = JSON.parse(loginVal);
+      setUsername(status.username);
+    }
+  };
+  getLoggedInName();
 
   const handleCaloriesAndSteps = async () => {
     const email = await getLoggedInEmail();
 
-    // Checking input data for age error
-    const inputAge = parseInt(age);
-    // if (!isNaN(inputAge)) {
-    if (inputAge >= 12 && inputAge <= 120) {
-      setAge(age);
-      //alert('');
-    } else {
-      //<View>
+    // Validate inputs and set default values if necessary
+    const inputAge = parseInt(age) || 0;
+    const inputHeight = parseInt(height) || 0;
+    const inputWeight = parseInt(weight) || 0;
 
-      // <HelperText type="error" visible={hasErrors()}>
-      alert("Amžius turi būti daugiau 12(netinkama vaikam)!");
-      //</HelperText>
-      // </View>
+    if (inputAge < 12 || inputAge > 120) {
+      alert("Amžius turi būti daugiau 12 (netinkama vaikam)!");
+      return;
     }
 
-    // }else {
-    //alert('Prašome įvesti tinkamą amžių.');
-    //}
-
-    // Checking input data for height error
-    const inputheight = parseInt(height);
-    //if (!isNaN(inputheight)) {
-    if (inputheight >= 12 && inputheight <= 260) {
-      setHeight(height);
-      //alert('');
-    } else {
-      //<View>
-      //  <HelperText type="error" visible={hasErrors()}>
-      alert(" Ūgis turi atitikti realius matmenis cm !");
-      // </HelperText>
-      //</View>
+    if (inputHeight < 12 || inputHeight > 260) {
+      alert("Ūgis turi atitikti realius matmenis cm!");
+      return;
     }
-    // } else {
-    // alert('Prašome įvesti tinkamą ūgį.');
-    // }
 
-    // Checking input data for weight error
-    const inputweight = parseInt(weight);
-    //if (!isNaN(inputweight)) {
-    if (inputweight >= 0) {
-      setHeight(weight);
-      //alert('');
-    } else {
-      //<View>
-      //<HelperText type="error" visible={hasErrors()}>
-      alert("Svoris turibūti teigiamas!");
-      //</HelperText>
-      //</View>
+    if (inputWeight <= 0) {
+      alert("Svoris turi būti teigiamas!");
+      return;
     }
-    //} else {
-    //alert('Prašome įvesti tinkamą svorį.');
-    //}
 
     const calculatedRecommendedCalories = calculateRecommendedCalories(
-      age,
+      inputAge,
       gender,
-      height,
-      weight,
+      inputHeight,
+      inputWeight,
       activityLevel,
       weightObjective
     );
     setCalorieGoal(calculatedRecommendedCalories);
 
     const calculatedStepGoal = calculateStepGoal(
-      age,
+      inputAge,
       gender,
-      height,
-      weight,
+      inputHeight,
+      inputWeight,
       activityLevel
     );
     setStepGoal(calculatedStepGoal);
@@ -132,31 +104,24 @@ const SettingsScreen = () => {
     );
     await goal_object.saveLocal();
     await goal_object.save(email);
-    //router.replace("./home");
+    router.replace("./(tabs)/home")
   };
-  
+
   const colorScheme = useColorScheme();
-  const themeBackground = colorScheme === 'light' ? commonStyles.lightBackground : commonStyles.darkBackground;
-  const themeContainer = colorScheme === 'light' ? commonStyles.lightContainer : commonStyles.darkContainer;
-  const themeTextStyle = colorScheme === 'light' ? [commonStyles.lightThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }] : [commonStyles.darkThemeText, { fontFamily: 'Helvetica', fontWeight: 'bold' }];
-  const themeSvg = colorScheme === 'light' ? '#ffffff' : '#003049';
-  
+  const themeBackground = colorScheme === "light" ? commonStyles.lightBackground : commonStyles.darkBackground;
+  const themeContainer = colorScheme === "light" ? commonStyles.lightContainer : commonStyles.darkContainer;
+  const themeTextStyle = colorScheme === "light" ? [commonStyles.lightThemeText, { fontFamily: "Helvetica", fontWeight: "bold" }] : [commonStyles.darkThemeText, { fontFamily: "Helvetica", fontWeight: "bold" }];
+  const themeSvg = colorScheme === "light" ? "#ffffff" : "#003049";
+
   async function handleLogout() {
     const loginVal = await AsyncStorage.getItem("@LoggedIn:");
     if (loginVal) {
       const status = JSON.parse(loginVal);
-
       status.username = "";
-
       await AsyncStorage.setItem("@LoggedIn:", JSON.stringify(status));
-
       router.replace("./session/login");
     } else {
-      await AsyncStorage.setItem(
-        "@LoggedIn:",
-        JSON.stringify({ username: "" })
-      );
-
+      await AsyncStorage.setItem("@LoggedIn:", JSON.stringify({ username: "" }));
       router.replace("./session/login");
     }
   }
@@ -170,6 +135,7 @@ const SettingsScreen = () => {
             style={[styles.input, themeTextStyle]}
             placeholder="Įveskite savo amžių"
             keyboardType="numeric"
+            value={age}
             onChangeText={(text) => setAge(text)}
           />
         </View>
@@ -191,6 +157,7 @@ const SettingsScreen = () => {
             style={[styles.input, themeTextStyle]}
             placeholder="Įveskite savo ūgį (cm)"
             keyboardType="numeric"
+            value={height}
             onChangeText={(text) => setHeight(text)}
           />
         </View>
@@ -200,13 +167,12 @@ const SettingsScreen = () => {
             style={[styles.input, themeTextStyle]}
             placeholder="Įveskite savo svorį (kg)"
             keyboardType="numeric"
+            value={weight}
             onChangeText={(text) => setWeight(text)}
           />
         </View>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-          <Text style={[styles.label, themeTextStyle]}>
-            Fizinio aktyvumo lygis
-          </Text>
+          <Text style={[styles.label, themeTextStyle]}>Fizinio aktyvumo lygis</Text>
           <Picker
             selectedValue={activityLevel}
             onValueChange={(itemValue) => setActivityLevel(itemValue)}
@@ -226,17 +192,11 @@ const SettingsScreen = () => {
             onValueChange={(itemValue) => setWeightObjective(itemValue)}
             style={[styles.input, themeTextStyle, themeContainer]}
           >
-            <Picker.Item
-              label="Ekstremalus svorio metimas"
-              value="extreme loss"
-            />
+            <Picker.Item label="Ekstremalus svorio metimas" value="extreme loss" />
             <Picker.Item label="Svorio metimas" value="loss" />
             <Picker.Item label="Svorio palaikymas" value="maintain" />
             <Picker.Item label="Svorio priaugimas" value="gain" />
-            <Picker.Item
-              label="Ekstremalus svorio priaugimas"
-              value="extreme gain"
-            />
+            <Picker.Item label="Ekstremalus svorio priaugimas" value="extreme gain" />
           </Picker>
         </View>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
@@ -247,32 +207,10 @@ const SettingsScreen = () => {
               onPress={handleCaloriesAndSteps}
             />
           </View>
-          <Text style={themeTextStyle}>
-            Rekomenduojamas žingsnių skaičius per dieną: {stepGoal}
-          </Text>
-          <Text style={themeTextStyle}>
-            Rekomenduojamas kalorijų kiekis per dieną: {calorieGoal}
-          </Text>
-          <Text style={themeTextStyle}>
-            Rekomenduojamas angliavandenių kiekis gramais:{" "}
-            {Math.round((calorieGoal * 0.5) / 4)}
-          </Text>
-          <Text style={themeTextStyle}>
-            Rekomenduojamas riebalų kiekis gramais:{" "}
-            {Math.round((calorieGoal * 0.2) / 9)}
-          </Text>
-          <Text style={themeTextStyle}>
-            Rekomenduojamas baltymų kiekis gramais:{" "}
-            {Math.round((calorieGoal * 0.3) / 4)}
-          </Text>
-
-          {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
         </View>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-          <Text
-            style={[themeTextStyle, { alignSelf: "center", marginBottom: 10 }]}
-          >
-            Vartotojo vardas ar kažkas tokio
+          <Text style={[themeTextStyle, { alignSelf: "center", marginBottom: 10 }]}>
+            Sveiki {username}!
           </Text>
           <View style={styles.buttonContainer}>
             <Button
@@ -331,6 +269,3 @@ const styles = StyleSheet.create({
 });
 
 export default SettingsScreen;
-function hasErrors(): boolean | undefined {
-  throw new Error("Function not implemented.");
-}

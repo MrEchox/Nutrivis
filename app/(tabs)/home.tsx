@@ -337,7 +337,6 @@ export default function Tracking() {
               <CircularProgress
                 size={110}
                 strokeWidth={10}
-                //progressPercent={60}
                 progressPercent={(sumCalories / goalCalories) * 100}
                 text="50%" //does nothing currently
                 fill={themeProg}
@@ -347,6 +346,7 @@ export default function Tracking() {
             <Text style={[styles.text, themeTextStyle]}>{sumCalories.toFixed(0)}/{goalCalories} kcal</Text>
             <Text>{'\n'}</Text>
           </View>
+          {/** If loading is false, render the stats
           {!loading && (
             <View style={[styles.column, themeContainer]}>
               <View style={[styles.statsItem, themeContainer]}>
@@ -371,7 +371,7 @@ export default function Tracking() {
                 <Text style={[styles.text, themeTextStyle]}>{sumFat.toFixed(0)}/{goalFat} g</Text>
               </View>
             </View>
-          )}
+          )}  */}
         </View>
 
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
