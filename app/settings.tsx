@@ -32,6 +32,11 @@ const SettingsScreen = () => {
   const [calorieGoal, setCalorieGoal] = useState(0);
   const [weightObjective, setWeightObjective] = useState("maintain");
   const [stepGoal, setStepGoal] = useState(0);
+  
+  const [ageError, setAgeError] = useState('');
+  const [heightError, setHeightError] = useState('');
+  const [weightError, setWeightError] = useState('');
+  
   const [username, setUsername] = useState("");
 
   const getLoggedInEmail = async () => {
@@ -55,24 +60,29 @@ const SettingsScreen = () => {
   const handleCaloriesAndSteps = async () => {
     const email = await getLoggedInEmail();
 
-    // Validate inputs and set default values if necessary
-    const inputAge = parseInt(age) || 0;
-    const inputHeight = parseInt(height) || 0;
-    const inputWeight = parseInt(weight) || 0;
-
-    if (inputAge < 12 || inputAge > 120) {
-      alert("Amžius turi būti daugiau 12 (netinkama vaikam)!");
-      return;
+    // Checking input data for age error
+    const inputAge = parseInt(age);
+    if (inputAge >= 12 && inputAge <= 120) {
+      setAge(age);
+    } else {
+      setAgeError('Amžius turi būti daugiau 12(netinkama vaikam)!');
     }
 
-    if (inputHeight < 12 || inputHeight > 260) {
-      alert("Ūgis turi atitikti realius matmenis cm!");
-      return;
+
+    // Checking input data for height error
+    const inputheight = parseInt(height);
+    if (inputheight >= 12 && inputheight <= 260) {
+      setHeight(height);
+    } else {
+      setHeightError(' Ūgis turi atitikti realius matmenis cm !');
     }
 
-    if (inputWeight <= 0) {
-      alert("Svoris turi būti teigiamas!");
-      return;
+    // Checking input data for weight error
+    const inputweight = parseInt(weight);
+    if (inputweight >= 0) {
+      setHeight(weight);
+    } else {
+      setWeightError ('Svoris turibūti teigiamas!');
     }
 
     const calculatedRecommendedCalories = calculateRecommendedCalories(
@@ -104,7 +114,7 @@ const SettingsScreen = () => {
     );
     await goal_object.saveLocal();
     await goal_object.save(email);
-    router.replace("./(tabs)/home")
+    router.replace("./home");
   };
 
   const colorScheme = useColorScheme();

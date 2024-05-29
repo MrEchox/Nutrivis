@@ -93,7 +93,7 @@ export default function Tracking() {
       let currentDayOfWeek = currentDate.getDay();
       let difference = currentDayOfWeek - 1;
       if (difference < 0) {
-        difference = 6;
+          difference = 6;
       }
       let mondayDate = new Date(currentDate);
 
