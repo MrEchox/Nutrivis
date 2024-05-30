@@ -58,6 +58,7 @@ const SettingsScreen = () => {
   getLoggedInName();
 
   const handleCaloriesAndSteps = async () => {
+    let hasError = false;
     const email = await getLoggedInEmail();
 
     // Checking input data for age error
@@ -66,6 +67,7 @@ const SettingsScreen = () => {
       setAge(age);
     } else {
       setAgeError('Amžius turi būti daugiau 12(netinkama vaikam)!');
+      hasError=true;
     }
 
 
@@ -75,6 +77,7 @@ const SettingsScreen = () => {
       setHeight(height);
     } else {
       setHeightError(' Ūgis turi atitikti realius matmenis cm !');
+      hasError=true;
     }
 
     // Checking input data for weight error
@@ -83,6 +86,11 @@ const SettingsScreen = () => {
       setHeight(weight);
     } else {
       setWeightError ('Svoris turibūti teigiamas!');
+      hasError=true;
+    }
+
+    if (hasError){
+      return;
     }
 
     const calculatedRecommendedCalories = calculateRecommendedCalories(
@@ -148,6 +156,7 @@ const SettingsScreen = () => {
             value={age}
             onChangeText={(text) => setAge(text)}
           />
+          {ageError ? <Text style={{ color: 'red' }}>{ageError}</Text> : null}
         </View>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
           <Text style={[styles.label, themeTextStyle]}>Lytis</Text>
@@ -170,6 +179,7 @@ const SettingsScreen = () => {
             value={height}
             onChangeText={(text) => setHeight(text)}
           />
+          {heightError ? <Text style={{ color: 'red' }}>{heightError}</Text> : null}
         </View>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
           <Text style={[styles.label, themeTextStyle]}>Svoris</Text>
@@ -180,6 +190,7 @@ const SettingsScreen = () => {
             value={weight}
             onChangeText={(text) => setWeight(text)}
           />
+          {weightError ? <Text style={{ color: 'red' }}>{weightError}</Text> : null}
         </View>
         <View style={[commonStyles.mainStatsContainer, themeContainer]}>
           <Text style={[styles.label, themeTextStyle]}>Fizinio aktyvumo lygis</Text>
