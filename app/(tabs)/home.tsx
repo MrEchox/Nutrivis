@@ -28,6 +28,10 @@ export default function Tracking() {
   const [goalFat, setGoalFat] = useState(0);
   const [goalProtein, setGoalProtein] = useState(0);
 
+  const [PBarProtein, setPBarProtein] = useState(0);
+  const [PBarCarbs, setPBarCarbs] = useState(0);
+  const [PBarFat, setPBarFat] = useState(0);
+
   const [barData, setBarData] = useState([
     { value: 0, label: 'Pr' },
     { value: 0, label: 'An' },
@@ -109,6 +113,47 @@ export default function Tracking() {
   // Function to fetch data from AsyncStorage
   const fetchData = async () => {
     try {
+      // Goal values
+      console.log("Goal values: " + valuesGoalLocal);
+      const goalValues = JSON.parse(valuesGoalLocal[0][1]);
+
+      if (goalValues !== null) {
+        if (goalValues.calories !== null) {
+          setGoalCalories(goalValues.calories);
+        }
+        else {
+          setGoalCalories(0);
+        }
+
+        if (goalValues.carbs !== null) {
+          setGoalCarbs(goalValues.carbs);
+        }
+        else {
+          setGoalCarbs(0);
+        }
+
+        if (goalValues.fat !== null) {
+          setGoalFat(goalValues.fat);
+        }
+        else {
+          setGoalFat(0);
+        }
+
+        if (goalValues.protein !== null) {
+          setGoalProtein(goalValues.protein);
+        }
+        else {
+          setGoalProtein(0);
+        }
+      }
+      else {
+        setGoalCalories(0);
+        setGoalCarbs(0);
+        setGoalFat(0);
+        setGoalProtein(0);
+      }
+
+
       setEatenFoods([]); // Clear eaten foods list
       var keysBetweenStartAndEnd = [];
 
@@ -197,14 +242,6 @@ export default function Tracking() {
         console.log("Loaded water: " + waterValues.water + "ml");
       }
 
-      // Goal values
-      console.log("Goal values: " + valuesGoalLocal);
-      const goalValues = JSON.parse(valuesGoalLocal[0][1]);
-      setGoalCalories(goalValues.calories);
-      setGoalCarbs(goalValues.carbs);
-      setGoalFat(goalValues.fat);
-      setGoalProtein(goalValues.protein);
-
       var Calories = 0
       var Carbs = 0
       var Fat = 0
@@ -229,6 +266,27 @@ export default function Tracking() {
       setSumCarbs(Carbs);
       setSumFat(Fat);
       setSumProtein(Protein);
+
+      if (goalCarbs !== 0) {  
+        setPBarCarbs(Carbs / goalCarbs);
+      }
+      else {
+        setPBarCarbs(0);
+      }
+
+      if (goalFat !== 0) {
+        setPBarFat(Fat / goalFat);
+      }
+      else {
+        setPBarFat(0);
+      }
+
+      if (goalProtein !== 0) {
+        setPBarProtein(Protein / goalProtein);
+      }
+      else {
+        setPBarProtein(0);
+      }
 
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -364,21 +422,21 @@ export default function Tracking() {
               <View style={[styles.statsItem, themeContainer]}>
                 <Text style={[styles.text, themeTextStyle]}>Baltymai</Text>
                 <View style={styles.progressBarContainer}>
-                  <ProgressBar progress={(sumProtein/goalProtein)} color={themeProg} style={themeProgBack}/>
+                  <ProgressBar progress={(PBarProtein)} color={themeProg} style={themeProgBack}/>
                 </View>
                 <Text style={[styles.text, themeTextStyle]}>{sumProtein.toFixed(0)}/{goalProtein} g</Text>
               </View>
               <View style={[styles.statsItem, themeContainer]}>
                 <Text style={[styles.text, themeTextStyle]}>Angliavandeniai</Text>
                 <View style={styles.progressBarContainer}>
-                  <ProgressBar progress={(sumCarbs/goalCarbs)} color={themeProg} style={themeProgBack}/>
+                  <ProgressBar progress={(PBarCarbs)} color={themeProg} style={themeProgBack}/>
                 </View>
                 <Text style={[styles.text, themeTextStyle]}>{sumCarbs.toFixed(0)}/{goalCarbs} g</Text>
               </View>
               <View style={[styles.statsItem, themeContainer]}>
                 <Text style={[styles.text, themeTextStyle]}>Riebalai</Text>
                 <View style={styles.progressBarContainer}>
-                  <ProgressBar progress={(sumFat/goalFat)} color={themeProg} style={themeProgBack} />
+                  <ProgressBar progress={(PBarFat)} color={themeProg} style={themeProgBack} />
                 </View>
                 <Text style={[styles.text, themeTextStyle]}>{sumFat.toFixed(0)}/{goalFat} g</Text>
               </View>
