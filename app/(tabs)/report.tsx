@@ -354,7 +354,7 @@ export default function TabTwoScreen() {
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
                         <View style={{ backgroundColor: 'transparent' }}>
                             <Text style={themeTextStyle}>Kalorijų suvartota</Text>
-                            <Text style={[themeTextStyle, styles.title]}>{calories} cal</Text>
+                            <Text style={[themeTextStyle, styles.title]}>{parseFloat(calories.toFixed(2))} kcal</Text>
                         </View>
                         <View style={{ backgroundColor: 'transparent' }}>
                             <Text style={themeTextStyle}>Vandens išgerta   </Text>
@@ -456,7 +456,7 @@ export default function TabTwoScreen() {
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
                         <View style={{ backgroundColor: 'transparent' }}>
                             <Text style={themeTextStyle}>{unitMapping[selectedStat].lit} suvartota</Text>
-                            <Text style={[themeTextStyle, styles.title]}>{unitMapping[selectedStat].value}</Text>
+                            <Text style={[themeTextStyle, styles.title]}>{parseFloat(unitMapping[selectedStat].value.toFixed(2))}</Text>
                         </View>
                         <View style={{ backgroundColor: 'transparent' }}>
                             <Text style={themeTextStyle}>Tai lygu</Text>
