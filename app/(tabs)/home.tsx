@@ -10,6 +10,7 @@ import { Svg } from 'react-native-svg';
 import { daily_water_object } from '@/src/object_classes/daily_water';
 import { useFocusEffect } from '@react-navigation/native';
 import { BarChart } from "react-native-gifted-charts";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Food_Eaten_Prefix = '@Food_Eaten:';
 const Goal_Prefix = '@Goal:';
@@ -403,120 +404,123 @@ export default function Tracking() {
 
   return (
     <SafeAreaView style={[styles.container, themeBackground]}>
-      <ScrollView style={[{ paddingTop: 10 }]}>
-        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-          <View style={[styles.statsItem, themeContainer, {marginBottom: -30}]}>
-            <Text style={[styles.title, styles.text, themeTextStyle]}>Kalorijos</Text>
-            <View style={[styles.progressBarContainer, themeContainer]}>
-              <CircularProgress
-                size={110}
-                strokeWidth={10}
-                progressPercent={(sumCalories / goalCalories) * 100}
-                text="50%" //does nothing currently
-                fill={themeProg}
-                back={themeProgF}
-              />
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ScrollView style={[{ paddingTop: 10 }]}>
+          <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+            <View style={[styles.statsItem, themeContainer, {marginBottom: -30}]}>
+              <Text style={[styles.title, styles.text, themeTextStyle]}>Kalorijos</Text>
+              <View style={[styles.progressBarContainer, themeContainer]}>
+                <CircularProgress
+                  size={110}
+                  strokeWidth={10}
+                  progressPercent={(sumCalories / goalCalories) * 100}
+                  text="50%" //does nothing currently
+                  fill={themeProg}
+                  back={themeProgF}
+                />
+              </View>
+              <Text style={[styles.text, themeTextStyle]}>{sumCalories.toFixed(0)}/{goalCalories} kcal</Text>
+              <Text>{'\n'}</Text>
             </View>
-            <Text style={[styles.text, themeTextStyle]}>{sumCalories.toFixed(0)}/{goalCalories} kcal</Text>
-            <Text>{'\n'}</Text>
+
+            {(
+              <View style={[styles.column, themeContainer]}>
+                <View style={[styles.statsItem, themeContainer]}>
+                  <Text style={[styles.text, themeTextStyle]}>Baltymai</Text>
+                  <View style={styles.progressBarContainer}>
+                    <ProgressBar progress={(PBarProtein <= 1 && PBarProtein >= 0 ? PBarProtein : 0)} color={themeProg} style={themeProgBack}/>
+                  </View>
+                  <Text style={[styles.text, themeTextStyle]}>{sumProtein.toFixed(0)}/{goalProtein} g</Text>
+                </View>
+                <View style={[styles.statsItem, themeContainer]}>
+                  <Text style={[styles.text, themeTextStyle]}>Angliavandeniai</Text>
+                  <View style={styles.progressBarContainer}>
+                    <ProgressBar progress={(PBarCarbs <= 1 && PBarCarbs >= 0 ? PBarCarbs : 0)} color={themeProg} style={themeProgBack}/>
+                  </View>
+                  <Text style={[styles.text, themeTextStyle]}>{sumCarbs.toFixed(0)}/{goalCarbs} g</Text>
+                </View>
+                <View style={[styles.statsItem, themeContainer]}>
+                  <Text style={[styles.text, themeTextStyle]}>Riebalai</Text>
+                  <View style={styles.progressBarContainer}>
+                    <ProgressBar progress={(PBarFat <= 1 && PBarFat >= 0 ? PBarFat : 0)} color={themeProg} style={themeProgBack} />
+                  </View>
+                  <Text style={[styles.text, themeTextStyle]}>{sumFat.toFixed(0)}/{goalFat} g</Text>
+                </View>
+              </View>
+            )} 
           </View>
-          
-          {(
+
+          <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+            <View style={[styles.statsItem, themeContainer]}>
+              <Text style={[styles.title, styles.text, themeTextStyle]}>Savaitė</Text>
+              <View style={[styles.progressBarContainer, themeContainer]}>
+                <BarChart
+                  key={JSON.stringify(barData)}
+                  barWidth={22}
+                  noOfSections={3}
+                  barBorderRadius={5}
+                  frontColor={themeSvg}
+                  data={barData}
+                  yAxisThickness={0}
+                  xAxisThickness={0}
+                  hideYAxisText={true}
+                  xAxisLabelTextStyle={[themeTextStyle]}
+                  dashGap={0}
+                  xAxisColor={'red'}
+                  height={100}
+                />
+              </View>
+            </View>
+          </View>
+
+          <View style={[commonStyles.mainStatsContainer, themeContainer, { alignItems: 'center' }]}>
             <View style={[styles.column, themeContainer]}>
-              <View style={[styles.statsItem, themeContainer]}>
-                <Text style={[styles.text, themeTextStyle]}>Baltymai</Text>
-                <View style={styles.progressBarContainer}>
-                  <ProgressBar progress={(PBarProtein <= 1 && PBarProtein >= 0 ? PBarProtein : 0)} color={themeProg} style={themeProgBack}/>
-                </View>
-                <Text style={[styles.text, themeTextStyle]}>{sumProtein.toFixed(0)}/{goalProtein} g</Text>
+              <Pressable style={[styles.waterIntakeButton]} onPress={() => handleWaterDrink('minus5')}>
+                <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
+                  {minusSvg}
+                </Svg>
+                <Text style={[styles.waterIntakeText, themeTextStyle, { bottom: 42, fontSize: 13 }]}>500</Text>
+              </Pressable>
+              <Pressable style={[styles.waterIntakeButton]} onPress={() => handleWaterDrink('minus2')}>
+                <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
+                  {minusSvg}
+                </Svg>
+                <Text style={[styles.waterIntakeText, themeTextStyle, { bottom: 42, fontSize: 13 }]}>200</Text>
+              </Pressable>
+              <View style={[styles.waterIntakeButton, themeContainer]}>
+                <Svg width="100" height="100" style={{ transform: [{ scale: 1 }] }} >
+                  {waterSvg}
+                </Svg>
               </View>
-              <View style={[styles.statsItem, themeContainer]}>
-                <Text style={[styles.text, themeTextStyle]}>Angliavandeniai</Text>
-                <View style={styles.progressBarContainer}>
-                  <ProgressBar progress={(PBarCarbs <= 1 && PBarCarbs >= 0 ? PBarCarbs : 0)} color={themeProg} style={themeProgBack}/>
-                </View>
-                <Text style={[styles.text, themeTextStyle]}>{sumCarbs.toFixed(0)}/{goalCarbs} g</Text>
-              </View>
-              <View style={[styles.statsItem, themeContainer]}>
-                <Text style={[styles.text, themeTextStyle]}>Riebalai</Text>
-                <View style={styles.progressBarContainer}>
-                  <ProgressBar progress={(PBarFat <= 1 && PBarFat >= 0 ? PBarFat : 0)} color={themeProg} style={themeProgBack} />
-                </View>
-                <Text style={[styles.text, themeTextStyle]}>{sumFat.toFixed(0)}/{goalFat} g</Text>
-              </View>
+              <Text style={[styles.waterIntakeText, themeTextStyle]}>{Watah}ml</Text>
+              <Pressable style={styles.waterIntakeButton} onPress={() => handleWaterDrink('add2')} >
+                <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
+                  {plusSvg}
+                </Svg>
+                <Text style={[styles.waterIntakeText, themeTextStyle, { bottom: 42, fontSize: 13 }]}>200</Text>
+              </Pressable>
+              <Pressable style={styles.waterIntakeButton} onPress={() => handleWaterDrink('add5')} >
+                <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
+                  {plusSvg}
+                </Svg>
+                <Text style={[styles.waterIntakeText, themeTextStyle, { bottom: 42, fontSize: 13 }]}>500</Text>
+              </Pressable>
             </View>
-          )} 
-        </View>
-
-        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-          <View style={[styles.statsItem, themeContainer]}>
-            <Text style={[styles.title, styles.text, themeTextStyle]}>Savaitė</Text>
-            <View style={[styles.progressBarContainer, themeContainer]}>
-              <BarChart
-                key={JSON.stringify(barData)}
-                barWidth={22}
-                noOfSections={3}
-                barBorderRadius={5}
-                frontColor={themeSvg}
-                data={barData}
-                yAxisThickness={0}
-                xAxisThickness={0}
-                hideYAxisText={true}
-                xAxisLabelTextStyle={[themeTextStyle]}
-                dashGap={0}
-                xAxisColor={'red'}
-                height={100}
+          </View>
+          <View style={[commonStyles.mainStatsContainer, themeContainer]}>
+            <Text style={[styles.text, themeTextStyle]}>Maisto istorija:</Text>
+            <View style={{ maxHeight: 100, backgroundColor: '' }}>
+              <FlatList
+                nestedScrollEnabled={true}
+                data={eatenFoods}
+                keyExtractor={(item, index) => `${item.date}:${item.name}:${index}`}
+                renderItem={renderEatenFoodItem}
               />
             </View>
           </View>
-        </View>
-
-        <View style={[commonStyles.mainStatsContainer, themeContainer, { alignItems: 'center' }]}>
-          <View style={[styles.column, themeContainer]}>
-            <Pressable style={[styles.waterIntakeButton]} onPress={() => handleWaterDrink('minus5')}>
-              <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
-                {minusSvg}
-              </Svg>
-              <Text style={[styles.waterIntakeText, themeTextStyle, { bottom: 42, fontSize: 13 }]}>500</Text>
-            </Pressable>
-            <Pressable style={[styles.waterIntakeButton]} onPress={() => handleWaterDrink('minus2')}>
-              <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
-                {minusSvg}
-              </Svg>
-              <Text style={[styles.waterIntakeText, themeTextStyle, { bottom: 42, fontSize: 13 }]}>200</Text>
-            </Pressable>
-            <View style={[styles.waterIntakeButton, themeContainer]}>
-              <Svg width="100" height="100" style={{ transform: [{ scale: 1 }] }} >
-                {waterSvg}
-              </Svg>
-            </View>
-            <Text style={[styles.waterIntakeText, themeTextStyle]}>{Watah}ml</Text>
-            <Pressable style={styles.waterIntakeButton} onPress={() => handleWaterDrink('add2')} >
-              <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
-                {plusSvg}
-              </Svg>
-              <Text style={[styles.waterIntakeText, themeTextStyle, { bottom: 42, fontSize: 13 }]}>200</Text>
-            </Pressable>
-            <Pressable style={styles.waterIntakeButton} onPress={() => handleWaterDrink('add5')} >
-              <Svg width="100" height="100" style={{ transform: [{ scale: 0.5 }] }} >
-                {plusSvg}
-              </Svg>
-              <Text style={[styles.waterIntakeText, themeTextStyle, { bottom: 42, fontSize: 13 }]}>500</Text>
-            </Pressable>
-          </View>
-        </View>
-        <View style={[commonStyles.mainStatsContainer, themeContainer]}>
-          <Text style={[styles.text, themeTextStyle]}>Maisto istorija:</Text>
-          <View style={{ maxHeight: 100, backgroundColor: '' }}>
-            <FlatList
-              data={eatenFoods}
-              keyExtractor={(item, index) => `${item.date}:${item.name}:${index}`}
-              renderItem={renderEatenFoodItem}
-            />
-          </View>
-        </View>
-        <Text></Text>
-      </ScrollView>
+          <Text></Text>
+        </ScrollView>
+      </GestureHandlerRootView>
     </SafeAreaView>
   );
 };
