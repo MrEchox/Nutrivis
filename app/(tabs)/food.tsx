@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, FlatList, Modal, Button, TextInput, useCo
 import { Text, View } from '@/components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { food_object_eaten } from '@/src/object_classes/food_object_eaten'; 
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { commonStyles } from '../../components/commonStyles';
 import { router } from 'expo-router';
 
@@ -37,6 +37,8 @@ export default function Foods() {
 
   const [refreshPage, setRefreshPage] = useState(false); // State to trigger page refresh
 
+  const route = useRoute();
+
   const fetchData = async () => {
     try {
       // Fetch all keys from AsyncStorage
@@ -51,6 +53,26 @@ export default function Foods() {
       // Update state with the retrieved values
       setLocalFoodValues(valuesFood);
       setLocalFoodBarcodeValues(valuesFoodBarcode);
+
+      //check if barcode was passed
+      let item;
+
+      if (route.params !== null) {
+        if (route.params.barcode !== null) {
+          const barcode = route.params.barcode;
+          console.log(valuesFoodBarcode[0][1]);
+          for (let i = 0; i < valuesFoodBarcode.length; i++) {
+            item = valuesFoodBarcode[i];
+            if (JSON.parse(item[1]).barcode == barcode) {
+              console.log('Item:', JSON.parse(item[1]));
+              handleFoodItemClick(item, valuesFoodBarcode.indexOf(item));
+              break;
+            }
+          }
+        }
+      }
+
+
     } catch (error) {
       console.error('Error fetching data:', error);
     }

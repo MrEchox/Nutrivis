@@ -46,6 +46,7 @@ export default function scannerScreen() {
 
         const q = query(collectionRef, where("barcode", "==", barcode));
         const querySnapshot = await getDocs(q);
+        console.log("scannedbarcode:" + barcode);
         if (querySnapshot.size < 0) {
             router.replace(`../food?calories=${querySnapshot.docs[0].data().calories}&name=${querySnapshot.docs[0].data().name}&carbs=${querySnapshot.docs[0].data().carbs}
             &sugars=${querySnapshot.docs[0].data().sugars}&fat=${querySnapshot.docs[0].data().fat}&protein=${querySnapshot.docs[0].data().protein}
@@ -67,7 +68,7 @@ export default function scannerScreen() {
                     if (item.barcode == barcode) {
                         router.replace(`../food?calories=${item.calories}&name=${item.name}&carbs=${item.carbs}
                         &sugars=${item.sugars}&fat=${item.fat}&protein=${item.protein}
-                        &sodium=${item.sodium}&measuring_unit=${item.measuring_unit}`);
+                        &sodium=${item.sodium}&measuring_unit=${item.measuring_unit}&barcode=${barcode}`);
                         setAlertVisible(false);
                         return;
                     }
