@@ -113,6 +113,23 @@ export default function Tracking() {
   // Function to fetch data from AsyncStorage
   const fetchData = async () => {
     try {
+      const email = await getLoggedInEmail();
+
+      // Fetch all keys from AsyncStorage
+      const allKeys = await AsyncStorage.getAllKeys();
+
+      const appKeysGoal = allKeys.filter(key => key.startsWith(Goal_Prefix + "local" + ":" + email));
+
+      const appKeysEatenAll = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix)); // Gets all eaten food values
+      const appKeysEatenAllFiltered = appKeysEatenAll.filter(key => key.includes(email)); // Filter out only eaten food values for the logged in user
+
+      // Fetch values corresponding to the filtered keys
+      const unfilteredValuesGoalLocal = await AsyncStorage.multiGet(appKeysGoal);
+      const valuesGoalLocal = unfilteredValuesGoalLocal.filter(([key, value]) => {
+        const data = JSON.parse(value);
+        return data.email === email;
+      });
+
       // Goal values
       console.log("Goal values: " + valuesGoalLocal);
       const goalValues = JSON.parse(valuesGoalLocal[0][1]);
@@ -145,6 +162,7 @@ export default function Tracking() {
         else {
           setGoalProtein(0);
         }
+
       }
       else {
         setGoalCalories(0);
@@ -156,16 +174,6 @@ export default function Tracking() {
 
       setEatenFoods([]); // Clear eaten foods list
       var keysBetweenStartAndEnd = [];
-
-      const email = await getLoggedInEmail();
-
-      // Fetch all keys from AsyncStorage
-      const allKeys = await AsyncStorage.getAllKeys();
-
-      const appKeysGoal = allKeys.filter(key => key.startsWith(Goal_Prefix + "local" + ":" + email));
-
-      const appKeysEatenAll = allKeys.filter(key => key.startsWith(Food_Eaten_Prefix)); // Gets all eaten food values
-      const appKeysEatenAllFiltered = appKeysEatenAll.filter(key => key.includes(email)); // Filter out only eaten food values for the logged in user
 
       ///////////////////////////////////////start of bar chart data/////////////////////////////////////
       var weekCalories = [
@@ -214,13 +222,6 @@ export default function Tracking() {
       const appKeysEaten = appKeysEatenUnfiltered.filter(key => key.includes(email)); // Filter out only todays eaten food values for the logged in user
       const appKeysWater = allKeys.filter(key => key.startsWith('@Water:' + currentDate)); // Gets todays drank water values
 
-      // Fetch values corresponding to the filtered keys
-      const unfilteredValuesGoalLocal = await AsyncStorage.multiGet(appKeysGoal);
-      const valuesGoalLocal = unfilteredValuesGoalLocal.filter(([key, value]) => {
-        const data = JSON.parse(value);
-        return data.email === email;
-      });
-
       // Eaten values
       const unfilteredValuesEaten = await AsyncStorage.multiGet(appKeysEaten);
       const valuesEaten = unfilteredValuesEaten.filter(([key, value]) => {
@@ -267,32 +268,35 @@ export default function Tracking() {
       setSumFat(Fat);
       setSumProtein(Protein);
 
-      if (goalCarbs !== 0) {  
-        setPBarCarbs(Carbs / goalCarbs);
+      if (goalValues.carbs !== null) {
+        setPBarCarbs(((Carbs / goalValues.carbs) < 1 && (Carbs / goalValues.carbs) >= 0 ? Carbs /goalValues.carbs : 1));
       }
-      else {
+      else{
         setPBarCarbs(0);
       }
 
-      if (goalFat !== 0) {
-        setPBarFat(Fat / goalFat);
+      if (goalValues.fat !== null) {
+        setPBarFat((Fat / goalValues.fat) < 1 && (Fat / goalValues.fat) >= 0 ? Fat / goalValues.fat : 1);
       }
-      else {
+      else{
         setPBarFat(0);
       }
 
-      if (goalProtein !== 0) {
-        setPBarProtein(Protein / goalProtein);
+      if (goalValues.protein !== null) {
+        setPBarProtein((Protein / goalValues.protein) < 1 && (Protein / goalValues.protein) >= 0 ? Protein / goalValues.protein : 1);
       }
-      else {
+      else{
         setPBarProtein(0);
       }
+
+      console.log("PBarProtein: " + (Protein / goalProtein) + " PBarCarbs: " + (Carbs / goalCarbs) + " PBarFat: " + (Fat / goalFat))
 
     } catch (error) {
       console.error('Error fetching data:', error);
     }
     setLoading(false);
   };
+
 
   // Function calls on page focus
   useEffect(() => {
@@ -417,26 +421,26 @@ export default function Tracking() {
             <Text>{'\n'}</Text>
           </View>
           
-          {!loading && (
+          {(
             <View style={[styles.column, themeContainer]}>
               <View style={[styles.statsItem, themeContainer]}>
                 <Text style={[styles.text, themeTextStyle]}>Baltymai</Text>
                 <View style={styles.progressBarContainer}>
-                  <ProgressBar progress={(PBarProtein)} color={themeProg} style={themeProgBack}/>
+                  <ProgressBar progress={(PBarProtein <= 1 && PBarProtein >= 0 ? PBarProtein : 0)} color={themeProg} style={themeProgBack}/>
                 </View>
                 <Text style={[styles.text, themeTextStyle]}>{sumProtein.toFixed(0)}/{goalProtein} g</Text>
               </View>
               <View style={[styles.statsItem, themeContainer]}>
                 <Text style={[styles.text, themeTextStyle]}>Angliavandeniai</Text>
                 <View style={styles.progressBarContainer}>
-                  <ProgressBar progress={(PBarCarbs)} color={themeProg} style={themeProgBack}/>
+                  <ProgressBar progress={(PBarCarbs <= 1 && PBarCarbs >= 0 ? PBarCarbs : 0)} color={themeProg} style={themeProgBack}/>
                 </View>
                 <Text style={[styles.text, themeTextStyle]}>{sumCarbs.toFixed(0)}/{goalCarbs} g</Text>
               </View>
               <View style={[styles.statsItem, themeContainer]}>
                 <Text style={[styles.text, themeTextStyle]}>Riebalai</Text>
                 <View style={styles.progressBarContainer}>
-                  <ProgressBar progress={(PBarFat)} color={themeProg} style={themeProgBack} />
+                  <ProgressBar progress={(PBarFat <= 1 && PBarFat >= 0 ? PBarFat : 0)} color={themeProg} style={themeProgBack} />
                 </View>
                 <Text style={[styles.text, themeTextStyle]}>{sumFat.toFixed(0)}/{goalFat} g</Text>
               </View>
